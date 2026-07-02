@@ -143,8 +143,9 @@ export default function IndiaMap() {
   return (
     <div className="w-full min-h-[600px] flex flex-col lg:flex-row gap-4 px-8 lg:px-6 py-10 bg-[#274255]">
       {/* MAP */}
-      <div className="relative w-full lg:w-[60%] h-[300px] sm:h-[400px] lg:h-[600px] rounded-2xl overflow-hidden border shadow-lg z-0">
-        <MapContainer
+      {/* <div className="relative w-full lg:w-[60%] h-[300px] sm:h-[400px] lg:h-[600px] rounded-2xl overflow-hidden border shadow-lg z-0"> */}
+      <div className="relative w-full lg:w-[60%] h-[300px] sm:h-[400px] lg:h-[600px] rounded-2xl overflow-hidden shadow-lg z-0">
+        {/* <MapContainer
           center={[22.5937, 78.9629]}
           zoom={11}
           minZoom={2}
@@ -155,7 +156,16 @@ export default function IndiaMap() {
           scrollWheelZoom={false}
           style={{ width: "100%", height: "100%" }}
           className=""
-        >
+        > */}
+        <MapContainer
+    center={[23.5, 82]}
+    zoom={4}
+    minZoom={3}
+    maxZoom={18}
+    zoomControl={false}
+    scrollWheelZoom={true}
+    style={{ width: "100%", height: "100%" }}
+>
           <FixMapSize />
           <CustomZoomControl />
 

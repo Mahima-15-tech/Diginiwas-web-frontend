@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { FiSearch, FiArrowRight, FiMapPin } from "react-icons/fi";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 
 import {
@@ -21,7 +21,7 @@ import {
   RiBrainLine,
   RiBuilding2Line,
 } from "react-icons/ri";
-import { FaHouseCircleCheck, FaAngleDown  } from "react-icons/fa6";
+import { FaHouseCircleCheck, FaAngleDown } from "react-icons/fa6";
 import { IoLocation } from "react-icons/io5";
 import { IoSearch, IoLocationSharp, IoLocationOutline } from "react-icons/io5";
 import { HiSparkles } from "react-icons/hi2";
@@ -62,11 +62,11 @@ export default function HeroSection() {
   useEffect(() => {
     getHeroSection();
   }, []);
-  
+
   const getHeroSection = async () => {
     try {
       const res = await axios.get("/cms/hero");
-  
+
       setHeroData(res.data.hero);
     } catch (err) {
       console.log(err);
@@ -74,25 +74,25 @@ export default function HeroSection() {
   };
 
   const targetAgents =
-  parseInt(heroData?.verifiedAgents) || 150;
+    parseInt(heroData?.verifiedAgents) || 150;
 
-const targetProperties =
-  parseInt(heroData?.propertiesListed) || 500;
+  const targetProperties =
+    parseInt(heroData?.propertiesListed) || 500;
 
-const targetCustomers =
-  parseInt(heroData?.happyCustomers) || 1000;
+  const targetCustomers =
+    parseInt(heroData?.happyCustomers) || 1000;
 
-const targetLocalities =
-  parseInt(heroData?.localitiesCovered) || 25;
+  const targetLocalities =
+    parseInt(heroData?.localitiesCovered) || 25;
 
   return (
     <div className="sm:min-h-screen h-full font-sans bg-[#0d1b2a] text-white">
       {/* <Navbar /> */}
       <Hero
-  currentBg={currentBg}
-  fade={fade}
-  heroData={heroData}
-/>
+        currentBg={currentBg}
+        fade={fade}
+        heroData={heroData}
+      />
     </div>
   );
 }
@@ -110,12 +110,17 @@ function Hero({ currentBg, fade, heroData }) {
       <div className="absolute inset-0 bg-[#274255] " />
       <div className=" ">
         <div className="relative z-10 flex flex-col  sm:py-10  ">
-          <div className="flex-1 flex flex-col  lg:flex-row items-center lg:items-end justify-between px-4 sm:px-6 lg:px-10 xl:px-14 pt-8 sm:pt-12 lg:pt-16 pb-6 gap-8 lg:gap-4">
-            <LeftContent />
+          {/* <div className="flex-1 flex flex-col  lg:flex-row items-center lg:items-end justify-between px-4 sm:px-6 lg:px-10 xl:px-14 pt-8 sm:pt-12 lg:pt-16 pb-6 gap-8 lg:gap-4">
+    
+            <LeftContent heroData={heroData} />
             <RightPhones heroData={heroData} />
-          </div>
+          </div> */}
+          <div className="flex-1 flex flex-col lg:flex-row items-center lg:items-center justify-between px-4 sm:px-6 lg:px-10 xl:px-14 pt-8 sm:pt-12 lg:pt-16 pb-6 gap-10">
+  <LeftContent heroData={heroData} />
+  <RightPhones heroData={heroData} />
+</div>
           <div className="flex flex-row justify-center px-4 sm:px-6 lg:px-10 xl:px-14 ">
-          <StatsBar heroData={heroData} />
+            <StatsBar heroData={heroData} />
           </div>
         </div>
       </div>
@@ -123,10 +128,11 @@ function Hero({ currentBg, fade, heroData }) {
   );
 }
 
-function LeftContent() {
+// function LeftContent() {
+function LeftContent({ heroData }) {
 
   const [btn, setBtn] = useState('search')
-  
+
   return (
     <div className="flex-1  max-w-full lg:max-w-[50%] xl:max-w-[50%] text-center lg:text-left ">
       <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1.5 mb-4 sm:mb-6">
@@ -136,33 +142,43 @@ function LeftContent() {
         </span>
       </div>
 
-      <h1 className="text-3xl sm:text-3xl md:text-4xl xl:text-5xl font-black leading-tight mb-4 sm:mb-6">
+      {/* <h1 className="text-3xl sm:text-3xl md:text-4xl xl:text-5xl font-black leading-tight mb-4 sm:mb-6">
         <span className="text-[#33cc99]">Ghar</span>
         <span className="text-white"> ki Talaash bhi,</span>
         <br />
         <span className="text-[#33cc99]">Vishwas</span>
         <span className="text-white"> bhi.</span>
-      </h1>
+      </h1> */}
+      <h1 className="text-3xl sm:text-3xl md:text-4xl xl:text-5xl font-black leading-tight mb-4 sm:mb-6">
+        <span className="text-[#33cc99]">
+          {heroData?.headingLine1 || "Ghar ki Talaash bhi,"}
+        </span>
 
+        <br />
+
+        <span className="text-white">
+          {heroData?.headingLine2 || "Vishwas bhi."}
+        </span>
+      </h1>
       <p className="text-white/70 text-sm sm:text-base leading-relaxed mb-6 sm:mb-8 max-w-md mx-auto lg:mx-0">
         Buy, Rent, Sell ya Lease — DigiNiwas aur Niwas AI ke saath property
         dhoondhna ab hua simple.
       </p>
 
       <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-8 sm:mb-10">
-         <Link to="/explore-property">
-        <button className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/30 text-white font-semibold px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg hover:bg-white/20 transition-all text-sm sm:text-base">
-          Explore Properties <FiArrowRight />
-        </button>
+        <Link to="/explore-property">
+          <button className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/30 text-white font-semibold px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg hover:bg-white/20 transition-all text-sm sm:text-base">
+            Explore Properties <FiArrowRight />
+          </button>
         </Link>
         <Link to="/niwas-ai">
-        <button className="flex items-center gap-2 bg-[#33cc99] text-[#0d1b2a] font-semibold px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg hover:bg-[#33cc99] transition-all text-sm sm:text-base">
-          Try Niwas AI <HiSparkles />
-        </button>
+          <button className="flex items-center gap-2 bg-[#33cc99] text-[#0d1b2a] font-semibold px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg hover:bg-[#33cc99] transition-all text-sm sm:text-base">
+            Try Niwas AI <HiSparkles />
+          </button>
         </Link>
       </div>
 
-    
+
       <div className="w-full max-w-5xl mx-auto lg:mx-0 bg-[#274255] border border-white/20 rounded-2xl overflow-hidden shadow-lg">
         <div className="flex flex-col xl:flex-row items-stretch sm:items-center gap-0 sm:gap-2  ite">
           <div className="px-2 pt-5 pb-4   ite">
@@ -177,15 +193,15 @@ function LeftContent() {
 
           <div className="px-3 xl:pt-4 pb-4">
             <div className="flex  flex-row w-full justify-evenly  rounded-xl overflow-hidden border border-white/20  ">
-              <button  className={`text-white px-4 py-3  ${ btn === 'search' ? 'bg-[#33cc99]' : 'bg-[#274255]' }   font-semibold flex items-center justify-center gap-2`}>
-              Buy/Sell
+              <button className={`text-white px-4 py-3  ${btn === 'search' ? 'bg-[#33cc99]' : 'bg-[#274255]'}   font-semibold flex items-center justify-center gap-2`}>
+                Buy/Sell
               </button>
 
-              <button onClick={() => {setBtn('rent')}} className={`text-white px-4 py-3  ${ btn === 'rent' ? 'bg-[#33cc99]' : 'bg-[#274255]' }   font-semibold flex items-center justify-center gap-2`}>
+              <button onClick={() => { setBtn('rent') }} className={`text-white px-4 py-3  ${btn === 'rent' ? 'bg-[#33cc99]' : 'bg-[#274255]'}   font-semibold flex items-center justify-center gap-2`}>
                 <LuFileSpreadsheet /> Rent
               </button>
 
-              <button onClick={() => {setBtn('lease')}} className={`text-white px-4 py-3  ${ btn === 'lease' ? 'bg-[#33cc99]' : 'bg-[#274255]' }   font-semibold flex items-center justify-center gap-2`}>
+              <button onClick={() => { setBtn('lease') }} className={`text-white px-4 py-3  ${btn === 'lease' ? 'bg-[#33cc99]' : 'bg-[#274255]'}   font-semibold flex items-center justify-center gap-2`}>
                 <TbHomeSignal />
                 Lease
               </button>
@@ -222,17 +238,17 @@ function LeftContent() {
                 <p className="text-white text-left font-medium">
                   Property Type
                 </p>
-                <div className="relative mt-2"> 
-                <select className="w-full bg-transparent text-white/70 outline-none appearance-none cursor-pointer mt-1">
-                  <option className="text-black">
-                   Select Property Type
-                  </option>
-                  <option className="text-black">House</option>
-                  <option className="text-black">Flat</option>
-                  <option className="text-black">Commercial</option>
-                </select>
-                   <FaAngleDown className="absolute right-0 top-1/2 -translate-y-1/2 text-white/70 pointer-events-none" />
-              </div>
+                <div className="relative mt-2">
+                  <select className="w-full bg-transparent text-white/70 outline-none appearance-none cursor-pointer mt-1">
+                    <option className="text-black">
+                      Select Property Type
+                    </option>
+                    <option className="text-black">House</option>
+                    <option className="text-black">Flat</option>
+                    <option className="text-black">Commercial</option>
+                  </select>
+                  <FaAngleDown className="absolute right-0 top-1/2 -translate-y-1/2 text-white/70 pointer-events-none" />
+                </div>
               </div>
             </div>
 
@@ -313,7 +329,7 @@ function RightPhones({ heroData }) {
             src={
               heroData?.heroImage2?.url ||
               property
-             }
+            }
             alt="Property Details"
             className="w-full h-auto rounded-[28px]"
           />
@@ -344,49 +360,115 @@ function RightPhones({ heroData }) {
   "
         >
           <img
-           src={
-            heroData?.heroImage3?.url ||
-            dashboard
-           }
+            src={
+              heroData?.heroImage3?.url ||
+              dashboard
+            }
             alt="Dashboard"
             className="w-full h-auto rounded-[24px]"
           />
         </div>
       </div>
 
-      <div> 
-      <div className="flex gap-3 pt-5">
+      {/* <div>
+        <div className="flex gap-3 pt-5">
           <button
-          id="download-app-btn"
-          className="border border-white px-3 py-2 rounded-xl"
-           onClick={() =>
-            window.open(
+            id="download-app-btn"
+            className="border border-white px-3 py-2 rounded-xl"
+            onClick={() =>
+              window.open(
                 "https://play.google.com/store/apps/details?id=com.whatsapp",
                 "_blank"
               )
-          }
-        >
-          Get it on 
-        <div className="text-lg flex items-center gap-2">  <IoLogoGooglePlaystore className="text-2xl"/>Play Store</div>
-        </button>
-        <button
-          id="download-app-btn"
-          className="border border-white px-3 py-2 rounded-xl"
+            }
+          >
+            Get it on
+            <div className="text-lg flex items-center gap-2">  <IoLogoGooglePlaystore className="text-2xl" />Play Store</div>
+          </button>
+          <button
+            id="download-app-btn"
+            className="border border-white px-3 py-2 rounded-xl"
             onClick={() =>
               window.open(
                 "https://apps.apple.com/app/id310633997",
                 "_blank"
               )
             }
-        >
-          Download on the
-        <div className="text-lg flex items-center gap-2"> <FaApple  className="text-2xl" />  App Store</div>
-        </button>
+          >
+            Download on the
+            <div className="text-lg flex items-center gap-2"> <FaApple className="text-2xl" />  App Store</div>
+          </button>
+        </div>
+        <div className="flex items-center text-center justify-center mx-auto pt-2">
+          <span className=""> Coming soon</span>
+        </div>
+      </div> */}
+      <div className="mt-8 ">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+
+          {/* Play Store */}
+          <button
+            id="download-playstore-btn"
+            onClick={() =>
+              window.open(
+                "https://play.google.com/store/apps/details?id=com.whatsapp",
+                "_blank"
+              )
+            }
+            className="group w-54 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-5 py-2 transition-all duration-300 hover:bg-white/20 hover:border-[#33cc99] hover:-translate-y-1 hover:shadow-[0_15px_40px_rgba(0,0,0,0.25)]"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-xl bg-[#33cc99] flex items-center justify-center shadow-lg">
+                <IoLogoGooglePlaystore className="text-3xl text-[#274255]" />
+              </div>
+
+              <div className="text-left">
+                <p className="text-xs text-white/70 uppercase tracking-wider">
+                  Get it on
+                </p>
+                <h3 className="text-lg font-bold text-white group-hover:text-[#33cc99] transition-colors">
+                  Google Play
+                </h3>
+              </div>
+            </div>
+          </button>
+
+          {/* App Store */}
+          <button
+            id="download-appstore-btn"
+            onClick={() =>
+              window.open(
+                "https://apps.apple.com/app/id310633997",
+                "_blank"
+              )
+            }
+            className="group w-54 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-5 py-2 transition-all duration-300 hover:bg-white/20 hover:border-[#33cc99] hover:-translate-y-1 hover:shadow-[0_15px_40px_rgba(0,0,0,0.25)]"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center shadow-lg">
+                <FaApple className="text-3xl text-black" />
+              </div>
+
+              <div className="text-left">
+                <p className="text-xs text-white/70 uppercase tracking-wider">
+                  Download on the
+                </p>
+                <h3 className="text-lg font-bold text-white group-hover:text-[#33cc99] transition-colors">
+                  App Store
+                </h3>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        {/* Coming Soon */}
+        <div className="flex justify-center mt-5">
+          <span className="inline-flex items-center gap-2 bg-[#33cc99]/15 border border-[#33cc99]/40 text-[#33cc99] px-5 py-2 rounded-full text-sm font-semibold tracking-wide backdrop-blur-sm">
+            <span className="w-2 h-2 rounded-full bg-[#33cc99] animate-pulse"></span>
+            Mobile Apps Coming Soon
+          </span>
+        </div>
       </div>
-      <div className="flex items-center text-center justify-center mx-auto pt-2"> 
-        <span className=""> Coming soon</span>
-          </div>
-          </div>
     </div>
   );
 }
@@ -466,33 +548,33 @@ function StatsBar({ heroData }) {
   // Counter Animation
   useEffect(() => {
     if (!startCounter) return;
-  
+
     const interval = setInterval(() => {
       setStats((prev) => ({
         agents:
           prev.agents < targetAgents
             ? Math.min(prev.agents + 3, targetAgents)
             : targetAgents,
-  
+
         properties:
           prev.properties < targetProperties
             ? Math.min(prev.properties + 10, targetProperties)
             : targetProperties,
-  
+
         customers:
           prev.customers < targetCustomers
             ? Math.min(prev.customers + 20, targetCustomers)
             : targetCustomers,
-  
+
         localities:
           prev.localities < targetLocalities
             ? Math.min(prev.localities + 1, targetLocalities)
             : targetLocalities,
       }));
     }, 20);
-  
+
     return () => clearInterval(interval);
-  
+
   }, [
     startCounter,
     targetAgents,
@@ -501,50 +583,50 @@ function StatsBar({ heroData }) {
     targetLocalities,
   ]);
   return (
-    <div    ref={sectionRef} className="mb-0  sm:mb-8  py-4  flex  flex-col lg:flex-row w-full items-center gap-4 lg:items-stretch md:justify-between ">
+    <div ref={sectionRef} className="mb-0  sm:mb-8  py-4  flex  flex-col lg:flex-row w-full items-center gap-4 lg:items-stretch md:justify-between ">
       <div className="bg-white/80 w-full sm:w-[60%] lg:w-[50%] rounded-3xl px-2 py-3 lg:py-0 gap-5 items-center grid grid-cols-2 sm:grid-cols-4">
-  {[
-    {
-      icon: <MdPerson className="text-[#0d1b2a] text-xl sm:text-2xl" />,
-      num: heroData?.verifiedAgents || `${stats.agents}+`,
-      label: "Verified Agents",
-    },
-    {
-      icon: <MdHome className="text-[#0d1b2a] text-xl sm:text-2xl" />,
-      num: heroData?.propertiesListed || `${stats.properties}+`,
-      label: "Properties Listed",
-    },
-    {
-      icon: <MdGroups className="text-[#0d1b2a] text-xl sm:text-2xl" />,
-      num: heroData?.happyCustomers || `${stats.customers}+`,
-      label: "Happy Customers",
-    },
-    {
-      icon: (
-        <MdLocationOn className="text-[#0d1b2a] text-xl sm:text-2xl" />
-      ),
-      num: heroData?.localitiesCovered || `${stats.localities}+`,
-      label: "Localities Covered",
-    },
-  ].map(({ icon, num, label }) => (
-    <div
-      key={label}
-      className="flex flex-col items-center gap-2 space-x-3"
-    >
-      <div>{icon}</div>
+        {[
+          {
+            icon: <MdPerson className="text-[#0d1b2a] text-xl sm:text-2xl" />,
+            num: heroData?.verifiedAgents || `${stats.agents}+`,
+            label: "Verified Agents",
+          },
+          {
+            icon: <MdHome className="text-[#0d1b2a] text-xl sm:text-2xl" />,
+            num: heroData?.propertiesListed || `${stats.properties}+`,
+            label: "Properties Listed",
+          },
+          {
+            icon: <MdGroups className="text-[#0d1b2a] text-xl sm:text-2xl" />,
+            num: heroData?.happyCustomers || `${stats.customers}+`,
+            label: "Happy Customers",
+          },
+          {
+            icon: (
+              <MdLocationOn className="text-[#0d1b2a] text-xl sm:text-2xl" />
+            ),
+            num: heroData?.localitiesCovered || `${stats.localities}+`,
+            label: "Localities Covered",
+          },
+        ].map(({ icon, num, label }) => (
+          <div
+            key={label}
+            className="flex flex-col items-center gap-2 space-x-3"
+          >
+            <div>{icon}</div>
 
-      <div className="flex flex-col items-center">
-        <p className="text-[#0d1b2a] font-black text-sm sm:text-lg lg:text-xl leading-tight">
-          {num}
-        </p>
+            <div className="flex flex-col items-center">
+              <p className="text-[#0d1b2a] font-black text-sm sm:text-lg lg:text-xl leading-tight">
+                {num}
+              </p>
 
-        <p className="text-gray-500 text-center text-xs font-medium leading-tight">
-          {label}
-        </p>
+              <p className="text-gray-500 text-center text-xs font-medium leading-tight">
+                {label}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-  ))}
-</div>
 
       <div className="grid grid-cols-2  gap-2 sm:gap-3 w-full   sm:max-w-sm lg:max-w-md  ">
         {[
@@ -552,30 +634,30 @@ function StatsBar({ heroData }) {
             icon: <MdSmartToy className="text-[#00d9a6] text-xl" />,
             title: "AI Powered",
             sub: "Search",
-             path:"/niwas-ai"
+            path: "/niwas-ai"
           },
           {
             icon: <MdGroups className="text-[#00d9a6] text-xl" />,
             title: "150+",
             sub: "Verified Agents",
-            path:"/explore-property"
+            path: "/explore-property"
           },
           {
             icon: <MdApartment className="text-[#00d9a6] text-xl" />,
             title: "500+",
             sub: "Properties Listed",
-             path: "/agent-corner"
+            path: "/agent-corner"
           },
           {
             icon: <MdCheckCircle className="text-[#00d9a6] text-xl" />,
             title: "100%",
             sub: "Genuine Leads",
-             path: "/agent-corner"
+            path: "/agent-corner"
           }
         ].map(({ icon, title, sub, path }) => (
           <div
             key={title + sub}
-           onClick={() => navigate(path)}
+            onClick={() => navigate(path)}
             className="flex items-center gap-2 sm:gap-3 bg-white/80 backdrop-blur-sm border
                         border-white/20 rounded-lg px-3 py-2 sm:px-4 sm:py-3 cursor-pointer
                         transition-all duration-300 hover:scale-110 hover:shadow-xl"

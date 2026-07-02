@@ -31,7 +31,7 @@ export default function DiginiwasWorks() {
           <div className='flex flex-row gap-10 items-center'> 
             <span>   HOW </span>
           <span className="text-[#33cc99] ">
-           <img src={diginiwas} className='sm:h-20' /> 
+           <img src={diginiwas} className='sm:h-20 mb-11' /> 
 
           </span> 
            <span> 
@@ -234,37 +234,46 @@ export default function DiginiwasWorks() {
       </div>
 
       {/* Bottom Features Horizontal Bar Container */}
-      <div className="max-w-7xl mx-auto w-full  border-slate-800/80 pt-1 lg:pt-20  mb-1 sm:mb-3 ">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 text-center text-xs md:text-sm text-slate-400">
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-2">
-            <HiOutlineShieldCheck  className="text-4xl sm:text-4xl md:text-5xl text-[#33cc99] shrink-0" />
-            <span className="font-medium   lg:text-lg text-white">100% Verified Agents & Listings</span>
-          </div>
+     <div className="max-w-7xl mx-auto w-full bg-white rounded-3xl shadow-lg border border-gray-200 px-6 py-8 mb-6">
+  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 text-center">
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-2">
-            <RiRobotLine  className="text-4xl  sm:text-4xl  md:text-5xl text-[#33cc99] shrink-0" />
-            <span className="font-medium   sm:text-base lg:text-lg text-white">AI Powered Smart Search</span>
-          </div>
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-2">
+      <HiOutlineShieldCheck className="text-4xl sm:text-4xl md:text-5xl text-[#33cc99] shrink-0" />
+      <span className="font-semibold text-sm sm:text-base lg:text-lg text-[#33cc99]">
+        100% Verified Agents & Listings
+      </span>
+    </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-2">
-            <HiOutlineUserGroup  className="text-4xl  sm:text-4xl  md:text-5xl text-[#33cc99] shrink-0" />
-            <span className="font-medium   sm:text-base lg:text-lg text-white">Happy Customers Everyday</span>
-          </div>
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-2">
+      <RiRobotLine className="text-4xl sm:text-4xl md:text-5xl text-[#33cc99] shrink-0" />
+      <span className="font-semibold text-sm sm:text-base lg:text-lg text-[#33cc99]">
+        AI Powered Smart Search
+      </span>
+    </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-2">
-            {/* <HiOutlineArrowTrendingUp  className="text-4xl  sm:text-4xl text-[#33cc99] shrink-0" /> */}
-            <GiHouse  className="text-4xl  sm:text-4xl md:text-5xl text-[#33cc99] shrink-0"/>
-            <span className="font-medium   sm:text-base lg:text-lg text-white">Grow Your Real Estate Business</span>
-          </div>
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-2">
+      <HiOutlineUserGroup className="text-4xl sm:text-4xl md:text-5xl text-[#33cc99] shrink-0" />
+      <span className="font-semibold text-sm sm:text-base lg:text-lg text-[#33cc99]">
+        Happy Customers Everyday
+      </span>
+    </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-2 col-span-2 md:col-span-1">
-            <BiHeadphone  className="text-4xl  sm:text-4xl md:text-5xl text-[#33cc99] shrink-0" />
-            <span className="font-medium   sm:text-base lg:text-lg text-white">Dedicated Support</span>
-          </div>
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-2">
+      <GiHouse className="text-4xl sm:text-4xl md:text-5xl text-[#33cc99] shrink-0" />
+      <span className="font-semibold text-sm sm:text-base lg:text-lg text-[#33cc99]">
+        Grow Your Real Estate Business
+      </span>
+    </div>
 
-        </div>
-      </div>
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 p-2 col-span-2 md:col-span-1">
+      <BiHeadphone className="text-4xl sm:text-4xl md:text-5xl text-[#33cc99] shrink-0" />
+      <span className="font-semibold text-sm sm:text-base lg:text-lg text-[#33cc99]">
+        Dedicated Support
+      </span>
+    </div>
+
+  </div>
+</div>
 
     </section>
   );

@@ -1,11 +1,10 @@
-
 import { MapContainer, TileLayer, Popup, CircleMarker } from "react-leaflet";
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 import { useState } from "react";
 import axios from "axios";
 import { Search } from "lucide-react";
-
+import L from "leaflet";
 
 
 const DARK_TILE_URL =
@@ -55,7 +54,37 @@ function CustomZoomControl() {
     </div>
   );
 }
+function FitAllCities({ cities }) {
+  const map = useMap();
 
+  useEffect(() => {
+    if (!cities.length) return;
+
+    const bounds = L.latLngBounds(
+      cities.map((city) => city.position)
+    );
+
+    map.fitBounds(bounds, {
+      padding: [80, 80],
+      maxZoom: 5,
+    });
+  }, [cities, map]);
+
+  return null;
+}
+function FlyToCity({ city }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!city?.clicked) return;
+
+    map.flyTo(city.position, 12, {
+      duration: 1.2,
+    });
+  }, [city, map]);
+
+  return null;
+}
 export default function ExploreProperty() {
   const [properties, setProperties] = useState([]);
   const [cities, setCities] = useState([]);
@@ -393,8 +422,9 @@ export default function ExploreProperty() {
 
        <div className="w-full min-h-[600px] flex flex-col lg:flex-row gap-4 px-8 lg:px-6 py-10 bg-[#274255]">
             {/* MAP */}
-            <div className="relative w-full lg:w-[60%] h-[300px] sm:h-[400px] lg:h-[600px] rounded-2xl overflow-hidden border shadow-lg z-0">
-              <MapContainer
+            {/* <div className="relative w-full lg:w-[60%] h-[300px] sm:h-[400px] lg:h-[600px] rounded-2xl overflow-hidden border shadow-lg z-0"> */}
+            <div className="relative w-full lg:w-[60%] h-[300px] sm:h-[400px] lg:h-[600px] rounded-2xl overflow-hidden shadow-lg z-0">
+              {/* <MapContainer
                 center={[22.5937, 78.9629]}
                 zoom={11}
                 minZoom={2}
@@ -405,10 +435,23 @@ export default function ExploreProperty() {
                 scrollWheelZoom={false}
                 style={{ width: "100%", height: "100%" }}
                 className=""
-              >
-                <FixMapSize />
-                <CustomZoomControl />
-      
+              > */}
+              <MapContainer
+    center={[23.5, 82]}
+    zoom={4}
+    minZoom={3}
+    maxZoom={18}
+    zoomControl={false}
+    scrollWheelZoom={true}
+    worldCopyJump={false}
+    style={{ width: "100%", height: "100%" }}
+>
+                {/* <FixMapSize />
+                <CustomZoomControl /> */}
+      <FixMapSize />
+<FitAllCities cities={cities} />
+<FlyToCity city={selectedCity} />
+<CustomZoomControl />
                 <TileLayer
                   url={DARK_TILE_URL}
                   attribution={DARK_TILE_ATTRIBUTION}
