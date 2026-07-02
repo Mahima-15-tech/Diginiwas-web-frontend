@@ -17,8 +17,7 @@ import axios from "axios";
 // const DARK_TILE_ATTRIBUTION =
 //   '&copy; OpenStreetMap contributors';
 const DARK_TILE_URL =
-"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-
+`https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=${import.meta.env.VITE_STADIA_API_KEY}`;
 const DARK_TILE_ATTRIBUTION =
 '&copy; OpenStreetMap contributors &copy; CARTO';
 
