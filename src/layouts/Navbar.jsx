@@ -1,0 +1,184 @@
+import React from "react";
+import { useState, useRef, useCallback } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { LuLogOut } from "react-icons/lu";
+import { CgProfile } from "react-icons/cg";
+import { IoSearchOutline } from "react-icons/io5";
+import { navItems } from "../data/navlinks";
+import logo from "../assets/images/logo.jpg";
+import { RxCross1 } from "react-icons/rx";
+
+const Navbar = ({ show, setShow }) => {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(true);
+  const isLoggedIn = !!localStorage.getItem("token");
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+    setOpen(false);
+    toast.success("Logout successfully ");
+  };
+
+  const onDashboard = () => {
+    navigate("/admin-dashboard");
+    setMobileMenuOpen(false);
+  };
+
+  return (
+    <div className="sticky top-0 z-[9999] shadow-lg ">
+      <div className="">
+        <nav className="  mx-auto   bg-white/80  transparent  rounded-2xl ">
+          <div className="flex items-center justify-between px-4 gap-5 sm:px-6 md:px-8 lg:px-10 h-[65px] sm:h-[70px] lg:h-[75px] max-w-screen-2xl mx-auto">
+            <NavLink
+              to="/"
+              className="flex-shrink-0 flex items-center text-black duration-200"
+            >
+              <div className="flex items-center gap-1 justify-center  ">
+                <img
+                  src={
+                    "https://res.cloudinary.com/dhuabv2it/image/upload/v1780739165/logo-removebg-preview_sh6cxs.png"
+                  }
+                  className="object-contain w-17  sm:h-16 h-12 "
+                />
+              </div>
+            </NavLink>
+
+            <div className="hidden lg:flex items-center   lg:gap-4 xl:gap-8 text-base font-medium tracking-wide">
+              {navItems.map((item, index) => (
+                <NavLink
+                  key={index}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    // `relative inline-block text-black transition-colors duration-200 
+                    //     after:content-[''] after:absolute after:left-0 after:bottom-0  whitespace-nowrap
+                    //     after:h-[2px] after:bg-green-700  after:transition-all after:duration-300 
+                    //     ${
+                    //       isActive ? " text-gray-700" : " hover:text-[0F766E] "
+                    //     }`
+
+                     `relative inline-block pb-1 text-black transition-colors duration-200
+      after:absolute after:left-0 after:bottom-0 after:h-[2px]
+      after:bg-green-700 after:transition-all after:duration-300 after:content-['']
+      ${isActive ? "after:w-full" : "after:w-0 hover:after:w-full"}`
+
+                  }
+                ><span>  {item.name} </span>
+                
+                </NavLink>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-1 sm:gap-3 overflow-hidden">
+              <div className="flex gap-0 sm:gap-4 overflow-hidden">
+                <div className="relative sm:w-full w-32  ">
+                  <IoSearchOutline
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+                    size={18}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-full h-8 sm:h-full pl-10 pr-4 py-2 bg-gray-100 border border-gray-300 rounded-full focus:outline-none  "
+                  />
+                </div>
+                <div className="sm:min-w-40 ">
+                  {" "}
+                  <button
+                    onClick={() => navigate("/signup")}
+                    className="hidden sm:block px-4 py-2 bg-[#274255]  text-white rounded-full cursor-pointer"
+                  >
+                    Get Started
+                  </button>{" "}
+                </div>
+              </div>
+
+              {!mobileMenuOpen && (
+                <button
+                  className="lg:hidden flex flex-col justify-center items-center w-8 h-8 gap-1.5"
+                  onClick={() => setMobileMenuOpen((prev) => !prev)}
+                >
+                  <span className="w-5 h-0.5 bg-gray-700 rounded transition-all duration-300" />
+                  <span className="w-5 h-0.5 bg-gray-700 rounded transition-all duration-300" />
+                  <span className="w-5 h-0.5 bg-gray-700 rounded transition-all duration-300" />
+                </button>
+              )}
+
+              {mobileMenuOpen && (
+                <button onClick={() => setMobileMenuOpen((prev) => !prev)}>
+                  <RxCross1 className="text-2xl block lg:hidden" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div
+            className={[
+              "lg:hidden overflow-hidden   transition-all duration-300 ease-in-out bg-white rounded-b-2xl",
+              mobileMenuOpen
+                ? "max-h-[400px] opacity-100"
+                : "max-h-0 opacity-0",
+            ].join(" ")}
+          >
+            <div className="flex flex-col px-6 py-4 gap-4 text-[15px] font-medium border-t border-gray-100">
+              {navItems.map((item, index) => (
+                <div key={index}>
+                  <NavLink
+                    to={item.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `inline-block text-green-800 pb-1 transition-all duration-100 ${
+                        isActive
+                          ? "text-gray-700  border-[#0A2540] border-b-2  "
+                          : "hover:text-[#0A2540]   "
+                      }`
+                    }
+                  >
+                    {({ isActive }) => (
+                      <span
+                        key={index}
+                        className={`inline-block  ${isActive ? "border-[#0A2540] duration-100  transform-all" : ""}`}
+                      >
+                        {item.name}
+                      </span>
+                    )}
+                  </NavLink>
+                </div>
+              ))}
+
+              <div className="flex flex-col items-start gap-3 mb-1 ">
+                {isLoggedIn && (
+                  <button
+                    className="text-white bg-[#0A2540] px-3 py-2  rounded-lg "
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="flex    flex-col items-start ml-6  mb-1 gap-3 pb-5">
+              {!isLoggedIn && (
+                <NavLink
+                  onClick={() => {
+                    setMobileMenuOpen((prev) => !prev);
+                  }}
+                  to="/signup"
+                  className="sm:hidden w-40 text-center block  px-4 py-2 bg-[#274255]   text-white rounded-full  cursor-pointer"
+                >
+                  Get Started
+                </NavLink>
+              )}
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;
