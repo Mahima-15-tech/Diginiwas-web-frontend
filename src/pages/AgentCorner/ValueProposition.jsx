@@ -276,22 +276,22 @@ export default ValueProposition;
 export const FeatureCard = ({ icon, title, description, iconBg, iconColor }) => {
   return (
     <div
-      className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-8
+      className="group relative overflow-hidden rounded-xl border border-gray-200 hover:bg-[#0d2633] bg-white p-8
       shadow-[0_24px_48px_rgba(13,38,51,0.08)]
       transition-all duration-300 ease-out
       hover:-translate-y-2 hover:border-[#0d2633]/20 hover:shadow-[0_32px_64px_rgba(13,38,51,0.14)]
       flex flex-col gap-4"
     >
       {/* subtle top accent line that grows in on hover */}
-      <span className="absolute left-0 top-0 h-1 w-0 bg-[#0d2633] transition-all duration-500 ease-out group-hover:w-full" />
+      <span className="absolute left-0 top-0 h-1 w-0 bg-[#0d2633]  transition-all duration-500 ease-out group-hover:w-full" />
 
       <div className="flex items-start justify-between">
         <div
           className={`w-12 h-12 rounded-xl flex items-center justify-center ${iconBg}
           transition-transform duration-300 ease-out
-          group-hover:scale-110 group-hover:-rotate-6`}
+          group-hover:scale-110 group-hover:-rotate-6 `}
         >
-          <span className={iconColor}>{icon}</span>
+          <span className={`${iconColor} `}>{icon}</span>
         </div>
 
         <MdArrowOutward
@@ -301,11 +301,11 @@ export const FeatureCard = ({ icon, title, description, iconBg, iconColor }) => 
         />
       </div>
 
-      <h3 className="text-xl font-semibold text-[#0d2633] transition-colors duration-300">
+      <h3 className="text-xl font-semibold text-[#0d2633]  group-hover:text-white  transition-colors duration-300">
         {title}
       </h3>
 
-      <p className="text-gray-600 leading-relaxed transition-colors duration-300">
+      <p className="text-gray-600 leading-relaxed  group-hover:text-white transition-colors duration-300">
         {description}
       </p>
     </div>

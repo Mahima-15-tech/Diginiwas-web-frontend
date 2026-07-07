@@ -645,7 +645,7 @@ function TrustBar() {
 function AgentDashboardMain() {
   const navigate = useNavigate()
   return (
-    <div className="  e w-full lg:max-w-5xl xl:max-w-[1420px] mx-auto
+    <div className="  w-full lg:max-w-5xl xl:max-w-[1420px] mx-auto
              grid grid-cols-1 xl:grid-cols-2
              lg:gap-8 xl:gap-10 space-y-10 xl:space-y-0
              px-5 sm:px-8 lg:px-8 xl:px-12

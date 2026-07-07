@@ -82,7 +82,8 @@ export default function JourneySection() {
                 className="flex flex-col items-center text-center group"
               >
                 <div
-                  className={`w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center hover:border-[#0d2633] justify-center mb-5 transition-all duration-300 ${
+                  className={`w-20 h-20 md:w-24 md:h-24 group-hover:text-white group-hover:bg-[#0d2633] 
+                     rounded-full flex items-center hover:border-[#0d2633] justify-center mb-5 transition-all duration-800 ${
                     step.active
                       ? "bg-[#0d2633] text-white shadow-xl border-2 transform-all duration-500 hover:border-[#0d2633]"
                       : "bg-white border border-gray-300 text-[#0d2633]"

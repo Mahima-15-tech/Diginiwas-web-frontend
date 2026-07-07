@@ -76,7 +76,7 @@ const HeroSection = () => {
   />
 
   {/* Gradient Overlay */}
-  <div className="absolute inset-0 bg-gradient-to-r from-[#274255]/95 via-[#274255]/60 to-transparent" />
+  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#1c3345]/40 to-[#1c3345] lg:from-transparent lg:via-[#1c3345]/20 lg:to-[#1c3345] lg:to-[63%]" />
 
       <div className="relative z-10"> 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">

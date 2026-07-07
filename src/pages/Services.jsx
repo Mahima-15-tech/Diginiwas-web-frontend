@@ -495,7 +495,7 @@ export default function HeroSection() {
 
 
   return (
-    <div className=" h-full font-sans bg-[#274255] text-white">
+    <div className=" h-full font-sans bg-gradient-to-r from-transparent via-[#1c3345]/40 to-[#1c3345] lg:from-transparent lg:via-[#1c3345]/20 lg:to-[#1c3345] text-white">
       {/* keyframes for card + stat animations */}
       <style>{`
         @keyframes fadeInUp {
@@ -529,18 +529,29 @@ export default function HeroSection() {
 function Hero({ currentBg, fade }) {
   const [showComingSoon, setShowComingSoon] = useState(false);
   return (
-    <section className=" sm:min-h-screen max-w-7xl overflow-hidden py-5 sm:py-0 mx-auto">
-       
+    <> 
+    <section className="relative ">
         
-      <div className="absolute inset-0 bg-gradient-to-r from-[#274255]/95 via-[#274255]/60 to-transparent " />
-      <div className=" ">
-        <div className="relative z-10 flex flex-col   sm:py-10  ">
-          <div> </div>
+      
+      <div className="absolute  inset-0 bg-gradient-to-r from-transparent via-[#1c3345]/40 to-[#1c3345] lg:from-transparent lg:via-[#1c3345]/20 lg:to-[#1c3345] lg:to-[63%] " />
+        <div className="absolute inset-0 -z-20">
+        <img
+          src={bgImages[currentBg]}
+          alt=""
+          className={`w-full h-full object-cover transition-opacity duration-700 ${
+            fade ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      </div>
+        <div className="relative z-10 px-5 sm:px-10 xl:max-w-7xl mx-auto flex flex-col   sm:py-12  ">
+           
           <div className="flex-1 flex flex-col  lg:flex-row items-center lg:items-center justify-evenly    pt-2 pb-6 gap-2">
             <LeftContent />
             <RightPhones />
           </div>
+        </div>
 
+</section>
             <section className="bg-[#274255] w-full px-4 py-10 sm:px-6 sm:py-14 md:px-10 md:py-16 lg:px-16 lg:py-20">
                <div className="max-w-7xl mx-auto gap-6 sm:gap-8 md:gap-10 lg:gap-16 flex flex-col">
                         <div className="text-center mb-8 sm:mb-10 md:mb-12 flex flex-col gap-2   ">
@@ -610,7 +621,7 @@ function Hero({ currentBg, fade }) {
                                 <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
                             </button>
 
-                            {/* subtle bottom accent line that grows on hover */}
+                  
                             <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-[#33cc99] to-[#33cc99]/0 transition-all duration-500 group-hover:w-full" />
                             </div>
                         ))}
@@ -635,7 +646,6 @@ function Hero({ currentBg, fade }) {
                         </button>
                         </div>
                 
-                        {/* Stats section - glass cards with glow icons & staggered entrance */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mt-8 sm:mt-10">
                         {stats.map((st, i) => (
                             <div
@@ -673,8 +683,8 @@ function Hero({ currentBg, fade }) {
                         </div>
                  </div>
             </section>
-        </div>
-      </div>
+        
+    
 
           {showComingSoon && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
@@ -729,16 +739,17 @@ function Hero({ currentBg, fade }) {
       )}
 
 
-    </section>
+    
+    </>
   );
 }
 
 function LeftContent() {
  
   return (
-    <div className="flex-1  max-w-full lg:max-w-[50%] xl:max-w-[50%] text-center lg:text-left ">
+    <div className="flex-1  max-w-full lg:max-w-[50%] xl:max-w-[50%] text-center lg:text-left py-4 sm:py-0 ">
 
-      <h1 className="text-3xl sm:text-3xl md:text-4xl xl:text-6xl font-bold leading-tight mb-4 sm:mb-6">
+      <h1 className="text-3xl sm:text-3xl md:text-4xl xl:text-6xl font-bold leading-tight mb- sm:mb-6">
         <span className="text-white"> Diginiwas  <span className="text-[#33cc99]">Services</span></span>
       
       </h1>
