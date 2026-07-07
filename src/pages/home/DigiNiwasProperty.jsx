@@ -645,7 +645,7 @@ function TrustBar() {
 function AgentDashboardMain() {
   const navigate = useNavigate()
   return (
-    <div className="  e max-w-[1420px] mx-auto
+    <div className="  e w-full lg:max-w-5xl xl:max-w-[1420px] mx-auto
              grid grid-cols-1 xl:grid-cols-2
              lg:gap-8 xl:gap-10 space-y-10 xl:space-y-0
              px-5 sm:px-8 lg:px-8 xl:px-12
@@ -673,7 +673,10 @@ function AgentDashboardMain() {
         </p>
 
         {/* feature cards */}
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
+        <div 
+        // style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}
+        className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 md:gap-5 lg:gap-6"
+        >
           {features.map((f) => (
             <div key={f.title} style={{
               display:"flex", gap:12, padding:14, borderRadius:12,
@@ -691,17 +694,20 @@ function AgentDashboardMain() {
         </div>
 
         {/* CTA */}
-        <div className="w-full flex justify-between items-center"> 
-        <button style={{
-          display:"inline-flex", alignItems:"center", gap:10,
-          background:MINT, color:"#0b1e2d", fontWeight:600, fontSize:14,
-          padding:"13px 26px", borderRadius:8, border:"none", cursor:"pointer",
-          alignSelf:"flex-start"
-        }}>
+        <div className="w-full flex  flex-col  md:flex-row justify-between items-center gap-3"> 
+        <button   className="bg-[#33cc99] hover:bg-[#1a9e72] text-[#0b1e2d] flex items-center justify-around gap-3 px-8 py-3  rounded-lg
+          font-semibold text-sm hover:shadow-lg active:scale-95 transition"
+        // style={{
+        //   display:"inline-flex", alignItems:"center", gap:10,
+        //   background:MINT, color:"#0b1e2d", fontWeight:600, fontSize:14,
+        //   padding:"13px 26px", borderRadius:8, border:"none", cursor:"pointer",
+        //   alignSelf:"flex-start"
+        // }}
+        >
           Explore Dashboard <FiArrowRight size={16}/>
         </button>
          <button onClick={() => navigate("/agent-corner")}
-          className="bg-[#33cc99] hover:bg-[#1a9e72] text-[#0b1e2d] flex items-center justify-around gap-3 px-8 py-3  rounded-lg
+          className="bg-[#33cc99] hover:bg-[#1a9e72] text-[#0b1e2d] flex items-center justify-around gap-3 px-[52px] py-3  rounded-lg
           font-semibold text-sm hover:shadow-lg active:scale-95 transition">
                 Join as Agent <FiArrowRight size={16}/>
               </button></div>
