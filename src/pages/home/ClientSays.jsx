@@ -87,7 +87,8 @@ export default function ClientSays() {
           {testimonials.map((item, index) => (
             <div
               key={index}
-              className="relative bg-white  gap-5 rounded-[28px] hover:scale-105 duration-300 transition-all sm:rounded-[32px] p-6 sm:p-7 lg:p-9 shadow-xl"
+              className="relative bg-white  gap-5 rounded-[28px] hover:scale-105 duration-300   hover:border-[#274255] hover:border-2
+               transition-all sm:rounded-[32px] p-6 sm:p-7 lg:p-9 shadow-xl"
             >
  
               <p className="text-[#4F6473] italic leading-[1.8] text-[16px] sm:text-[17px] lg:text-[18px] min-h-[170px] lg:min-h-[190px]">

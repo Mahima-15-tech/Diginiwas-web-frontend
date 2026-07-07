@@ -50,25 +50,25 @@ const dummyPlans = [
 const dummyCityData = [
   {
     name: "Chandigarh",
-    count: "850+",
+    // count: "850+",
     dotColor: "bg-yellow-300",
     textColor: "text-yellow-300",
   },
   {
     name: "Mohali",
-    count: "600+",
+    // count: "600+",
     dotColor: "bg-green-300",
     textColor: "text-green-300",
   },
   {
     name: "Ludhiana",
-    count: "450+",
+    // count: "450+",
     dotColor: "bg-slate-300",
     textColor: "text-slate-300",
   },
   {
     name: "Jalandhar",
-    count: "300+",
+    // count: "300+",
     dotColor: "bg-slate-500",
     textColor: "text-slate-400",
   },
@@ -272,7 +272,7 @@ function NetworkDensity({ networkData }) {
             {networkData.description}
             </p>
 
-            <div className="flex flex-wrap gap-3 mb-8 relative z-10">
+            {/* <div className="flex flex-wrap gap-3 mb-8 relative z-10">
             {networkData.cities.map((city, index) => {
   const colors = [
     {
@@ -312,7 +312,7 @@ function NetworkDensity({ networkData }) {
     </div>
   );
 })}
-            </div>
+            </div> */}
 
               
           </div>

@@ -1,8 +1,7 @@
 import React from "react";
 import { HiOutlineMenu, HiOutlineUserCircle } from "react-icons/hi";
 import { MdGroup, MdAccountTree, MdForum, MdSettings } from "react-icons/md";
-import mobile1 from "../../assets/images/mobile1.png";
-import mobile2 from "../../assets/images/mobile2.png";
+
 import { FaUserGroup } from "react-icons/fa6";
 
 import agent from "../../assets/images/agent.webp";

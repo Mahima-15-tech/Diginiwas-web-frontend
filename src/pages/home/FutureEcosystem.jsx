@@ -90,7 +90,7 @@ useEffect(() => {
 
   const interval = setInterval(() => {
     setCounts((prev) => ({
-      agents: prev.agents < 150 ? prev.agents + 1 : 150,
+      agents: prev.agents < 100 ? prev.agents + 1 : 100,
       properties: prev.properties < 500 ? prev.properties + 5 : 500,
       customers: prev.customers < 10000 ? prev.customers + 100 : 10000,
       secure: prev.secure < 100 ? prev.secure + 1 : 100,
@@ -101,10 +101,10 @@ useEffect(() => {
 }, [startCounter]);
 
 const statsData = [
-  { icon: HiOutlineUserGroup, count: counts.agents, suffix: "+", label: "Verified Agents" },
-  { icon: HiOutlineHome, count: counts.properties, suffix: "+", label: "Properties Listed" },
-  { icon: HiOutlineUserGroup, count: counts.customers, suffix: "+", label: "Happy Customers" },
-  { icon: HiOutlineShieldCheck, count: counts.secure, suffix: "%", label: "Safe & Secure Platform" }
+  { icon: HiOutlineUserGroup, count: counts.agents, suffix: "%", label: "Verified Agents" },
+  { icon: HiOutlineHome, count: counts.properties, suffix: "+", label: "AI Powered" },
+  { icon: HiOutlineUserGroup, count: counts.customers, suffix: "", label: "Easy property listing" },
+  { icon: HiOutlineShieldCheck, count: counts.secure, suffix: "%", label: "Genuine leads" }
 ];
   return (
     <section   ref={sectionRef} id='future' className="min-h-screen bg-[#274255] text-white px-10 py-8 pb-14 sm:pb-16 flex flex-col justify-center items-center font-sans antialiased selection:bg-[#33cc99] selection:text-black">
@@ -141,7 +141,9 @@ const statsData = [
             {ecosystemCards.map((card) => (
               <div 
                 key={card.id} 
-                className="bg-[#051422] border border-slate-800/60 rounded-xl hover:scale-105 p-5 flex flex-col items-center text-center justify-between sm:min-h-[240px] hover:border-[#33cc99]/30 transition-all duration-300 group"
+                className="bg-[#051422] border border-slate-800/60 rounded-xl hover:scale-105 p-5 
+                flex flex-col items-center text-center justify-between sm:min-h-[240px]
+                  transition-all duration-300 group   hover:border-[#33cc99] hover:border-2"
               >
                 {/* <div className="w-14 sm:w-20 sm:h-20 h-14 text-3xl sm:text-5xl bg-[#071c2f] rounded-xl flex items-center justify-center text-[#33cc99] mb-4 border border-slate-800 group-hover:scale-105 transition-transform duration-300"> */}
                   <card.icon  className='text-3xl sm:text-6xl text-[#33cc99] font-medium' />
@@ -179,9 +181,9 @@ const statsData = [
                   <stat.icon  className='text-2xl sm:text-4xl text-[#33cc99] font-medium' />
                 {/* </div> */}
                 <div className="flex flex-col">
-                  <span className="text-xl sm:text-2xl font-bold text-slate-100 tracking-tight">
+                 {(index === 0 || index === 3 ) && ( <span className="text-xl sm:text-2xl font-bold text-slate-100 tracking-tight">
                      {stat.count.toLocaleString()} {stat.suffix}
-                  </span>
+                  </span>)}
                   <span className="text-xs sm:text-sm font-medium text-slate-400 whitespace-nowrap">
                     {stat.label}
                   </span>

@@ -1,5 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "../../api/axios";
+import bg from "../../assets/images/bg.webp"
+import bg2 from "../../assets/images/bg2.webp"
+import bg3 from "../../assets/images/bg3.webp"
+import { IoPlayOutline } from "react-icons/io5";
+
+const bgImages = [
+  bg,bg2,bg3
+];
+
+const url = "https://www.youtube.com/embed/X2NVOSNBbxU"
 
 const HeroSection = () => {
   const [stats, setStats] = useState({
@@ -8,6 +18,21 @@ const HeroSection = () => {
     transactions: 0,
   });
   const [agentData, setAgentData] = useState(null);
+    const [currentBg, setCurrentBg] = useState(0);
+  const [fade, setFade] = useState(true);
+   
+  const [showVideo, setShowVideo] = useState(false);
+
+  useEffect(() => {
+      const interval = setInterval(() => {
+        setFade(false);
+        setTimeout(() => {
+          setCurrentBg((prev) => (prev + 1) % bgImages.length);
+          setFade(true);
+        }, 500);
+      }, 10000);
+      return () => clearInterval(interval);
+    }, []);
 
   const getAgentCorner = async () => {
     try {
@@ -41,9 +66,21 @@ const HeroSection = () => {
   }, []);
   return (
     <div
-      className="font-sans text-white bg-[#274255]  overflow-x-hidden   "
+      className="relative font-sans text-white bg-[#274255]  overflow-x-hidden pb-12  "
     >
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-20 ">
+        <div
+    className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000"
+    style={{
+      backgroundImage: `url(${bgImages[currentBg]})`,
+    }}
+  />
+
+  {/* Gradient Overlay */}
+  <div className="absolute inset-0 bg-gradient-to-r from-[#274255]/95 via-[#274255]/60 to-transparent" />
+
+      <div className="relative z-10"> 
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+        
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <section className="order-2 lg:order-1">
             <h1
@@ -68,8 +105,16 @@ const HeroSection = () => {
                 Join as Agent
               </button>
 
-              <button className="bg-[#274255] text-[#33cc99] border  px-8 py-4 rounded-lg font-semibold text-lg shadow-sm border-[#33cc99] active:scale-95 transition">
-                Watch How it Works
+              <button className="bg-[#274255] text-[#33cc99] flex items-center justify-center gap-2 border  px-8 py-4 rounded-lg font-semibold text-lg shadow-sm border-[#33cc99] active:scale-95 transition">
+                Watch How it Works   
+                                <button
+                                      onClick={() => {
+                                        setShowVideo(true);
+                                      }}
+                                      className="border cursor-pointer  bg-[#062018] border-slate-300 p-2 rounded-full"
+                                    >
+                                      <IoPlayOutline className="text-xl  fill-[#33cc99] hover:text-[#33cc99]" />
+                                    </button>
               </button>
             </div>
 
@@ -102,7 +147,8 @@ const HeroSection = () => {
 
           <section className="order-1 lg:order-2 relative overflow-hidden">
             <div className="relative" style={{ perspective: "1000px" }}>
-              <div className="relative bg-white p-2 rounded-[2.5rem] shadow-2xl  ">
+              <div className="relative  p-2    border-white/15
+  shadow-[0_0_25px_rgba(51,204,153,0.35)] ">
                 <img
                   src={
   agentData?.image?.url ||
@@ -112,41 +158,6 @@ const HeroSection = () => {
                   className="w-full h-auto rounded-[2rem] object-cover min-h-[300px]"
                 />
 
-                <div className="absolute  -right-10 -top-20 bg-white/95 backdrop-blur-sm p-4 animate-bounce [animation-duration:3s] md:p-6 rounded-2xl shadow-xl border border-gray-100 max-w-[240px]">
-                  <p className="text-[10px] uppercase font-bold text-gray-500 tracking-widest mb-1">
-                    Property Demand Score
-                  </p>
-
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl md:text-4xl font-bold">4.4</span>
-
-                    <span className="text-green-600 text-sm font-bold">
-                      +12%
-                    </span>
-                  </div>
-
-                  <p className="text-[10px] text-gray-400 mt-2 leading-tight">
-                    Active buyer market in Chandigarh Sector 17
-                  </p>
-                </div>
-
-                <div className="absolute -bottom-10 -left-10 bg-white/95 backdrop-blur-sm p-4 md:p-6 rounded-2xl shadow-xl border border-gray-100 max-w-[240px]">
-                  <p className="text-[10px] uppercase font-bold text-gray-500 tracking-widest mb-1">
-                    Property Demand Score
-                  </p>
-
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl md:text-4xl font-bold">4.4</span>
-
-                    <span className="text-green-600 text-sm font-bold">
-                      +12%
-                    </span>
-                  </div>
-
-                  <p className="text-[10px] text-gray-400 mt-2 leading-tight">
-                    Active buyer market in Chandigarh Sector 17
-                  </p>
-                </div>
               </div>
             </div>
           </section>
@@ -178,6 +189,34 @@ const HeroSection = () => {
 ))}
         </div>
       </main>
+      </div>
+        {showVideo && (
+              <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+                
+                <div className="relative w-full md:w-1/2 bg-white rounded-2xl p-4">
+
+                  <button
+                    onClick={() => {
+                      setShowVideo(false);
+                      setSelectedVideo("");
+                    }}
+                    className="absolute right-4 top-2 text-2xl z-50 text-white"
+                  >
+                    ✕
+                  </button>
+
+                  <iframe
+  className="w-full h-[250px] md:h-[450px] rounded-xl"
+  src={url}
+  title="YouTube Video"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+/>
+
+                </div>
+
+              </div>
+            )}
     </div>
   );
 };

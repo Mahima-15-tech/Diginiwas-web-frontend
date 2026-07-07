@@ -46,7 +46,7 @@ const WhyAgentsLove = () => {
               return (
                 <div
                   key={index}
-                  className="flex items-start gap-4 rounded-2xl p-3 transition-all duration-300 hover:bg-white/5"
+                  className="flex items-start gap-4 rounded-2xl p-3 hover:border hover:border-[#33cc99] transition-all duration-300 hover:bg-white/5"
                 >
                   <div className="sm:flex h-14 w-14 hidden  sm:h-16 sm:w-16 md:h-[68px] md:w-[68px] shrink-0 items-center justify-center rounded-full bg-[#274255]/60">
                     <Icon className="text-[#33cc99] text-2xl sm:text-[28px]" />

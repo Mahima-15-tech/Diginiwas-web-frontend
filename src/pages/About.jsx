@@ -398,8 +398,8 @@ function JourneySection() {
         <div className="block md:hidden absolute left-6 top-0 bottom-0 w-[2px] bg-[#006d44]" />
 
         <div className="relative flex md:justify-start items-center mb-24">
-          <div className="md:w-1/2 md:pr-12 pl-16 md:pl-0">
-            <div className="bg-white p-8 rounded-2xl text-end shadow-sm hover:shadow-lg transition">
+          <div className="md:w-1/2 md:pr-12 pl-16 md:pl-0 ">
+            <div className="bg-white p-8 rounded-2xl text-end shadow-sm hover:shadow-lg transition-all duration-300 hover:border-[#006d44] hover:border-2" >
               <h3 className="text-2xl font-medium text-[#162839] mb-2">
                 Problem Discovery
               </h3>
@@ -417,12 +417,12 @@ function JourneySection() {
         </div>
 
         <div className="relative flex justify-end items-center mb-24">
-          <div className="absolute left-0 md:left-1/2 md:-translate-x-1/2 w-12 h-12 rounded-full bg-[#006d44] border-4 border-white flex items-center justify-center shadow-lg">
+          <div className="absolute left-0 md:left-1/2 md:-translate-x-1/2 w-12 h-12 rounded-full bg-[#cca730] border-4 border-white flex items-center justify-center shadow-lg">
             <BarChart3 size={22} className="text-white" />
           </div>
 
           <div className="md:w-1/2 md:pl-12 pl-16">
-            <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition">
+            <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg  transition-all duration-300 hover:border-[#006d44] hover:border-2">
               <h3 className="text-2xl font-medium text-[#162839] mb-2">
                 AI Vision
               </h3>
@@ -437,7 +437,7 @@ function JourneySection() {
 
         <div className="relative flex md:justify-start items-center">
           <div className="md:w-1/2 md:pr-12 pl-16 md:pl-0">
-            <div className="bg-white p-8 rounded-2xl text-end shadow-sm hover:shadow-lg transition">
+            <div className="bg-white p-8 rounded-2xl text-end shadow-sm hover:shadow-lg  transition-all duration-300 hover:border-[#006d44] hover:border-2">
               <h3 className="text-2xl font-medium text-[#162839] mb-2">
                 Diginiwas Launch
               </h3>
@@ -449,7 +449,7 @@ function JourneySection() {
             </div>
           </div>
 
-          <div className="absolute left-0 md:left-1/2 md:-translate-x-1/2 w-12 h-12 rounded-full bg-[#cca730] border-4 border-white flex items-center justify-center shadow-lg">
+          <div className="absolute left-0 md:left-1/2 md:-translate-x-1/2 w-12 h-12 rounded-full bg-[#006d44] border-4 border-white flex items-center justify-center shadow-lg">
             <Rocket size={22} className="text-white" />
           </div>
         </div>
@@ -507,8 +507,9 @@ function MissionVisionSection() {
   return (
     <section className="py-12 sm:py-28 px-5 md:px-16">
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8">
-        <div className="bg-[#274255] text-white p-12 rounded-[40px]">
-          <span className="text-[#ffe088] font-bold">{missionVision.mission.title}</span>
+
+        <div className="bg-[#274255] text-white p-12 rounded-[40px]  group hover:border   hover:bg-gray-100 hover:text-[#162839] transition-all duration-500">
+          <span className="text-[#ffe088] font-bold group-hover:text-[#006d44]">{missionVision.mission.title}</span>
 
           <h3 className="text-2xl sm:text-3xl text-center sm:text-left font-semibold mt-4 mb-4">
           {missionVision.mission.heading}
@@ -519,10 +520,11 @@ function MissionVisionSection() {
           </p>
         </div>
 
-        <div className="bg-gray-100 p-12 rounded-[40px] border">
-          <span className="text-[#006d44] font-bold">{missionVision.vision.title}</span>
+        <div className="bg-gray-100 p-12 rounded-[40px] border   group  transition-all duration-500
+      hover:bg-[#274255] hover:text-white">
+          <span className="text-[#006d44] font-bold duration-500 group-hover:text-[#ffe088]">{missionVision.vision.title}</span>
 
-          <h3 className="text-3xl font-semibold mt-4 mb-4 text-[#162839]">
+          <h3 className="text-3xl font-semibold mt-4 mb-4 ">
           {missionVision.vision.heading}
           </h3>
 
@@ -545,7 +547,7 @@ function FeaturesSection() {
       </div>
 
       <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
-        <div className="bg-gray-50 p-8 rounded-3xl border">
+        <div className="bg-gray-50 p-8 rounded-3xl border  transition-all duration-300 hover:border-[#274255] hover:border-2">
           <h4 className="text-2xl font-semibold text-[#162839] mb-4">
             AI Real Estate Assistant
           </h4>
@@ -555,7 +557,7 @@ function FeaturesSection() {
           </p>
         </div>
 
-        <div className="bg-gray-50 p-8 rounded-3xl border">
+        <div className="bg-gray-50 p-8 rounded-3xl border  transition-all duration-300 hover:border-[#274255] hover:border-2">
           <h4 className="text-2xl font-semibold text-[#24255] mb-4">
             Verified Listings
           </h4>
@@ -565,7 +567,7 @@ function FeaturesSection() {
           </p>
         </div>
 
-        <div className="bg-gray-50 p-8 rounded-3xl border">
+        <div className="bg-gray-50 p-8 rounded-3xl border  transition-all duration-300 hover:border-[#274255] hover:border-2">
           <h4 className="text-2xl font-semibold text-[#274255] mb-4">
             NRI Priority Support
           </h4>

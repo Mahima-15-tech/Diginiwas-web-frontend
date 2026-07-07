@@ -8,6 +8,7 @@ import { BiTargetLock } from "react-icons/bi";
 import { RiRobot2Line } from "react-icons/ri";
 import homelogo from '../../assets/images/homelogo.png'
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const features = [
   { icon: FaBrain, t1: "Understands", t2: "Your Needs" },
@@ -70,7 +71,7 @@ setCurrentImage((prev) => (prev + 1) % propertyImages.length);
               {featuress.map((f) => (
                 <div
                   key={f.title2}
-                  className="rounded-xl border border-[#1f3a3f] bg-[#0d2329]/60 p-3 sm:p-4 flex flex-col items-start gap-2"
+                  className="rounded-xl border border-[#1f3a3f] bg-[#0d2329]/60  transition-all duration-300 hover:border-[#33cc99] hover:border-2 p-3 sm:p-4 flex flex-col items-start gap-2"
                 >
                   <div className="w-9 h-9 hover:scale-110 duration-100 transition-all rounded-md border border-[#2dd4a8]/40 text-[#2dd4a8] flex items-center justify-center">
                     <f.icon size={16} />
@@ -216,6 +217,7 @@ src={currentProperty?.images?.[0]?.url} alt="" className="w-full h-12 sm:h-16 ob
     );
   }
 export default function NiwasAIFinds() {
+  const navigate = useNavigate()
 const [properties, setProperties] = useState([]);
 const [loading, setLoading] = useState(true);
   const [startIndex, setStartIndex] = useState(0);
@@ -269,7 +271,7 @@ if (loading) {
           {/* LEFT */}
           <div>
             <h2 className="text-4xl sm:text-5xl font-bold leading-[1.05]">
-              Niwas AI Finds
+               <span onClick={() => navigate('niwas-ai')} className="hover:cursor-pointer">Niwas AI </span>   Finds
               <br />
               <span className="text-[#2dd4a8]">What You Need.</span>
             </h2>
@@ -315,16 +317,16 @@ if (loading) {
                 <div className="flex gap-2 sm:gap-3 justify-between w-full  
                 ">
                   {visibleProperties.map((p) => (
-                    <div key={p._id} className="rounded-xl w-full border border-[#1f3a3f] bg-[#0a1a1f]/80 overflow-hidden">
+                    <div key={p._id} className="rounded-xl w-full border border-[#1f3a3f] bg-[#0a1a1f]/80  transition-all duration-300 hover:border-[#33cc99] hover:border-2  overflow-hidden">
                       <div className="relative">
                         {/* <img src={p.img} alt={p.title}  */}
                         <img
-  src={
-    p.images?.length
-      ? p.images[0].url
-      : "/no-image.png"
-  }
-  alt={p.title}
+                              src={
+                                p.images?.length
+                                  ? p.images[0].url
+                                  : "/no-image.png"
+                              }
+                              alt={p.title}
                         loading="lazy" className="w-full h-20 sm:h-28 object-cover" />
                         <span className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/50 border border-white/20 text-white flex items-center justify-center">
                           <FiHeart size={12} />
