@@ -1,0 +1,37 @@
+import React from 'react'
+import diginiwasVideo from "../../assets/video/diginiwas.mp4"
+import { Smartphone, Bell , X} from "lucide-react";
+
+const ComingSoonVideo = ({setShowComingSoon}) => {
+  return (
+      <div
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+                onClick={() => setShowComingSoon(false)}
+              >
+                <div
+                  className="relative"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <video
+                    src={diginiwasVideo}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    controls
+                    className="w-full max-w-lg rounded-2xl shadow-xl"
+                  />
+
+                
+                  <button
+                    onClick={() => setShowComingSoon(false)}
+                    className="absolute top-3 right-3 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+              </div>
+  )
+}
+
+export default ComingSoonVideo

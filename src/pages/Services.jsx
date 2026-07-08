@@ -867,8 +867,10 @@ import bg from "../assets/images/bg.webp"
 import bg2 from "../assets/images/bg2.webp"
 import bg3 from "../assets/images/bg3.webp"
 import { Smartphone, Bell , X} from "lucide-react";
-
+import diginiwasVideo from "../assets/video/diginiwas.mp4"
 // Popup
+import ComingSoonVideo from "../components/common/ComingSoonVideo";
+
 const bgImages = [
   bg,bg2,bg3
 ];
@@ -958,7 +960,7 @@ export default function HeroSection() {
           0%, 100% { transform: translate(0, 0) scale(1); }
           50% { transform: translate(-6px, 6px) scale(1.08); }
         }
-        @keyframes shimmer {
+        @keyframes shimmer { 
           0% { background-position: -200% 0; }
           100% { background-position: 200% 0; }
         }
@@ -1156,7 +1158,7 @@ function Hero({ currentBg, fade }) {
               </div>
             </div>
 
-            {/* Body */}
+           
 
             {/* <div className="px-8 py-8 text-center">
 
@@ -1188,119 +1190,115 @@ function Hero({ currentBg, fade }) {
 
 
 
-{showComingSoon && (
-  <div
-    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out] p-4"
-    onClick={() => setShowComingSoon(false)}
-  >
-    <div
-      onClick={(e) => e.stopPropagation()}
-      className="relative w-full max-w-2xl overflow-hidden rounded-3xl p-[2px] shadow-2xl animate-[popIn_0.3s_cubic-bezier(0.34,1.56,0.64,1)]"
-      style={{
-        background: "linear-gradient(135deg, #1CB46D, #274255, #1CB46D)",
-      }}
-    >
-      {/* Animated gradient background card */}
-      <div
-        className="relative overflow-hidden rounded-[calc(1.5rem-2px)] px-8 py-8 text-center"
-        style={{
-          background:
-            "linear-gradient(-45deg, #0F2E46, #1CB46D, #173D5B, #0F2E46)",
-          backgroundSize: "400% 400%",
-          animation: "gradientShift 8s ease infinite",
-        }}
-      >
-        {/* Glass overlay on top of gradient */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background: "rgba(255, 255, 255, 0.08)",
-            backdropFilter: "blur(2px)",
-          }}
-        />
-
-        {/* Floating glow blobs for extra depth */}
-        <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-3xl animate-pulse" />
-        <div className="pointer-events-none absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-[#1CB46D]/30 blur-3xl animate-pulse [animation-delay:1s]" />
-
-        {/* Close button */}
-        <button
-          onClick={() => setShowComingSoon(false)}
-          className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/20 hover:text-white"
-        >
-          <X size={16} />
-        </button>
-
-        {/* Content */}
-        <div className="relative z-10">
-          {/* Icon badge */}
-          {/* <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 shadow-lg">
-            <Smartphone size={26} className="text-white" strokeWidth={2} />
-          </div> */}
-
-       
-
-          {/* Heading */}
-          <h2 className="mt-4 text-2xl font-bold text-white">
-            Mobile App
-          </h2>
-
-   {/* Badge pill */}
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 px-3 py-1 text-xs font-semibold text-white mt-2">
-            <Bell size={12} /> Launching Soon
-          </span>
-          {/* <h3 className="mt-1 flex items-center justify-center gap-1.5 text-lg font-semibold text-[#e8fff2]">
-            Coming Soon <span className="inline-block animate-bounce">🚀</span>
-          </h3> */}
-
-          {/* Description */}
-          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/80">
-            We're building an amazing DigiNiwas mobile experience. Soon you'll
-            be able to explore properties, chat with Niwas AI, and connect
-            with verified experts — directly from our app.
-          </p>
-
-          {/* Feature chips */}
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-            {["Explore Properties", "Chat with AI", "Verified Experts"].map((f) => (
-              <span
-                key={f}
-                className="rounded-full border border-white/25 bg-white/10 backdrop-blur-md px-3 py-1 text-[11px] font-medium text-white"
-              >
-                {f}
-              </span>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <button
+        {/* {showComingSoon && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out] p-4"
             onClick={() => setShowComingSoon(false)}
-            className="mt-6 rounded-xl bg-white px-10 py-3 font-semibold text-[#0F2E46] shadow-md transition-all hover:bg-[#e8fff2] hover:shadow-lg active:scale-[0.98]"
           >
-            Got it
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-2xl overflow-hidden rounded-3xl p-[2px] shadow-2xl animate-[popIn_0.3s_cubic-bezier(0.34,1.56,0.64,1)]"
+              style={{
+                background: "linear-gradient(135deg, #1CB46D, #274255, #1CB46D)",
+              }}
+            >
+            
+              <div
+                className="relative overflow-hidden rounded-[calc(1.5rem-2px)] px-8 py-8 text-center"
+                style={{
+                  background:
+                    "linear-gradient(-45deg, #0F2E46, #1CB46D, #173D5B, #0F2E46)",
+                  backgroundSize: "400% 400%",
+                  animation: "gradientShift 8s ease infinite",
+                }}
+              >
+              
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.08)",
+                    backdropFilter: "blur(2px)",
+                  }}
+                />
 
-{/* Animations */}
-<style>{`
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes popIn {
-    from { opacity: 0; transform: scale(0.85) translateY(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-  }
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-`}</style>
+              
+                <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-3xl animate-pulse" />
+                <div className="pointer-events-none absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-[#1CB46D]/30 blur-3xl animate-pulse [animation-delay:1s]" />
+
+                
+                <button
+                  onClick={() => setShowComingSoon(false)}
+                  className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/20 hover:text-white"
+                >
+                  <X size={16} />
+                </button>
+
+              
+                <div className="relative z-10">
+                
+                  <h2 className="mt-4 text-2xl font-bold text-white">
+                    Mobile App
+                  </h2>
+
+        
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 px-3 py-1 text-xs font-semibold text-white mt-2">
+                    <Bell size={12} /> Launching Soon
+                  </span>
+                
+                  <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/80">
+                    We're building an amazing DigiNiwas mobile experience. Soon you'll
+                    be able to explore properties, chat with Niwas AI, and connect
+                    with verified experts — directly from our app.
+                  </p>
+
+                
+                  <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+                    {["Explore Properties", "Chat with AI", "Verified Experts"].map((f) => (
+                      <span
+                        key={f}
+                        className="rounded-full border border-white/25 bg-white/10 backdrop-blur-md px-3 py-1 text-[11px] font-medium text-white"
+                      >
+                        {f}
+                      </span>
+                    ))}
+                  </div>
+
+                
+                  <button
+                    onClick={() => setShowComingSoon(false)}
+                    className="mt-6 rounded-xl bg-white px-10 py-3 font-semibold text-[#0F2E46] shadow-md transition-all hover:bg-[#e8fff2] hover:shadow-lg active:scale-[0.98]"
+                  >
+                    Got it
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )} */}
+
+
+            {showComingSoon && (
+             <ComingSoonVideo setShowComingSoon={setShowComingSoon} /> 
+            )}
+
+
+
+          {/* Animations */}
+          <style>{`
+            @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+            @keyframes popIn {
+              from { opacity: 0; transform: scale(0.85) translateY(10px); }
+              to { opacity: 1; transform: scale(1) translateY(0); }
+            }
+            @keyframes gradientShift {
+              0% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
+            }
+          `}</style>
           </div>
 
         </div>

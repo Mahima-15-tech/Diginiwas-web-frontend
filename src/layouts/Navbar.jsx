@@ -8,20 +8,17 @@ import { IoSearchOutline } from "react-icons/io5";
 import { navItems } from "../data/navlinks";
 import logo from "../assets/images/logo.jpg";
 import { RxCross1 } from "react-icons/rx";
+import ComingSoonVideo from "../components/common/ComingSoonVideo";
 
 const Navbar = ({ show, setShow }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const isLoggedIn = !!localStorage.getItem("token");
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-    setOpen(false);
-    toast.success("Logout successfully ");
-  };
+  
 
   const onDashboard = () => {
     navigate("/admin-dashboard");
@@ -88,7 +85,9 @@ const Navbar = ({ show, setShow }) => {
                 <div className="sm:min-w-40 ">
                   {" "}
                   <button
-                    onClick={() => navigate("/signup")}
+                    onClick={() => {
+                     setShowComingSoon(true)
+                    }}
                     className="hidden sm:block px-4 py-2 bg-[#274255]  text-white rounded-full cursor-pointer"
                   >
                     Get Started
@@ -147,35 +146,33 @@ const Navbar = ({ show, setShow }) => {
                     )}
                   </NavLink>
                 </div>
-              ))}
-
-              <div className="flex flex-col items-start gap-3 mb-1 ">
-                {isLoggedIn && (
-                  <button
-                    className="text-white bg-[#0A2540] px-3 py-2  rounded-lg "
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
-                )}
-              </div>
+              ))}           
             </div>
 
             <div className="flex    flex-col items-start ml-6  mb-1 gap-3 pb-5">
               {!isLoggedIn && (
-                <NavLink
+                <button
                   onClick={() => {
                     setMobileMenuOpen((prev) => !prev);
+                    setShowComingSoon(true)
                   }}
-                  to="/signup"
+                 
                   className="sm:hidden w-40 text-center block  px-4 py-2 bg-[#274255]   text-white rounded-full  cursor-pointer"
                 >
                   Get Started
-                </NavLink>
+                </button>
               )}
             </div>
           </div>
         </nav>
+
+
+        {showComingSoon && (
+        <ComingSoonVideo
+          setShowComingSoon={setShowComingSoon}
+        />
+      )}
+
       </div>
     </div>
   );
