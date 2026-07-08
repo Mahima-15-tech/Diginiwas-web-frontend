@@ -212,6 +212,7 @@ import { useEffect, useState, useRef } from "react";
 import { IoPlayOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import ComingSoonVideo from "../../components/common/ComingSoonVideo";
 
 const dummyTestimonials = [
   {
@@ -255,6 +256,7 @@ export default function ClientSays() {
   const [selectedVideo, setSelectedVideo] = useState("");
   const [testimonials, setTestimonials] = useState(dummyTestimonials);
 
+  console.log('show vide', showVideo)
   const getTestimonials = async () => {
     try {
       const res = await axios.get("/cms/testimonials");
@@ -402,9 +404,10 @@ export default function ClientSays() {
           ))}
         </motion.div>
 
+          
         {/* Video Player Modal */}
         <AnimatePresence>
-          {showVideo && (
+          {/* {showVideo && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -447,7 +450,13 @@ export default function ClientSays() {
                 />
               </motion.div>
             </motion.div>
-          )}
+          )} */}
+        
+        { showVideo && (
+         <ComingSoonVideo
+          setShowComingSoon={setShowVideo}
+        />)
+        }
         </AnimatePresence>
       </div>
     </section>

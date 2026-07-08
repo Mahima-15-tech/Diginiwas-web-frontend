@@ -56,7 +56,7 @@ const Home = () => {
 
   // text-[#274255] text-[#33cc99]
   return (
-    <div className='bg-[#274255]'>
+    <div className='bg-[#274255] overflow-hidden'>
       
         <HeroSection />
         {/* <MapSection /> */}

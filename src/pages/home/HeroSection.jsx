@@ -800,9 +800,14 @@ import { Link } from "react-router-dom";
 import bg from "../../assets/images/bg.webp"
 import bg2 from "../../assets/images/bg2.webp"
 import bg3 from "../../assets/images/bg3.webp"
+
+
+import ComingSoonVideo from "../../components/common/ComingSoonVideo"
+
 const bgImages = [
   bg,bg2,bg3
 ];
+
 
 export default function HeroSection() {
 
@@ -1031,6 +1036,7 @@ function LeftContent({ heroData, onSearch }) {
 }
 
 function RightPhones({ heroData }) {
+  const [showComingSoon, setShowComingSoon] = useState(false)
   return (
     <div className="flex-1 hidden md:flex flex-col items-center lg:items-end  w-full lg:max-w-[55%] mt-8 lg:mt-0 ">
       <div className=" relative flex items-end justify-center w-full  max-w-5xl mx-auto h-full  sm:h-[340px] md:h-[420px] lg:h-[500px]">
@@ -1082,7 +1088,7 @@ function RightPhones({ heroData }) {
           </button>
         </div>
 
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center mt-6 cursor-pointer" onClick={() => setShowComingSoon(true)}>
           <div className="group flex items-center gap-4 px-5 py-3 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl shadow-lg hover:border-[#33cc99] transition-all duration-300">
             <div className="flex -space-x-2">
               <div className="w-10 h-10 rounded-full bg-[#33cc99] flex items-center justify-center">
@@ -1092,7 +1098,7 @@ function RightPhones({ heroData }) {
                 <FaApple className="text-black text-xl" />
               </div>
             </div>
-            <div>
+            <div  >
               <p className="text-white font-semibold text-sm">Mobile App Coming Soon</p>
               <p className="text-white/60 text-xs">Android & iOS</p>
             </div>
@@ -1100,6 +1106,13 @@ function RightPhones({ heroData }) {
           </div>
         </div>
       </div>
+
+       { showComingSoon && (
+         <ComingSoonVideo
+          setShowComingSoon={setShowComingSoon}
+        />)
+        }
+
     </div>
   );
 }

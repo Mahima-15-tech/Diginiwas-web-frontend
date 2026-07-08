@@ -1063,7 +1063,7 @@ function ArcShowcase() {
       </div>
 
       {/* LAYER 2: ABSOLUTE SYMMETRIC CENTERED SMARTPHONE */}
-      <div className="absolute z-20" style={{ left: `${centerX}px`, top: `${centerY}px`, transform: "translate(-30%, -75%)" }}>
+      <div className="absolute z-10" style={{ left: `${centerX}px`, top: `${centerY}px`, transform: "translate(-30%, -75%)" }}>
         <PhoneMobileApp />
       </div>
 
@@ -1096,7 +1096,7 @@ function ArcShowcase() {
       }} />
 
       {/* RENDER OBJECTS ON THE FRONT LOOP LAYER */}
-      <div className="absolute inset-0 z-40 w-full h-full">
+      <div className="absolute inset-0 z-10 w-full h-full">
         {arcItems.map((item) => item.isFront && renderCard(item))}
       </div>
 
@@ -1152,7 +1152,7 @@ export default function AgentDashboardPreview() {
         </div>
 
         {/* Right Graphical Section */}
-        <div className="xl:col-span-6 w-full flex items-center justify-center overflow-visible py-10">
+        <div className="hidden xl:col-span-6 w-full md:flex items-center justify-center overflow-visible py-10">
           <ArcShowcase/>
         </div>
 

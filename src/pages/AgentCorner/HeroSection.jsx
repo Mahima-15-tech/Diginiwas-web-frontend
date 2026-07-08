@@ -241,11 +241,14 @@ import bg2 from "../../assets/images/bg2.webp";
 import bg3 from "../../assets/images/bg3.webp";
 import { IoPlayOutline } from "react-icons/io5";
 import { FiChevronLeft, FiChevronRight, FiPause, FiPlay } from "react-icons/fi";
+import  ComingSoonVideo from  "../../components/common/ComingSoonVideo"
 
 const bgImages = [bg, bg2, bg3];
 const url = "https://www.youtube.com/embed/X2NVOSNBbxU";
 
 const HeroSection = () => {
+  // const [showComingSoon, setShowComingSoon] = useState(false)
+
   const [stats, setStats] = useState({ leads: 0, agents: 0, transactions: 0 });
   const [agentData, setAgentData] = useState(null);
   const [currentBg, setCurrentBg] = useState(0);
@@ -423,26 +426,33 @@ const HeroSection = () => {
 
       {/* Video Popup Overlay Iframe */}
       {showVideo && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
-          <div className="relative w-full max-w-3xl bg-[#11222f] border border-white/10 rounded-2xl p-2 shadow-2xl">
-            <button
-              onClick={() => setShowVideo(false)}
-              className="absolute -top-12 right-0 bg-[#33cc99] text-white w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shadow-lg hover:bg-emerald-400 transition"
-            >
-              ✕
-            </button>
-            <div className="aspect-video w-full rounded-xl overflow-hidden">
-              <iframe
-                className="w-full h-full"
-                src={`${url}?autoplay=1`}
-                title="Diginiwas Premium Operational Overview"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          </div>
-        </div>
+        // <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
+        //   <div className="relative w-full max-w-3xl bg-[#11222f] border border-white/10 rounded-2xl p-2 shadow-2xl">
+        //     <button
+        //       onClick={() => setShowVideo(false)}
+        //       className="absolute -top-12 right-0 bg-[#33cc99] text-white w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shadow-lg hover:bg-emerald-400 transition"
+        //     >
+        //       ✕
+        //     </button>
+        //     <div className="aspect-video w-full rounded-xl overflow-hidden">
+        //       <iframe
+        //         className="w-full h-full"
+        //         src={`${url}?autoplay=1`}
+        //         title="Diginiwas Premium Operational Overview"
+        //         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        //         allowFullScreen
+        //       />
+        //     </div>
+        //   </div>
+        // </div>
+           <ComingSoonVideo
+          setShowComingSoon={setShowVideo}
+        />
       )}
+
+     
+       
+    
     </div>
   );
 };
@@ -468,7 +478,8 @@ const StatCard = ({ number, label, indexId }) => {
 
       {/* Internal Subtle Vector Linear Light Accent */}
       <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#33cc99]/40 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
-    </div>
+   
+      </div>
   );
 };
 

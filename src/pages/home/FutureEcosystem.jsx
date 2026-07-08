@@ -18,7 +18,7 @@ import {
 } from 'react-icons/md';
 import { RiRocketLine } from "react-icons/ri";
 import { IoRocketOutline } from 'react-icons/io5';
-
+import ComingSoonVideo from "../../components/common/ComingSoonVideo"
 const ecosystemCards = [
   {
     id: 1,
@@ -57,6 +57,7 @@ const ecosystemCards = [
 export default function FutureEcosystem() {
   const sectionRef = useRef(null);
 const [startCounter, setStartCounter] = useState(false);
+   const [showComingSoon, setShowComingSoon] = useState(false);
 
 useEffect(() => {
   const observer = new IntersectionObserver(
@@ -131,7 +132,7 @@ const statsData = [
               DigiNiwas is building an ecosystem that makes life easier for customers and helps businesses grow together.
             </p>
 
-            <button className="flex items-center gap-2 bg-[#051727] border border-[#33cc99]/30 text-[#33cc99] px-5 py-2.5 rounded-xl font-medium text-sm hover:bg-[#33cc99]/10 transition-all duration-300 shadow-md">
+            <button onClick={() => setShowComingSoon(true)} className="flex items-center hover:cursor-pointer gap-2 bg-[#051727] border border-[#33cc99]/30 text-[#33cc99] px-5 py-2.5 rounded-xl font-medium text-sm hover:bg-[#33cc99]/10 transition-all duration-300 shadow-md">
               <span>Coming Soon</span>
               <IoRocketOutline size={16} className="transform rotate-45 text-[#33cc99]" />
             </button>
@@ -158,11 +159,11 @@ const statsData = [
                   </p>
                 </div>
 
-                <div className="w-full  mt-5 max-w-40 border   rounded-md border-[#33cc99]/80">
-                  <div className="w-full  bg-[#030d17] border border-slate-800/80
-                   rounded-lg py-1.5 text-xs sm:text-base font-medium text-[#33cc99]/80 tracking-wide">
-                    Coming Soon
-                  </div>
+                <div onClick={() => setShowComingSoon(true)} className="w-full  hover:cursor-pointer  mt-5 max-w-40 border   rounded-md border-[#33cc99]/80">
+                    <div className="w-full  bg-[#030d17] border border-slate-800/80
+                    rounded-lg py-1.5 text-xs sm:text-base font-medium text-[#33cc99]/80 tracking-wide">
+                      Coming Soon
+                    </div>
                 </div>
               </div>
             ))}
@@ -194,6 +195,11 @@ const statsData = [
         </div>
 
       </div>
+      {  showComingSoon && (
+       <ComingSoonVideo
+          setShowComingSoon={setShowComingSoon}
+        />)
+      }
     </section>
   );
 }

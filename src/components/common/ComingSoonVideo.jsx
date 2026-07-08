@@ -9,7 +9,7 @@ const ComingSoonVideo = ({setShowComingSoon}) => {
                 onClick={() => setShowComingSoon(false)}
               >
                 <div
-                  className="relative"
+                  className="  relative w-full sm:max-w-3xl"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <video
@@ -19,13 +19,14 @@ const ComingSoonVideo = ({setShowComingSoon}) => {
                     loop
                     playsInline
                     controls
-                    className="w-full max-w-lg rounded-2xl shadow-xl"
+                    className="w-full h-auto max-h-[85vh] rounded-2xl shadow-2xl object-contain"
                   />
 
                 
                   <button
                     onClick={() => setShowComingSoon(false)}
-                    className="absolute top-3 right-3 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80"
+                    className="absolute top-3 right-3 z-20 flex h-10 w-10 items-center justify-center 
+                    rounded-full bg-black/60 text-white transition hover:bg-black/80"
                   >
                     <X size={20} />
                   </button>
