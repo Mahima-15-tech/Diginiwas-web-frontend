@@ -1095,7 +1095,7 @@ function Hero({ currentBg, fade }) {
                             </p>
                             </div>
                         </div>
-                        <button className="bg-[#33cc99] text-[#0f1c26] font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg flex items-center gap-2 whitespace-nowrap transition-transform duration-300 hover:scale-105">
+                        <button onClick={() => setShowComingSoon(true) } className="bg-[#33cc99] text-[#0f1c26] font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg flex items-center gap-2 whitespace-nowrap transition-transform duration-300 hover:scale-105">
                             Contact Our Team <FiArrowRight />
                         </button>
                         </div>

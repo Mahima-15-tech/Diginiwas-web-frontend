@@ -1,6 +1,7 @@
 import React,  { useState, useEffect }  from "react";
 import { Search, BarChart3, Rocket } from "lucide-react";
 import axios from "../api/axios";
+import ComingSoonVideo from "../components/common/ComingSoonVideo";
 const dummyStats = [
   {
     value: "10,000+",
@@ -653,6 +654,7 @@ function VisionariesSection() {
 }
 
 function CTASection() {
+  const [showComingSoon, setShowComingSoon] = useState(false)
   return (
     <section className="bg-[#162839] text-center py-20 px-5">
       <div className="max-w-3xl mx-auto">
@@ -665,15 +667,20 @@ function CTASection() {
         </h2>
 
         <div className="flex flex-col md:flex-row gap-6 justify-center">
-          <button className="bg-[#33cc99] text-white px-10 py-4 rounded-full">
+          <button onClick={() => setShowComingSoon(true)} className="bg-[#33cc99] text-white px-10 py-4 rounded-full">
             Start Your Search
           </button>
 
-          <button className="border-2 border-white text-white px-10 py-4 rounded-full">
+          <button  onClick={() => setShowComingSoon(true)} className="border-2 border-white text-white px-10 py-4 rounded-full">
             Partner With Us
           </button>
         </div>
       </div>
+
+          {showComingSoon && (
+             <ComingSoonVideo setShowComingSoon={setShowComingSoon} /> 
+            )}
+
     </section>
   );
 }

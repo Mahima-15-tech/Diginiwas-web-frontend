@@ -71,17 +71,7 @@ const Navbar = ({ show, setShow }) => {
 
             <div className="flex items-center gap-1 sm:gap-3 overflow-hidden">
               <div className="flex gap-0 sm:gap-4 overflow-hidden">
-                <div className="relative sm:w-full w-32  ">
-                  <IoSearchOutline
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
-                    size={18}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-full h-8 sm:h-full pl-10 pr-4 py-2 bg-gray-100 border border-gray-300 rounded-full focus:outline-none  "
-                  />
-                </div>
+              
                 <div className="sm:min-w-40 ">
                   {" "}
                   <button

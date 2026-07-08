@@ -855,12 +855,14 @@
 //   );
 // }
 
-import React from 'react';
+import React, { useState } from 'react';
+import homelogo from '../../assets/images/homelogo.png'
 import {
   FiUser, FiHome, FiBarChart2, FiCreditCard,
   FiBell, FiChevronDown, FiChevronRight,
   FiArchive, FiMic, FiVideo, FiEye, FiArrowRight,
 } from "react-icons/fi";
+import ComingSoonVideo from "../../components/common/ComingSoonVideo"
 
 const arcItems = [
   { icon: FiUser,       title: "Captures",    sub: "Every Lead",        angle: 120, isFront: true },
@@ -1105,6 +1107,7 @@ function ArcShowcase() {
 }
 
 export default function AgentDashboardPreview() {
+  const [ showComingSoon, setShowComingSoon] = useState(false)
   return (
     <section style={{ background:"#040f1a", color:"#fff", minHeight:"100vh", display: "flex", alignItems: "center" }}>
       <div className="w-full lg:max-w-5xl xl:max-w-[1420px] mx-auto grid grid-cols-1 xl:grid-cols-12 gap-12 items-center px-6 sm:px-10 py-12">
@@ -1113,7 +1116,9 @@ export default function AgentDashboardPreview() {
         <div className="xl:col-span-6 flex flex-col gap-6">
           <div style={{ display:"flex", alignItems:"center", gap:10 }}>
             <div style={{ width:44, height:44, borderRadius:10, border:"1px solid rgba(51,204,153,0.4)", display:"flex", alignItems:"center", justifyContent:"center", color:MINT, background: "#051625" }}>
-              <FiHome size={18}/>
+               <span className="w-12 h-12 rounded-lg border border-[#2dd4a8]/60 text-[#2dd4a8] flex items-center justify-center text-sm font-semibold">
+                              <img src={homelogo} className="" />
+                  </span>
             </div>
             <span style={{ color:MINT, letterSpacing:"0.18em", fontSize:12, fontWeight:600 }}>AGENT DASHBOARD</span>
           </div>
@@ -1142,10 +1147,10 @@ export default function AgentDashboardPreview() {
           </div>
 
           <div className="w-full flex flex-col sm:flex-row items-center gap-4 mt-4">
-            <button className="w-full sm:w-auto bg-[#33cc99] hover:bg-[#1a9e72] text-[#040f1a] flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl font-bold text-sm shadow-lg hover:shadow-[#33cc99]/10 active:scale-98 transition duration-200">
+            <button  onClick={() => setShowComingSoon(true)}  className="w-full sm:w-auto bg-[#33cc99] hover:bg-[#1a9e72] text-[#040f1a] flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl font-bold text-sm shadow-lg hover:shadow-[#33cc99]/10 active:scale-98 transition duration-200">
               Explore Dashboard <FiArrowRight size={16}/>
             </button>
-            <button className="w-full sm:w-auto bg-transparent border border-slate-800 hover:border-[#33cc99]/40 text-white flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl font-bold text-sm active:scale-98 transition duration-200">
+            <button  onClick={() => setShowComingSoon(true)} className="w-full sm:w-auto bg-transparent border border-slate-800 hover:border-[#33cc99]/40 text-white flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl font-bold text-sm active:scale-98 transition duration-200">
               Join as Agent <FiArrowRight size={16}/>
             </button>
           </div>
@@ -1157,6 +1162,11 @@ export default function AgentDashboardPreview() {
         </div>
 
       </div>
+
+
+       {showComingSoon && (
+             <ComingSoonVideo setShowComingSoon={setShowComingSoon} /> 
+            )}
     </section>
   );
 }

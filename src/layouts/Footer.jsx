@@ -73,8 +73,8 @@
 // export default Footer
 
 
- 
-import React from "react";
+ import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   FaFacebookF,
@@ -124,6 +124,8 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+  const navigate = useNavigate()
+
   return (
     <footer className="bg-[#274255] text-white pt-16">
 
@@ -257,6 +259,14 @@ export default function Footer() {
             ©️ 2026 DigiNiwas. All Rights Reserved.
           </p>
 
+               <div>
+               <p
+                onClick={() => window.open("https://www.technoviaan.com/", "_blank")}
+                className="cursor-pointer text-sm text-white/60 hover:underline"
+              >
+                Developed and designed by <span> Technoviaan Software Solution</span> 
+              </p>
+          </div>
           <div className="flex flex-wrap justify-center gap-6">
 
             <NavLink

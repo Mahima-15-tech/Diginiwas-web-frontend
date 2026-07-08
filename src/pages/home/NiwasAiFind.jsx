@@ -10,6 +10,7 @@ import niwasAi from '../../assets/images/niwasAi.png'
 import homelogo from '../../assets/images/homelogo.png'
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import ComingSoonVideo from "../../components/common/ComingSoonVideo";
 
 const features = [
   { icon: FaBrain, t1: "Understands", t2: "Your Needs" },
@@ -27,6 +28,8 @@ const features = [
 
 //  function PropertyListing() {
 function PropertyListing({ properties }) {
+  const [showComingSoon, setShowComingSoon] = useState(false);
+
   const propertyImages = properties.filter(
   (item) => item.images && item.images.length > 0
 );
@@ -85,7 +88,7 @@ setCurrentImage((prev) => (prev + 1) % propertyImages.length);
               ))}
             </div>
   
-            <button className="mt-8 inline-flex items-center gap-3 bg-[#2dd4a8] hover:bg-[#26c099] text-[#062018] font-semibold rounded-full pl-6 pr-2 py-2 transition-colors">
+            <button onClick={() => setShowComingSoon(true)} className="mt-8 inline-flex items-center gap-3 bg-[#2dd4a8] hover:bg-[#26c099] text-[#062018] font-semibold rounded-full pl-6 pr-2 py-2 transition-colors">
               <span className="text-sm sm:text-base">List Your Property</span>
               <span className="w-8 h-8 rounded-full bg-[#062018] text-[#2dd4a8] flex items-center justify-center">
                 <FiArrowRight size={14} />
@@ -214,6 +217,10 @@ src={currentProperty?.images?.[0]?.url} alt="" className="w-full h-12 sm:h-16 ob
           </div>
      
         </div>
+
+        {showComingSoon && (
+          <ComingSoonVideo setShowComingSoon={setShowComingSoon}/>
+        )}
       </section>
     );
   }
@@ -310,12 +317,12 @@ if (loading) {
                   <RiRobot2Line size={20} />
                 </span> */}
                 <span className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#2dd4a8]/70 shrink-0 shadow-lg">
-  <img
-    src={niwasAi}
-    alt="Niwas AI"
-    className="w-full h-full object-cover"
-  />
-</span>
+            <img
+              src={niwasAi}
+              alt="Niwas AI"
+              className="w-full h-full object-cover"
+            />
+          </span>
                 <div className="rounded-xl border border-[#1f3a3f] bg-[#0a1a1f]/80 px-4 py-2 text-xs sm:text-sm text-gray-200 max-w-xs">
                   Sure! Here are some best 2BHK properties in Ambala near schools under ₹30k
                 </div>
@@ -340,13 +347,23 @@ if (loading) {
                           <FiHeart size={12} />
                         </span>
                       </div>
-                      <div className="p-2 sm:p-3">
+                      <div className="flex flex-col justify-between p-2 sm:p-3">
+                        <div>
                         <div className="text-[11px] sm:text-base font-semibold leading-tight">{p.title}</div>
                         <div className="text-[9px] sm:text-sm text-gray-400 mt-0.5">{p.address}, {p.city}</div>
                         <div className="text-[10px] sm:text-xs text-[#2dd4a8] font-semibold mt-1.5">
                           ₹{Number(p.price).toLocaleString("en-IN")} <span className="text-gray-500 text-sm font-normal">/ month</span>
                         </div>
-                      </div>
+                        </div>
+                       
+                           <div  className="mt-auto pt-3"> 
+                          <button className="mt-auto w-full bg-[#0F2E46] hover:bg-[#163B59] transition text-white font-semibold text-sm px-4 py-2.5 rounded-xl">
+                            View Details
+                          </button>
+                          </div>
+                          </div>
+                      
+
                     </div>
                   ))}
                 </div>
