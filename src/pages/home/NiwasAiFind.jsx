@@ -6,6 +6,7 @@ import { FiHeart, FiChevronRight,FiChevronLeft,
 import { FaBrain, FaRegClock,  FaInstagram, FaFacebook, FaWhatsapp, FaBullhorn } from "react-icons/fa";
 import { BiTargetLock } from "react-icons/bi";
 import { RiRobot2Line } from "react-icons/ri";
+import niwasAi from '../../assets/images/niwasAi.png'
 import homelogo from '../../assets/images/homelogo.png'
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -305,9 +306,16 @@ if (loading) {
               </div>
               {/* AI bubble */}
               <div className="flex items-start gap-3 mb-4 mt-2">
-                <span className="w-10 h-10 rounded-full border border-[#2dd4a8]/60 text-[#2dd4a8] flex items-center justify-center shrink-0">
+                {/* <span className="w-10 h-10 rounded-full border border-[#2dd4a8]/60 text-[#2dd4a8] flex items-center justify-center shrink-0">
                   <RiRobot2Line size={20} />
-                </span>
+                </span> */}
+                <span className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#2dd4a8]/70 shrink-0 shadow-lg">
+  <img
+    src={niwasAi}
+    alt="Niwas AI"
+    className="w-full h-full object-cover"
+  />
+</span>
                 <div className="rounded-xl border border-[#1f3a3f] bg-[#0a1a1f]/80 px-4 py-2 text-xs sm:text-sm text-gray-200 max-w-xs">
                   Sure! Here are some best 2BHK properties in Ambala near schools under ₹30k
                 </div>

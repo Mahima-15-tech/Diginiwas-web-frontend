@@ -1,4 +1,4 @@
-mport React from "react";
+import React from "react";
 import { Bot } from "lucide-react";
 
 export default function TypingIndicator() {

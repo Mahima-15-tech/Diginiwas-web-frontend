@@ -253,7 +253,7 @@ const PricingPlans = () => {
 
 function NetworkDensity({ networkData }) {
   return (
-    <section className="bg-[#274255] text-white sm:min-h-screen py-20 px-4 md:px-8 overflow-hidden">
+    <section className="bg-[#274255] text-white sm:min-h-screen py-16 px-4 md:px-8 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="relative overflow-hidden rounded-[32px] border border-white/10 backdrop-blur-xl bg-white/[0.03] p-8 md:p-12 shadow-2xl">
