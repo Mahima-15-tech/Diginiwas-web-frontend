@@ -149,7 +149,7 @@ const Navbar = ({ show, setShow }) => {
                   }}
                   className="sm:hidden w-40 text-center block  px-4 py-2 bg-[#274255]   text-white rounded-full  cursor-pointer"
                 >
-                  Get Started
+                  Get Digital
                 </button>
               )}
             </div>
