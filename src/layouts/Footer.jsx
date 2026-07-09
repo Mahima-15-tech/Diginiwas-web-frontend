@@ -93,7 +93,7 @@ const footerLinks = {
     { label: "Home", path: "/" },
     { label: "Explore Properties", path: "/explore-property" },
     { label: "Niwas AI", path: "/niwas-ai" },
-    { label: "Agent Corner", path: "/agent-corner" },
+    { label: "Partner Corner", path: "/agent-corner" },
     { label: "About Us", path: "/about" },
   ],
 

@@ -344,7 +344,7 @@ const HeroSection = () => {
               {/* Dynamic Action Buttons Row */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
                 <button className="relative group overflow-hidden bg-[#0e3a3a] text-[#33cc99] border-2 border-[#33cc99] px-7 py-3.5 rounded-xl font-bold text-base tracking-wide shadow-[0_0_20px_rgba(51,204,153,0.15)] transition-all duration-300 hover:bg-[#33cc99] hover:text-white hover:shadow-[0_0_25px_rgba(51,204,153,0.45)] active:scale-[0.98]">
-                  Join as Agent
+                  Join as Partner
                 </button>
 
                 <button 

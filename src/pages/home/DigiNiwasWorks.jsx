@@ -356,11 +356,11 @@ export default function DiginiwasWorks() {
 
           <h3 className="text-xl font-bold mb-3 tracking-tight">
             We Onboard <br />
-            <span className="text-[#33cc99]">Verified</span> Agents
+            <span className="text-[#33cc99]">Verified</span> Partners
           </h3>
 
           <p className="text-slate-400 text-sm leading-relaxed mb-2 flex-grow">
-            Every agent goes through onboarding and KYC verification to ensure a
+            Every Partner goes through onboarding and KYC verification to ensure a
             trusted network for our customers.
           </p>
 
@@ -458,11 +458,11 @@ export default function DiginiwasWorks() {
 
           <h3 className="text-xl font-bold mb-3 tracking-tight">
             Connect with <br />
-            <span className="text-[#33cc99]">Verified & Trusted</span> Agents
+            <span className="text-[#33cc99]">Verified & Trusted</span> Partners
           </h3>
 
           <p className="text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
-            Connect with verified and trusted agents who can help you in every
+            Connect with verified and trusted Partners who can help you in every
             step of your real estate journey.
           </p>
 
@@ -600,7 +600,7 @@ function TrustFeatures() {
       >
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 text-center">
           {[
-            { icon: HiOutlineShieldCheck, text: "100% Verified Agents & Listings" },
+            { icon: HiOutlineShieldCheck, text: "100% Verified Partners & Listings" },
             { icon: RiRobotLine, text: "AI Powered Smart Search" },
             { icon: HiOutlineUserGroup, text: "Happy Customers Everyday" },
             { icon: GiHouse, text: "Grow Your Real Estate Business" },

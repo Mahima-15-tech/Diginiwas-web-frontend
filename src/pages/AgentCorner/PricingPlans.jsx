@@ -406,7 +406,7 @@ import isoHouseImg from "../../assets/images/demo.webp";
 
 const dummyPlans = [
   {
-    title: "Starter Agent",
+    title: "Starter Partner",
     description: "For individuals beginning their luxury real estate journey.",
     price: "₹2,499",
     duration: "/month",
@@ -419,7 +419,7 @@ const dummyPlans = [
     ],
   },
   {
-    title: "Pro Agent",
+    title: "Pro Partner",
     description: "Full-suite AI tools for the career-driven professional.",
     price: "₹5,999",
     duration: "/month",

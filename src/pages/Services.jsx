@@ -913,7 +913,7 @@ const services = [
 ];
  
 const stats = [
-  { icon: <FiUsers />, value: "100%", label: "Verified agents" },
+  { icon: <FiUsers />, value: "100%", label: "Verified partners" },
   { icon: <FaHandshake />, value: "", label: "Easy property listing" },
   { icon: <FaBuilding />, value: "100%", label: "Genuine Leads" },
   { icon: <FaShieldAlt />, value: "", label: "AI Powered" },
@@ -1016,7 +1016,7 @@ function Hero({ currentBg, fade }) {
                             All Under One Roof.
                         </h2>
                         <p className="text-gray-400 text-base md:text-lg mt-3 font- max-w-xl mx-auto px-2">
-                            Powerful services designed to support buyers, sellers, agents and investors
+                            Powerful services designed to support buyers, sellers, partners and investors
                             at every step of their real estate journey.
                         </p>
                         </div>

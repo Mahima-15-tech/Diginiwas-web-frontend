@@ -31,7 +31,7 @@ const steps = [
   {
     icon: <MdAccountCircle size={34} />,
     title: "Activation",
-    description: "Branded agent profile",
+    description: "Branded Partner profile",
   },
   {
     icon: <MdAddBusiness size={34} />,

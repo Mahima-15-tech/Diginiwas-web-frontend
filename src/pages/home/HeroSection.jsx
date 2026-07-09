@@ -906,8 +906,9 @@ function LeftContent({ heroData, onSearch }) {
     <div className="flex-1  max-w-full lg:max-w-[50%] xl:max-w-[50%] text-center lg:text-left ">
       <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1.5 mb-4 sm:mb-6">
         <MdLocationOn className="text-[#00d9a6] text-sm" />
-        <span className="text-white text-xs sm:text-sm font-medium">
-          अपना Shahr, अपना Platform.
+        <span className="text-white text-md sm:text-sm font-semibold">
+          {/* अपना Shahr, अपना Platform. */}
+          APNA शहर, …अपना  PLATFORM  
         </span>
       </div>
 
@@ -1178,7 +1179,7 @@ function StatsBar({ heroData }) {
       <div className="grid grid-cols-2  gap-2 sm:gap-3 w-full   sm:max-w-sm lg:max-w-md  ">
         {[
           { icon: <MdSmartToy className="text-[#00d9a6] text-xl" />, title: "AI Powered", sub: "Search", path: "/niwas-ai" },
-          { icon: <MdGroups className="text-[#00d9a6] text-xl" />, title: "100%", sub: "Verified Agents", path: "/explore-property" },
+          { icon: <MdGroups className="text-[#00d9a6] text-xl" />, title: "100%", sub: "Verified Partner", path: "/explore-property" },
           { icon: <MdApartment className="text-[#00d9a6] text-xl" />, title: "Easy property Listing", sub: "", path: "/agent-corner" },
           { icon: <MdCheckCircle className="text-[#00d9a6] text-xl" />, title: "100%", sub: "Genuine Leads", path: "/agent-corner" },
         ].map(({ icon, title, sub, path }) => (

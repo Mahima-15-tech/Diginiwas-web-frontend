@@ -330,11 +330,11 @@ import { Quote, Star, Sparkles, Building2, TrendingUp } from "lucide-react";
 
 const dummyData = {
   topTitle: "THE NETWORK",
-  heading: "Voices of Top Agents",
+  heading: "Voices of Top Partners",
   subheading:
-    "Real numbers, real closings. Here's what agents across the country say after switching to Niwas AI.",
+    "Real numbers, real closings. Here's what partners across the country say after switching to Niwas AI.",
   stats: [
-    { label: "Active Agents", value: "500+" },
+    { label: "Active Partners", value: "500+" },
     { label: "Avg. Rating", value: "4.9" },
     { label: "Deals Accelerated", value: "12k+" },
   ],
@@ -552,7 +552,7 @@ const NetworkSection = () => {
         >
           <TrendingUp className="w-4 h-4 text-[#C9A24B]" strokeWidth={2} />
           <span className="text-[#9FC2B8] text-xs sm:text-sm font-medium tracking-wide">
-            Growth agents can see, before they sign a single deal
+            Growth partner can see, before they sign a single deal
           </span>
         </motion.div>
       </div>

@@ -18,7 +18,7 @@ export default function PrivacyPolicy() {
         {[
           ["Information We Collect","Name, email, phone number, property preferences, saved listings, search history, approximate location (with permission), enquiries and AI chat history."],
           ["How We Use Your Information","To recommend properties, connect buyers and sellers, improve Niwas AI, provide customer support, detect fraud and enhance platform security."],
-          ["Property Listings","Owners, builders and agents are responsible for listing accuracy. Users should independently verify all property information before making decisions."],
+          ["Property Listings","Owners, builders and partners are responsible for listing accuracy. Users should independently verify all property information before making decisions."],
           ["Niwas AI","Niwas AI provides personalised recommendations. Responses are informational and are not legal or financial advice."],
           ["Cookies","We use cookies to improve login, preferences, analytics and user experience."],
           ["Data Security","We use reasonable technical and organisational measures to protect your data from unauthorised access."],

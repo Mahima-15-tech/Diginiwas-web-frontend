@@ -36,7 +36,7 @@ const WhyAgentsLove = () => {
       <div className="mx-auto w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-7xl">
         <div className="rounded-[24px] border border-white/10 bg-[#0B1725] shadow-[0_0_40px_rgba(0,0,0,0.35)] p-6 sm:p-8 md:p-10">
           <h2 className="text-white font-semibold text-xl sm:text-2xl md:text-3xl leading-tight">
-            Why Agents Love DigiNiwas
+            Why Partners Love DigiNiwas
           </h2>
 
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 ">

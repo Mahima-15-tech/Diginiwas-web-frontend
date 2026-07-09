@@ -24,7 +24,7 @@ const statCards = [
     bars: [3, 4, 5, 5, 6, 7, 8],
   },
   {
-    label: "Active Agents", value: "2,105", change: "+4.2%", up: true,
+    label: "Active Partners", value: "2,105", change: "+4.2%", up: true,
     color: "#10b981", barColor: "#6ee7b7",
     bars: [3, 4, 5, 5, 6, 7, 8],
   },
@@ -279,7 +279,7 @@ export default function AdminDashboard() {
                   </button>
                   <button className="w-full flex items-center gap-3 text-sm font-semibold text-teal-700 rounded-2xl px-5 py-4 border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-left">
                     <MdOutlinePersonAdd size={20} className="text-teal-600 flex-shrink-0" />
-                    Approve Agent
+                    Approve Partner
                   </button>
                   <button className="w-full flex items-center gap-3 text-sm font-semibold text-gray-700 rounded-2xl px-5 py-4 border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-left">
                     <MdOutlineDescription size={20} className="text-gray-500 flex-shrink-0" />

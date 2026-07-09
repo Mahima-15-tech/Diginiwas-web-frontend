@@ -56,7 +56,7 @@ const AgentCRMWorkflow = () => {
           <section className=" ">
             <div className="flex flex-col">
               <p className="text-[#33cc99] text-sm font-bold tracking-[3px] uppercase mb-4">
-                Agent support that works for you
+                Partner support that works for you
               </p>
 
               <h2
