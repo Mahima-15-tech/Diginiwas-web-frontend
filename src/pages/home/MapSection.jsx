@@ -209,7 +209,7 @@ export default function IndiaMap({ searchCity }) {
       </div>
 
       {/* PROPERTY LIST SECTION */}
-      <div className="w-full lg:w-[42%] h-[620px] overflow-y-auto pr-1 custom-scrollbar">
+      <div className="w-full lg:w-[42%] sm:h-full py-3 sm:py-0 overflow-y-auto pr-1 custom-scrollbar">
         {notFound || !selectedCity || selectedCity.properties.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-white/40 text-center p-6">
             <h2 className="text-lg font-medium">No Property Found</h2>

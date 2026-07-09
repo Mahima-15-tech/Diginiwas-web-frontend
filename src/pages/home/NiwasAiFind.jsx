@@ -11,6 +11,7 @@ import homelogo from '../../assets/images/homelogo.png'
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ComingSoonVideo from "../../components/common/ComingSoonVideo";
+import ai from "../../assets/images/ai.webp"
 
 const features = [
   { icon: FaBrain, t1: "Understands", t2: "Your Needs" },
@@ -278,8 +279,14 @@ if (loading) {
         <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 sm:pb-10 lg:pb-20 xl:pb-32 lg:pt-5 gap-10 items-center">
           {/* LEFT */}
           <div>
+            <div className="bg-white  inline mb-10">
+              <div className="bg-white inline-block rounded-lg">  
+                  <img onClick={() => navigate('niwas-ai')} src={ai} className="cursor-pointer w-20 h-16" />
+               </div>
+          
+            </div>
             <h2 className="text-4xl sm:text-5xl font-bold leading-[1.05]">
-               <span onClick={() => navigate('niwas-ai')} className="hover:cursor-pointer">Niwas AI </span>   Finds
+               <span  className="">Niwas AI </span>   Finds
               <br />
               <span className="text-[#2dd4a8]">What You Need.</span>
             </h2>
