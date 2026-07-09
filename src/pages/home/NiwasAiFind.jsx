@@ -26,7 +26,7 @@ const features = [
       ]
 
 
-//  function PropertyListing() {
+
 function PropertyListing({ properties }) {
   const [showComingSoon, setShowComingSoon] = useState(false);
 
@@ -219,7 +219,7 @@ src={currentProperty?.images?.[0]?.url} alt="" className="w-full h-12 sm:h-16 ob
         </div>
 
         {showComingSoon && (
-          <ComingSoonVideo setShowComingSoon={setShowComingSoon}/>
+          <ComingSoonVideo setShowComingSoon={setShowComingSoon} video={import.meta.env.VITE_NIWAS_AI} />
         )}
       </section>
     );
@@ -230,7 +230,7 @@ const [properties, setProperties] = useState([]);
 const [loading, setLoading] = useState(true);
   const [startIndex, setStartIndex] = useState(0);
   const visibleProperties = properties.slice(startIndex, startIndex + 3);
-
+  
    const [showComingSoon, setShowComingSoon] = useState(false);
   useEffect(() => {
   fetchProperties();
@@ -380,7 +380,7 @@ if (loading) {
 <PropertyListing properties={properties} />
 
         {showComingSoon && (
-          <ComingSoonVideo setShowComingSoon={setShowComingSoon} />
+          <ComingSoonVideo setShowComingSoon={setShowComingSoon}  video={import.meta.env.VITE_NIWAS_AI}/>
          )}
       </section>
     );

@@ -668,8 +668,8 @@
 
 
 
-
-
+import big from "../assets/images/big.webp"
+import PopupImage from "../components/common/PopupImage"
 import { MapContainer, TileLayer, Popup, CircleMarker } from "react-leaflet";
 import { useEffect, useState } from "react";
 import { useMap } from "react-leaflet";
@@ -758,6 +758,8 @@ export default function ExploreProperty() {
   const [focusVersion, setFocusVersion] = useState(0);
   const [hasFocus, setHasFocus] = useState(false);
   const [notFound, setNotFound] = useState(false);
+    const [showPopUpImg, setShowPopUpImg] = useState(false)
+    const [image, setImage] = useState(null)
   
   // 🔽 NEW: Yeh flag check karega ki user ne manually search button daba diya hai ya nahi
   const [isSearched, setIsSearched] = useState(false);
@@ -1081,7 +1083,10 @@ export default function ExploreProperty() {
                       <div className="text-sm font-bold mt-1">₹{p.price.toLocaleString()}</div>
                     </div>
                     <div className="px-3">
-                      <button className="bg-[#0F2E46] hover:bg-[#163B59] transition text-white font-semibold text-xs sm:text-sm px-5 py-3 rounded-xl">
+                      <button onClick={() => 
+                     { setShowPopUpImg(true)
+                      setImage(big)}
+                      } className="bg-[#0F2E46] hover:bg-[#163B59] transition text-white font-semibold text-xs sm:text-sm px-5 py-3 rounded-xl">
                         View Details
                       </button>
                     </div>
@@ -1093,6 +1098,11 @@ export default function ExploreProperty() {
         </div>
 
       </div>
+
+        {showPopUpImg && (
+               <PopupImage  image={image} setShowPopUpImg={setShowPopUpImg} />
+            )}
+
     </div>
   );
 }

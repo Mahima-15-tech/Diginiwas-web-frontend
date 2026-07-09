@@ -2,6 +2,10 @@ import React,  { useState, useEffect }  from "react";
 import { Search, BarChart3, Rocket } from "lucide-react";
 import axios from "../api/axios";
 import ComingSoonVideo from "../components/common/ComingSoonVideo";
+import { useNavigate } from "react-router-dom";
+
+import growth from "../assets/images/growth.png" 
+
 const dummyStats = [
   {
     value: "10,000+",
@@ -316,23 +320,22 @@ function StatisticsSection() {
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
         <div className="space-y-8">
           <h2 className="text-4xl font-bold">
-            Unlocking the Diginiwas Prosperity Cycle.
+            Building India's Most Trusted <span className="text-[#33cc99]"> Property</span>  Cycle.
           </h2>
 
           <div className="space-y-8">
             <div className="flex gap-4">
               <div>
-                <h3 className="font-bold text-[#ffe088] mb-2">
+                {/* <h3 className="font-bold text-[#ffe088] mb-2">
                   Digital Transformation
-                </h3>
+                </h3> */}
                 <p className="text-slate-300">
-                  Diginiwas's real estate digitization is projected to grow by 240%
-                  by 2030.
+                  Diginiwas's is on a mission to make property transaction simple, transparent and intelligent for everyone.
                 </p>
               </div>
             </div>
 
-            <div className="flex gap-4">
+            {/* <div className="flex gap-4">
               <div>
                 <h3 className="font-bold text-[#ffe088] mb-2">NRI Demand</h3>
                 <p className="text-slate-300">
@@ -340,15 +343,15 @@ function StatisticsSection() {
                   diaspora.
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
      
 
-        <div className="bg-[#2c3e50] p-8 rounded-3xl">
-          <div className="flex items-end justify-between h-[300px] gap-4">
-            <div className="flex flex-col justify-end items-center flex-1 h-full">
+        <div className="bg-[#2c3e50] rounded-2xl ">
+          {/* <div className="flex items-end justify-between h-[300px] gap-4"> */}
+            {/* <div className="flex flex-col justify-end items-center flex-1 h-full">
               <div
                 className="w-full bg-[#006d44] rounded-t-lg"
                 style={{ height: "20%" }}
@@ -378,8 +381,9 @@ function StatisticsSection() {
                 style={{ height: "90%" }}
               />
               <span className="mt-4 text-xs text-[#ffe088]">2026F</span>
-            </div>
-          </div>
+            </div> */}
+            <img src={growth} className="rounded-2xl md:h-56 lg:h-full" />
+          {/* </div> */}
         </div>
       </div>
     </section>
@@ -390,7 +394,7 @@ function JourneySection() {
   return (
     <section className="py-10 sm:py-28 px-5 md:px-16 bg-[#f8f9fa]">
       <div className="max-w-7xl mx-auto text-center mb-16">
-        <span className="  text-3xl  c">Our Journey</span>
+        <span className="  text-3xl  c">Our Approach</span>
       </div>
 
       <div className="max-w-5xl mx-auto relative">
@@ -402,12 +406,11 @@ function JourneySection() {
           <div className="md:w-1/2 md:pr-12 pl-16 md:pl-0 ">
             <div className="bg-white p-8 rounded-2xl text-end shadow-sm hover:shadow-lg transition-all duration-300 hover:border-[#006d44] hover:border-2" >
               <h3 className="text-2xl font-medium text-[#162839] mb-2">
-                Problem Discovery
+               Verified Network
               </h3>
 
               <p className="text-gray-600">
-                Analyzing 20 years of property disputes and transparency gaps in
-                Diginiwas.
+              Every DigiNiwas partner is carefully verified to build a trusted real estate community.
               </p>
             </div>
           </div>
@@ -425,12 +428,11 @@ function JourneySection() {
           <div className="md:w-1/2 md:pl-12 pl-16">
             <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg  transition-all duration-300 hover:border-[#006d44] hover:border-2">
               <h3 className="text-2xl font-medium text-[#162839] mb-2">
-                AI Vision
+               One Digital Platform
               </h3>
 
               <p className="text-gray-600">
-                Developing the first property valuation engine tailored for
-                Indian land dynamics.
+                Search, list, promote and manage properties—all from one seamless platform.
               </p>
             </div>
           </div>
@@ -440,12 +442,11 @@ function JourneySection() {
           <div className="md:w-1/2 md:pr-12 pl-16 md:pl-0">
             <div className="bg-white p-8 rounded-2xl text-end shadow-sm hover:shadow-lg  transition-all duration-300 hover:border-[#006d44] hover:border-2">
               <h3 className="text-2xl font-medium text-[#162839] mb-2">
-                Diginiwas Launch
+              Smarter with Niwas AI
               </h3>
 
               <p className="text-gray-600">
-                Going live with the first 5,000 verified listings across
-                Ludhiana, Jalandhar and Amritsar.
+               AI-powered property discovery designed to make buying, renting, selling and leasing faster, simpler and more personalized.
               </p>
             </div>
           </div>
@@ -654,6 +655,8 @@ function VisionariesSection() {
 }
 
 function CTASection() {
+
+  const navigate = useNavigate()
   const [showComingSoon, setShowComingSoon] = useState(false)
   return (
     <section className="bg-[#162839] text-center py-20 px-5">
@@ -671,14 +674,15 @@ function CTASection() {
             Start Your Search
           </button>
 
-          <button  onClick={() => setShowComingSoon(true)} className="border-2 border-white text-white px-10 py-4 rounded-full">
+          <button  onClick={() => navigate('/agent-corner')} className="border-2 border-white text-white px-10 py-4 rounded-full">
             Partner With Us
           </button>
         </div>
+
       </div>
 
           {showComingSoon && (
-             <ComingSoonVideo setShowComingSoon={setShowComingSoon} /> 
+             <ComingSoonVideo setShowComingSoon={setShowComingSoon}  video={import.meta.env.VITE_NIWAS_AI} /> 
             )}
 
     </section>

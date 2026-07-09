@@ -867,9 +867,19 @@ import bg from "../assets/images/bg.webp"
 import bg2 from "../assets/images/bg2.webp"
 import bg3 from "../assets/images/bg3.webp"
 import { Smartphone, Bell , X} from "lucide-react";
-import diginiwasVideo from "../assets/video/diginiwas.mp4"
+
 // Popup
 import ComingSoonVideo from "../components/common/ComingSoonVideo";
+import propertyPhotography from "../assets/images/propertyPhotography.webp"
+import homeLoan from "../assets/images/homeLoan.webp"
+import documentVerification from "../assets/images/documentVerification.webp"
+import retireGovernment from "../assets/images/retireGovernment.webp"
+
+import digitalProperty from "../assets/images/digitalProperty.webp"
+import propertyManagement from "../assets/images/propertyManagement.webp"
+
+import PopupImage from "../components/common/PopupImage"
+
 
 const bgImages = [
   bg,bg2,bg3
@@ -882,33 +892,39 @@ const services = [
     img: house,
     title: "Home Loan Assistance",
     desc: "Get hassle-free home loans with the best interest rates. We connect you with trusted banks and financial partners.",
+    image : homeLoan
   },
   {
     img: camera,
     title: "Property Photography & Videography",
     desc: "Professional photos, videos and reels that highlight the best of your property and attract serious buyers/tenants.",
+      image : propertyPhotography
   },
   {
     img: mic,
     icon: "promotion",
     title: "Digital Property Promotion",
     desc: "Get maximum visibility with our digital marketing, social media promotion, featured listings and premium exposure.",
+      image : digitalProperty
   },
   {
     img: calender,
     title: "Property Management",
     badge: "Coming Soon",
     desc: "End-to-end rental management, tenant tracking, maintenance coordination and rent reminders - all in one place.",
+      image : propertyManagement
   },
   {
     img: human,
     title: "Retired Government Officers Network",
     desc: "We onboard retired government officials as trusted DigiNiwas partners and local property advisors. A second career. A bigger purpose.",
+      image : retireGovernment
   },
   {
     img: notes,
     title: "Documentation & Verification Support",
     desc: "Assistance with property documentation, verification and all related legal formalities for a worry-free experience.",
+      image : documentVerification
   },
 ];
  
@@ -982,6 +998,9 @@ export default function HeroSection() {
 
 function Hero({ currentBg, fade }) {
   const [showComingSoon, setShowComingSoon] = useState(false);
+  const [showPopUpImg, setShowPopUpImg] = useState(false)
+  const [image, setImage] = useState(null)
+
   return (
     <> 
     <section className="relative ">
@@ -1068,7 +1087,10 @@ function Hero({ currentBg, fade }) {
                             </p>
                 
                             <button
-                                onClick={() => setShowComingSoon(true)}
+                                onClick={() => {
+                                  setShowPopUpImg(true)
+                                  setImage(s.image)
+                                }}
                                 className="relative z-10 flex items-center gap-1 text-[#33cc99] text-xs sm:text-sm font-semibold mt-4 transition-all duration-300 group-hover:gap-2"
                             >
                                 Learn More
@@ -1095,8 +1117,20 @@ function Hero({ currentBg, fade }) {
                             </p>
                             </div>
                         </div>
-                        <button onClick={() => setShowComingSoon(true) } className="bg-[#33cc99] text-[#0f1c26] font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg flex items-center gap-2 whitespace-nowrap transition-transform duration-300 hover:scale-105">
-                            Contact Our Team <FiArrowRight />
+                        {/* onClick={() =>  } */}
+
+                        <button   className="bg-[#33cc99] text-[#0f1c26] font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg flex items-center gap-2 whitespace-nowrap transition-transform duration-300 hover:scale-105">
+                          
+                               <a
+                                  href="https://wa.me/917988537478" 
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex  items-center justify-center gap-3"
+                                  title="Download WhatsApp"
+                                > 
+                           Contact Our Team <FiArrowRight />
+                                </a>
+                           
                         </button>
                         </div>
                 
@@ -1140,9 +1174,9 @@ function Hero({ currentBg, fade }) {
         
     
 
-          {showComingSoon && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
-
+          {showPopUpImg && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+   
           <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-[fadeIn_.25s_ease]">
 
             {/* Top */}
@@ -1277,10 +1311,17 @@ function Hero({ currentBg, fade }) {
         )} */}
 
 
-            {showComingSoon && (
+            {/* {showComingSoon && (
              <ComingSoonVideo setShowComingSoon={setShowComingSoon} /> 
+            )} */}
+
+
+
+           {showPopUpImg && (
+               <PopupImage  image={image} setShowPopUpImg={setShowPopUpImg} />
             )}
 
+   
 
 
           {/* Animations */}

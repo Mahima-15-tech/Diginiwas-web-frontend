@@ -10,6 +10,7 @@ import logo from "../assets/images/logo.jpg";
 import { RxCross1 } from "react-icons/rx";
 import ComingSoonVideo from "../components/common/ComingSoonVideo";
 
+
 const Navbar = ({ show, setShow }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
@@ -80,7 +81,7 @@ const Navbar = ({ show, setShow }) => {
                     }}
                     className="hidden sm:block px-4 py-2 bg-[#274255]  text-white rounded-full cursor-pointer"
                   >
-                    Get Started
+                    Get Digital
                   </button>{" "}
                 </div>
               </div>
@@ -158,7 +159,7 @@ const Navbar = ({ show, setShow }) => {
 
         {showComingSoon && (
         <ComingSoonVideo
-          setShowComingSoon={setShowComingSoon}
+          setShowComingSoon={setShowComingSoon} video={import.meta.env.VITE_NIWAS_AI}
         />
       )}
 

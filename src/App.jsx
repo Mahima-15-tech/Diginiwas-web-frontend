@@ -16,7 +16,7 @@ import Services from "./pages/Services";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import CookiesPolicy from "./pages/CokkiesPolicy";
-
+import Blogs from "./pages/Blogs"
 function App() {
   const [count, setCount] = useState(0);
 
@@ -38,6 +38,7 @@ function App() {
           <Route path="add-property" element={<AddProperty />} />
           <Route path="admin-dashboard" element={<AdminDashboard />} />
           <Route path="property-management" element={<PropertyManagement />} />
+           <Route path="blogs" element={<Blogs />} />
 
         </Route>
       </Routes>

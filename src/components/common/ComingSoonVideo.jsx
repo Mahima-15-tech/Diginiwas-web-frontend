@@ -1,11 +1,11 @@
 import React from 'react'
-import diginiwasVideo from "../../assets/video/diginiwas.mp4"
+
 import { Smartphone, Bell , X} from "lucide-react";
 
-const ComingSoonVideo = ({setShowComingSoon}) => {
+const ComingSoonVideo = ({setShowComingSoon, video}) => {
   return (
       <div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+                className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
                 onClick={() => setShowComingSoon(false)}
               >
                 <div
@@ -13,7 +13,7 @@ const ComingSoonVideo = ({setShowComingSoon}) => {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <video
-                    src={diginiwasVideo}
+                    src={video}
                     autoPlay
                     muted
                     loop

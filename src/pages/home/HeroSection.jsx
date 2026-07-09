@@ -1110,7 +1110,7 @@ function RightPhones({ heroData }) {
 
        { showComingSoon && (
          <ComingSoonVideo
-          setShowComingSoon={setShowComingSoon}
+          setShowComingSoon={setShowComingSoon} video={import.meta.env.VITE_NIWAS_AI}
         />)
         }
 

@@ -1,13 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // Agar react-router use kar rahe hain toh
 
+import ai from "../../assets/images/ai.webp"
+
 const FloatingButtons = () => {
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-4">
       
       {/* 1. Official WhatsApp Button */}
       <a
-        href="https://www.whatsapp.com/download" // WhatsApp download page link
+        href="https://wa.me/917988537478" 
         target="_blank"
         rel="noopener noreferrer"
         className="flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_15px_rgba(37,211,102,0.5)]"
@@ -24,13 +26,14 @@ const FloatingButtons = () => {
       </a>
 
       {/* 2. Niwas AI Chat Button */}
+      <div className='flex bg-white h-14 w-14 items-center justify-center rounded-full  shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_15px_rgba(16,185,129,0.5)] '> 
       <Link
         to="/niwas-ai" // React Router Navigation ke liye Link component use karna behtar hai
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-[#0284c7] to-[#10b981] text-white shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+        className="flex bg-white h-14 w-14 items-center justify-center rounded-full  shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_15px_rgba(16,185,129,0.5)]"
         title="Go to Niwas AI"
       >
-        {/* Real AI Sparkle / Bot Style Icon */}
-        <svg
+        
+        {/* <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"
@@ -40,13 +43,15 @@ const FloatingButtons = () => {
           strokeLinejoin="round"
           className="h-7 w-7 animate-pulse"
         >
-          {/* Main AI Sparkle */}
+          
           <path d="M12 2v4M12 18v4M4 12H2M22 12h-2M18.36 5.64l-2.83 2.83M8.46 15.54l-2.83 2.83M18.36 18.36l-2.83-2.83M8.46 8.46L5.64 5.64" />
-          {/* Core Chat Circle */}
+          
           <circle cx="12" cy="12" r="4" fill="currentColor" fillOpacity="0.2"/>
-        </svg>
-      </Link>
+        </svg> */}
 
+        <img src={ai} />
+      </Link>
+</div>
     </div>
   );
 };
