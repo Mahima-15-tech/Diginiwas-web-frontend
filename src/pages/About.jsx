@@ -1,10 +1,14 @@
-import React,  { useState, useEffect }  from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Search, BarChart3, Rocket } from "lucide-react";
 import axios from "../api/axios";
 import ComingSoonVideo from "../components/common/ComingSoonVideo";
 import { useNavigate } from "react-router-dom";
-
+import { motion, useScroll, useTransform } from "framer-motion";
 import growth from "../assets/images/growth.png" 
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const dummyStats = [
   {
@@ -128,71 +132,310 @@ const team = [
 
 
 
-function HeroSection() {
+// function HeroSection() {
 
+//   const [aboutStats, setAboutStats] = useState(dummyStats);
+
+//   const getAboutStats = async () => {
+//     try {
+//       const res = await axios.get("/cms/about-stats");
+  
+//       setAboutStats(
+//         res.data.stats?.length
+//           ? res.data.stats
+//           : dummyStats
+//       );
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   };
+  
+//   useEffect(() => {
+//     getAboutStats();
+//   }, []);
+  
+
+//   const [stats, setStats] = useState({
+//   listings: 0,
+//   agents: 0,
+//   portfolio: 0,
+// });
+
+
+
+
+
+
+
+
+// useEffect(() => {
+//   const interval = setInterval(() => {
+//     setStats((prev) => ({
+//       listings:
+//         prev.listings < 10000
+//           ? Math.min(prev.listings + 100, 10000)
+//           : 10000,
+
+//       agents:
+//         prev.agents < 500
+//           ? Math.min(prev.agents + 5, 500)
+//           : 500,
+
+//       portfolio:
+//         prev.portfolio < 5000
+//           ? Math.min(prev.portfolio + 50, 5000)
+//           : 5000,
+//     }));
+//   }, 20);
+
+//   return () => clearInterval(interval);
+// }, []);
+
+
+
+//   return (
+//     <section className="relative min-h-screen flex flex-col justify-center items-center text-center px-5 pt-32 pb-20 overflow-hidden">
+//       <div className="absolute inset-0 z-0">
+//         <div className="absolute inset-0 bg-gradient-to-b from-[#1628394d] to-[#162839cc] z-10"></div>
+
+//         <img
+//           src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBPZawAd1oy-smKp5UtCyQ1weMdzx-1bJh9nHxOUuSI1oxE0QjahuEBO0u_QC8L0QCAj7yRcM39Ypw2lgFnAwlWCfgCnmFIinPhXN6cDSfrladXNhbVU63iHidNHXJm8bY0gl3mDF1sU2imz0kzQfM0adN9JM7Ij1cWo6wqnoqWQDGIZR863K0JtXzSZ_4Hj_Z8mJa4BuCGQNXSomM9fVIUPZbQpAbZNChb1dcNVkq5ZH8bVMEhHnp9T8QL33ppcxzx3E71Hl9"
+//           alt=""
+//           className="w-full h-full object-cover"
+//         />
+//       </div>
+
+//       <div className="relative z-20 max-w-5xl mx-auto">
+//         <h1 className="text-4xl md:text-6xl font-semibold text-white mb-8 leading-tight">
+//           Building the Future of{" "}
+//           <span className="text-[#ffe088]">AI-Powered</span> Real Estate in
+//           Diginiwas
+//         </h1>
+
+//         <p className="text-base md:text-xl text-white/90 max-w-2xl mx-auto mb-16">
+//           We're bridging the gap between visionary investors, global NRIs, and
+//           the heart of Diginiwas through intelligent discovery and verified data.
+//         </p>
+
+//         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+//   {aboutStats.map((item, index) => (
+//     <div
+//       key={index}
+//       className="bg-white/70 backdrop-blur-xl border border-white/20 rounded-xl p-6"
+//     >
+//       <h3 className="text-3xl font-bold text-[#162839]">
+//         {item.value}
+//       </h3>
+
+//       <p className="uppercase text-sm font-semibold text-gray-600">
+//         {item.label}
+//       </p>
+//     </div>
+//   ))}
+// </div>
+//       </div>
+//     </section>
+//   );
+// }
+const flattenStory = (story) => {
+  return story.map((item) => {
+    if (!item.length) {
+      return {
+        text: "",
+        extraGap: true,
+      };
+    }
+
+    return {
+      text: item[0],
+      extraGap: false,
+    };
+  });
+};
+function HeroSection() {
   const [aboutStats, setAboutStats] = useState(dummyStats);
+
+  const sectionRef = useRef(null);
+  const storyRef = useRef(null);
+  const storyBoxRef = useRef(null); 
+  const storyInnerRef = useRef(null); 
+
+  const story = [
+    ["every property"],
+    ["has a story."],
+    [],
+    ["every dream"],
+    ["needs a place."],
+    [],
+    ["we believe"],
+    ["buying, selling,"],
+    ["renting and leasing"],
+    [],
+    ["should be simple."],
+    [],
+    ["transparent."],
+    [],
+    ["intelligent."],
+    [],
+    ["trusted."],
+    [],
+    ["that's why"],
+    ["we built"],
+    ["DigiNiwas."],
+    [],
+    ["where technology"],
+    ["meets trust."],
+    [],
+    ["where AI"],
+    ["meets real estate."],
+    [],
+    ["where every property"],
+    ["finds the right owner."],
+  ];
+
+  const lines = flattenStory(story); 
+  const lineRefs = useRef([]);
+  lineRefs.current = []; 
 
   const getAboutStats = async () => {
     try {
       const res = await axios.get("/cms/about-stats");
-  
-      setAboutStats(
-        res.data.stats?.length
-          ? res.data.stats
-          : dummyStats
-      );
+      setAboutStats(res.data.stats?.length ? res.data.stats : dummyStats);
     } catch (err) {
       console.log(err);
     }
   };
-  
+
   useEffect(() => {
     getAboutStats();
   }, []);
-  
 
   const [stats, setStats] = useState({
-  listings: 0,
-  agents: 0,
-  portfolio: 0,
-});
+    listings: 0,
+    agents: 0,
+    portfolio: 0,
+  });
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStats((prev) => ({
+        listings:
+          prev.listings < 10000
+            ? Math.min(prev.listings + 100, 10000)
+            : 10000,
+        agents: prev.agents < 500 ? Math.min(prev.agents + 5, 500) : 500,
+        portfolio:
+          prev.portfolio < 5000 ? Math.min(prev.portfolio + 50, 5000) : 5000,
+      }));
+    }, 20);
 
+    return () => clearInterval(interval);
+  }, []);
 
+  useLayoutEffect(() => {
+    let ctx;
 
+    const setup = () => {
+      if (ctx) ctx.revert();
 
+      ctx = gsap.context(() => {
+        const container = storyBoxRef.current;
+        const inner = storyInnerRef.current;
+        const lineEls = lineRefs.current.filter(Boolean);
 
+        if (!container || !inner || !lineEls.length) return;
 
+        const containerHeight = container.offsetHeight;
+        const centerY = containerHeight * 0.45; 
 
-useEffect(() => {
-  const interval = setInterval(() => {
-    setStats((prev) => ({
-      listings:
-        prev.listings < 10000
-          ? Math.min(prev.listings + 100, 10000)
-          : 10000,
+        // Set baseline muted color and zero shadow blur (normal appearance)
+        gsap.set(lineEls, { 
+          color: "#4a525d",
+          textShadow: "0px 0px 0px rgba(255,255,255,0)"
+        }); 
 
-      agents:
-        prev.agents < 500
-          ? Math.min(prev.agents + 5, 500)
-          : 500,
+        const lineCenters = lineEls.map(
+          (el) => el.offsetTop + el.offsetHeight / 2
+        );
 
-      portfolio:
-        prev.portfolio < 5000
-          ? Math.min(prev.portfolio + 50, 5000)
-          : 5000,
-    }));
-  }, 20);
+        const startY = centerY - lineCenters[0];
+        const endY = centerY - lineCenters[lineCenters.length - 1];
 
-  return () => clearInterval(interval);
-}, []);
+        gsap.set(inner, { y: startY });
 
+        const scrollDistance = Math.abs(endY - startY) + window.innerHeight * 0.6;
 
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: `+=${scrollDistance}`,
+            scrub: 1,
+            pin: true,
+            pinSpacing: true,
+            anticipatePin: 1,
+          },
+        });
+
+        tl.to(
+          inner,
+          {
+            y: endY,
+            ease: "none",
+            duration: 1,
+          },
+          0
+        );
+
+        const totalTravel = endY - startY;
+        lineEls.forEach((el, i) => {
+          const t = (centerY - lineCenters[i] - startY) / totalTravel;
+          const clamped = Math.min(Math.max(t, 0), 1);
+          const fadeWindow = 0.04; 
+
+          // Transition color and text shadow tracking together for the bold white effect
+          tl.to(
+            el,
+            {
+              color: "#ffffff",
+              textShadow: "0px 0px 1px rgba(255,255,255,1), 0.5px 0px 0px rgba(255,255,255,1)",
+              ease: "none",
+              duration: fadeWindow,
+            },
+            Math.max(clamped - fadeWindow / 2, 0)
+          );
+        });
+      }, sectionRef);
+    };
+
+    setup();
+    ScrollTrigger.refresh();
+
+    let resizeTimeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        setup();
+        ScrollTrigger.refresh();
+      }, 200);
+    };
+
+    window.addEventListener("load", ScrollTrigger.refresh);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("load", ScrollTrigger.refresh);
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(resizeTimeout);
+      if (ctx) ctx.revert();
+    };
+  }, [lines.length]);
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center items-center text-center px-5 pt-32 pb-20 overflow-hidden">
+    <section ref={sectionRef} className="relative h-[100vh] overflow-hidden bg-black">
+      {/* Background Image Layer with Premium Text Overlay Support */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1628394d] to-[#162839cc] z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 z-10"></div>
 
         <img
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBPZawAd1oy-smKp5UtCyQ1weMdzx-1bJh9nHxOUuSI1oxE0QjahuEBO0u_QC8L0QCAj7yRcM39Ypw2lgFnAwlWCfgCnmFIinPhXN6cDSfrladXNhbVU63iHidNHXJm8bY0gl3mDF1sU2imz0kzQfM0adN9JM7Ij1cWo6wqnoqWQDGIZR863K0JtXzSZ_4Hj_Z8mJa4BuCGQNXSomM9fVIUPZbQpAbZNChb1dcNVkq5ZH8bVMEhHnp9T8QL33ppcxzx3E71Hl9"
@@ -201,39 +444,48 @@ useEffect(() => {
         />
       </div>
 
-      <div className="relative z-20 max-w-5xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-semibold text-white mb-8 leading-tight">
-          Building the Future of{" "}
-          <span className="text-[#ffe088]">AI-Powered</span> Real Estate in
-          Diginiwas
-        </h1>
+      <div
+        ref={storyRef}
+        className="sticky top-0 h-screen flex flex-col items-center justify-center z-20 px-4"
+      >
+        <div className="max-w-5xl mx-auto mt-44 text-center w-full">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-semibold text-white mb-6 md:mb-10 leading-tight">
+            Building the Future of{" "}
+            <span className="text-[#ffe088]">AI-Powered</span> Real Estate in
+            Diginiwas
+          </h1>
 
-        <p className="text-base md:text-xl text-white/90 max-w-2xl mx-auto mb-16">
-          We're bridging the gap between visionary investors, global NRIs, and
-          the heart of Diginiwas through intelligent discovery and verified data.
-        </p>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-  {aboutStats.map((item, index) => (
-    <div
-      key={index}
-      className="bg-white/70 backdrop-blur-xl border border-white/20 rounded-xl p-6"
-    >
-      <h3 className="text-3xl font-bold text-[#162839]">
-        {item.value}
-      </h3>
-
-      <p className="uppercase text-sm font-semibold text-gray-600">
-        {item.label}
-      </p>
-    </div>
-  ))}
-</div>
+          <div
+            ref={storyBoxRef}
+            className="relative mt-8 md:mt-12 w-full max-w-3xl mx-auto h-[320px] sm:h-[400px] md:h-[500px] overflow-hidden mask-fade-edges"
+          >
+            <div ref={storyInnerRef} className="absolute left-0 right-0">
+              {lines.map((line, i) => (
+                <p
+                  key={i}
+                  ref={(el) => (lineRefs.current[i] = el)}
+                  className={`text-[22px] sm:text-[28px] md:text-[42px] leading-[1.4] font-medium font-serif text-center will-change-transform ${
+                    line.extraGap ? "mb-6 sm:mb-10" : "mb-1"
+                  }`}
+                  style={{ fontSmooth: "always", WebkitFontSmoothing: "antialiased" }}
+                >
+                  {line.text}
+                </p>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
+
+      <style>{`
+        .mask-fade-edges {
+          -webkit-mask-image: linear-gradient(to bottom, transparent 0%, white 15%, white 85%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0%, white 15%, white 85%, transparent 100%);
+        }
+      `}</style>
     </section>
   );
 }
-
 function GenesisSection() {
   const [genesisData, setGenesisData] = useState(dummyGenesis);
 
@@ -539,45 +791,111 @@ function MissionVisionSection() {
   );
 }
 
+// function FeaturesSection() {
+//   return (
+//     <section className="py-12 sm:py-28 px-5 md:px-16 bg-white">
+//       <div className="max-w-7xl mx-auto text-center mb-16">
+//         <span className="uppercase tracking-widest text-[#006d44] font-bold">
+//           More Than a Platform
+//         </span>
+//       </div>
+
+//       <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
+//         <div className="bg-gray-50 p-8 rounded-3xl border  transition-all duration-300 hover:border-[#274255] hover:border-2">
+//           <h4 className="text-2xl font-semibold text-[#162839] mb-4">
+//             AI Real Estate Assistant
+//           </h4>
+//           <p>
+//             Personalized property recommendations based on financial goals and
+//             lifestyle preferences.
+//           </p>
+//         </div>
+
+//         <div className="bg-gray-50 p-8 rounded-3xl border  transition-all duration-300 hover:border-[#274255] hover:border-2">
+//           <h4 className="text-2xl font-semibold text-[#24255] mb-4">
+//             Verified Listings
+//           </h4>
+//           <p>
+//             Every property undergoes a 42-point background check before
+//             appearing on Niwas AI.
+//           </p>
+//         </div>
+
+//         <div className="bg-gray-50 p-8 rounded-3xl border  transition-all duration-300 hover:border-[#274255] hover:border-2">
+//           <h4 className="text-2xl font-semibold text-[#274255] mb-4">
+//             NRI Priority Support
+//           </h4>
+//           <p>
+//             Seamless digital documentation and virtual walkthroughs for our
+//             global Diginiwas family.
+//           </p>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
 function FeaturesSection() {
+  const [cmsData, setCmsData] = useState({
+    topTitle: "More Than a Platform",
+    features: [
+      {
+        title: "AI Real Estate Assistant",
+        description: "Personalized property recommendations based on financial goals and lifestyle preferences."
+      },
+      {
+        title: "Verified Listings",
+        description: "Every property undergoes a 42-point background check before appearing on Niwas AI."
+      },
+      {
+        title: "NRI Priority Support",
+        description: "Seamless digital documentation and virtual walkthroughs for our global Diginiwas family."
+      }
+    ]
+  });
+
+  useEffect(() => {
+    const fetchFeatures = async () => {
+      try {
+        const res = await axios.get("/cms/platform-features");
+       
+        if (res.data?.success && res.data?.data) {
+          setCmsData({
+            topTitle: res.data.data.topTitle || "More Than a Platform",
+            features: res.data.data.features?.length === 3 ? res.data.data.features : cmsData.features
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching platform features from CMS:", error);
+      }
+    };
+
+    fetchFeatures();
+  }, []);
+
   return (
     <section className="py-12 sm:py-28 px-5 md:px-16 bg-white">
+      {/* Dynamic Top Header Section */}
       <div className="max-w-7xl mx-auto text-center mb-16">
         <span className="uppercase tracking-widest text-[#006d44] font-bold">
-          More Than a Platform
+          {cmsData.topTitle}
         </span>
       </div>
 
+      {/* Dynamic 3-Card Grid Setup */}
       <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
-        <div className="bg-gray-50 p-8 rounded-3xl border  transition-all duration-300 hover:border-[#274255] hover:border-2">
-          <h4 className="text-2xl font-semibold text-[#162839] mb-4">
-            AI Real Estate Assistant
-          </h4>
-          <p>
-            Personalized property recommendations based on financial goals and
-            lifestyle preferences.
-          </p>
-        </div>
-
-        <div className="bg-gray-50 p-8 rounded-3xl border  transition-all duration-300 hover:border-[#274255] hover:border-2">
-          <h4 className="text-2xl font-semibold text-[#24255] mb-4">
-            Verified Listings
-          </h4>
-          <p>
-            Every property undergoes a 42-point background check before
-            appearing on Niwas AI.
-          </p>
-        </div>
-
-        <div className="bg-gray-50 p-8 rounded-3xl border  transition-all duration-300 hover:border-[#274255] hover:border-2">
-          <h4 className="text-2xl font-semibold text-[#274255] mb-4">
-            NRI Priority Support
-          </h4>
-          <p>
-            Seamless digital documentation and virtual walkthroughs for our
-            global Diginiwas family.
-          </p>
-        </div>
+        {cmsData.features.map((item, index) => (
+          <div 
+            key={index} 
+            className="bg-gray-50 p-8 rounded-3xl border transition-all duration-300 hover:border-[#274255] hover:border-2"
+          >
+            <h4 className="text-2xl font-semibold text-[#162839] mb-4">
+              {item.title}
+            </h4>
+            <p className="text-gray-600 leading-relaxed">
+              {item.description}
+            </p>
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -706,3 +1024,10 @@ const About = () => {
 };
 
 export default About;
+
+
+
+
+
+
+

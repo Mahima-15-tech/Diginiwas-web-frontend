@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // Agar react-router use kar rahe hain toh
 
-import ai from "../../assets/images/ai.webp"
+import ai from "../../assets/images/niwas_ai.png"
 
 const FloatingButtons = () => {
   return (
@@ -26,10 +26,10 @@ const FloatingButtons = () => {
       </a>
 
       {/* 2. Niwas AI Chat Button */}
-      <div className='flex bg-white h-14 w-14 items-center justify-center rounded-full  shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_15px_rgba(16,185,129,0.5)] '> 
+      <div className='flex  h-14 w-14 items-center justify-center rounded-full  shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_15px_rgba(16,185,129,0.5)] '> 
       <Link
         to="/niwas-ai" // React Router Navigation ke liye Link component use karna behtar hai
-        className="flex bg-white h-14 w-14 items-center justify-center rounded-full  shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+        className="flex  h-14 w-14 items-center justify-center rounded-full  shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-[0_0_15px_rgba(16,185,129,0.5)]"
         title="Go to Niwas AI"
       >
         

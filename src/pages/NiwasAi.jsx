@@ -16,7 +16,7 @@ import {
   Navigation,
 } from "lucide-react";
 import logo from "../assets/images/homelogo.png";
-import ai from "../assets/images/ai.webp"
+import ai from "../assets/images/niwas_ai.png"
 // import propertyVideo from "../assets/video/diginiwas.mp4";
 const propertyVideo  = import.meta.env.VITE_NIWAS_AI
 /* ============================================================
@@ -104,13 +104,14 @@ function SuggestionChips({ suggestions, onPick, disabled }) {
 function TypingIndicator() {
   return (
     <div className="flex items-end gap-2 animate-[fadeInUp_0.25s_ease-out]">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white border border-gray-100">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gray-100">
         <img
           src={ai}
           alt="Niwas AI"
           className="h-full w-full object-cover mix-blend-multiply"
         />
       </div>
+      
       <div className="inline-flex items-center gap-1.5 rounded-2xl rounded-bl-sm bg-gray-100 px-4 py-3.5">
         <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.3s]" />
         <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.15s]" />
