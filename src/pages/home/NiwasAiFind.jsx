@@ -231,7 +231,7 @@ const [loading, setLoading] = useState(true);
   const [startIndex, setStartIndex] = useState(0);
   const visibleProperties = properties.slice(startIndex, startIndex + 3);
 
-
+   const [showComingSoon, setShowComingSoon] = useState(false);
   useEffect(() => {
   fetchProperties();
 }, []);
@@ -357,7 +357,7 @@ if (loading) {
                         </div>
                        
                            <div  className="mt-auto pt-3"> 
-                          <button className="mt-auto w-full bg-[#0F2E46] hover:bg-[#163B59] transition text-white font-semibold text-sm px-4 py-2.5 rounded-xl">
+                          <button onClick={() => setShowComingSoon(true)} className="mt-auto w-full bg-[#0F2E46] hover:bg-[#163B59] transition text-white font-semibold text-sm px-4 py-2.5 rounded-xl">
                             View Details
                           </button>
                           </div>
@@ -378,6 +378,10 @@ if (loading) {
 
         {/* <PropertyListing /> */}
 <PropertyListing properties={properties} />
+
+        {showComingSoon && (
+          <ComingSoonVideo setShowComingSoon={setShowComingSoon} />
+         )}
       </section>
     );
   }

@@ -76,6 +76,7 @@
  import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import ComingSoonVideo from "../components/common/ComingSoonVideo";
 import {
   FaFacebookF,
   FaInstagram,
@@ -125,6 +126,7 @@ const socialLinks = [
 
 export default function Footer() {
   const navigate = useNavigate()
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   return (
     <footer className="bg-[#274255] text-white pt-16">
@@ -153,13 +155,13 @@ export default function Footer() {
             <div className="flex gap-3 mt-6">
 
               {socialLinks.map((item, index) => (
-                <a
-                  href={item.link}
+                <span onClick={() => setShowComingSoon(true)}
+                  // href={item.link}
                   key={index}
-                  className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-[#33cc99] hover:text-[#274255] transition-all duration-300"
+                  className="w-10 h-10 cursor-pointer rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-[#33cc99] hover:text-[#274255] transition-all duration-300"
                 >
                   {item.icon}
-                </a>
+                </span>
               ))}
 
             </div>
@@ -180,7 +182,7 @@ export default function Footer() {
 
                 {links.map((item, index) => (
 
-                  <li key={index}>
+                  <li key={index} >
 
                     <NavLink
                       to={item.path}
@@ -268,7 +270,7 @@ export default function Footer() {
               </p>
           </div>
           <div className="flex flex-wrap justify-center gap-6">
-
+            
             <NavLink
               to="/privacy-policy"
               className="text-white/60 hover:text-[#33cc99] text-sm transition-all"
@@ -296,6 +298,10 @@ export default function Footer() {
 
       </div>
 
+          
+        {showComingSoon && (
+          <ComingSoonVideo setShowComingSoon={setShowComingSoon}/>
+        )}
     </footer>
   );
 }
