@@ -732,7 +732,7 @@ function FlyToCity({ city, focusVersion, hasFocus }) {
   const map = useMap();
   useEffect(() => {
     if (!hasFocus || !city?.position) return;
-    map.flyTo(city.position, 10, { // 👈 Search karne par perfectly balanced zoom level 10
+    map.flyTo(city.position, 10, {
       duration: 1.2,
     });
   }, [focusVersion, map, hasFocus, city]);
@@ -838,7 +838,7 @@ export default function ExploreProperty() {
   }, [properties, cityFromUrl]);
 
   const handleSearch = () => {
-    setIsSearched(true); // 🔥 User ne search hit kar diya hai
+    setIsSearched(true); 
     let filtered = [...properties];
 
     if (search.trim()) {
@@ -1083,9 +1083,10 @@ export default function ExploreProperty() {
                       <div className="text-sm font-bold mt-1">₹{p.price.toLocaleString()}</div>
                     </div>
                     <div className="px-3">
-                      <button onClick={() => 
-                     { setShowPopUpImg(true)
-                      setImage(big)}
+                      <button onClick={() => {
+                    //  { setShowPopUpImg(true)
+                      // setImage(big);
+                    window.open("https://wa.me/917988537478", "_blank");}
                       } className="bg-[#0F2E46] hover:bg-[#163B59] transition text-white font-semibold text-xs sm:text-sm px-5 py-3 rounded-xl">
                         View Details
                       </button>

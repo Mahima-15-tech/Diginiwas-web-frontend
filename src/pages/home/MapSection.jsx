@@ -276,8 +276,10 @@ export default function IndiaMap({ searchCity }) {
                   </div>
 
                   {/* View Details Button */}
-                  <button onClick={() => { setShowPopUpImg(true)
-                                        setImage(big)}
+                  <button onClick={() => { 
+                    // setShowPopUpImg(true)
+                                        // setImage(big);
+                                      window.open("https://wa.me/917988537478", "_blank");}
                      } className="w-full bg-[#0F2E46] hover:bg-emerald-600 transition-colors duration-200 text-white font-bold text-xs py-2.5 rounded-lg shadow-sm mt-1">
                     View Details
                   </button>
