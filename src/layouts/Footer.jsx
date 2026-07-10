@@ -145,7 +145,7 @@ export default function Footer() {
                 <MdLocationOn className="text-[#33cc99] text-2xl mt-1 flex-shrink-0" />
 
                 <p className="text-white/70">
-                  Ambala, Haryana,
+                    Haryana,
                   <br />
                   India
                 </p>
@@ -157,7 +157,7 @@ export default function Footer() {
                 <MdEmail className="text-[#33cc99] text-xl" />
 
                 <span className="text-white/70">
-                  support@diginiwas.com
+                  diginiwas@gmail.com
                 </span>
 
               </div>
@@ -167,7 +167,7 @@ export default function Footer() {
                 <MdCall className="text-[#33cc99] text-xl" />
 
                 <span className="text-white/70">
-                  +91 98765 43210
+                  +91 82854 66557
                 </span>
 
               </div>

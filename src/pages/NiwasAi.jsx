@@ -1199,7 +1199,7 @@ export default function NiwasAi() {
   const [chatHistory, setChatHistory] = useState([
     {
       id: "session-1",
-      title: "Jaipur Properties Query",
+      title: "Properties Query",
       messages: [
         {
           role: "assistant",
