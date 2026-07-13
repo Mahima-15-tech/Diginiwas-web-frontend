@@ -1,5 +1,3 @@
-
-
 // import React, { useEffect, useMemo, useRef, useState } from "react";
 // import axios from "axios";
 // import {
@@ -17,7 +15,6 @@
 // } from "lucide-react";
 // import logo from "../assets/images/homelogo.png";
 // import ai from "../assets/images/niwas_ai.png"
-// // import propertyVideo from "../assets/video/diginiwas.mp4";
 // const propertyVideo  = import.meta.env.VITE_NIWAS_AI
 // /* ============================================================
 //    UTILS — city fallback coords, distance, formatting
@@ -104,14 +101,14 @@
 // function TypingIndicator() {
 //   return (
 //     <div className="flex items-end gap-2 animate-[fadeInUp_0.25s_ease-out]">
-//       <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gray-100">
+//       <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] p-1.5 shadow-sm">
 //         <img
 //           src={ai}
 //           alt="Niwas AI"
-//           className="h-full w-full object-cover mix-blend-multiply"
+//           className="h-full w-full object-contain"
 //         />
 //       </div>
-      
+
 //       <div className="inline-flex items-center gap-1.5 rounded-2xl rounded-bl-sm bg-gray-100 px-4 py-3.5">
 //         <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.3s]" />
 //         <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.15s]" />
@@ -161,14 +158,20 @@
 //         isUser ? "flex-row-reverse" : ""
 //       }`}
 //     >
-//       <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gray-100">
+//       <div
+//         className={`flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-sm ${
+//           isUser
+//             ? "bg-gray-100"
+//             : "bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] p-1.5"
+//         }`}
+//       >
 //         {isUser ? (
 //           <User size={18} className="text-gray-600" />
 //         ) : (
 //           <img
 //             src={ai}
 //             alt="Niwas AI"
-//             className="h-full w-full object-cover mix-blend-multiply"
+//             className="h-full w-full object-contain"
 //           />
 //         )}
 //       </div>
@@ -340,7 +343,7 @@
 //   const [chatHistory, setChatHistory] = useState([
 //     {
 //       id: "session-1",
-//       title: "Jaipur Properties Query",
+//       title: "Properties Query",
 //       messages: [
 //         {
 //           role: "assistant",
@@ -462,84 +465,6 @@
 //     setTyping(true);
 
 //     // -------------------------------------------------------------
-//     // AI INTENT & SEARCH LOGIC
-//     // -------------------------------------------------------------
-//     // setTimeout(() => {
-//     //   setTyping(false);
-
-//     //   let assistantText = "";
-//     //   let matchedProperties = [];
-
-//     //   // 1. Identity Logic ("Who are you")
-//     //   if (
-//     //     query.includes("who are you") ||
-//     //     query.includes("who r u") ||
-//     //     query.includes("kaun ho") ||
-//     //     query.includes("kon ho") ||
-//     //     query.includes("what is niwas ai")
-//     //   ) {
-//     //     assistantText =
-//     //       "I'm **Niwas AI**, your smart real estate assistant! 🏡\n\nI'm here to help you find, compare, and get the best luxury properties within your budget effortlessly.";
-//     //   }
-//     //   // 2. Greetings Logic
-//     //   else if (
-//     //     query === "hi" ||
-//     //     query === "hello" ||
-//     //     query === "hey" ||
-//     //     query === "namaste"
-//     //   ) {
-//     //     assistantText =
-//     //       "Hello! 👋 How can I help you find the best luxury properties within your budget today?";
-//     //   }
-//     //   // 3. General Property Search Query
-//     //   else {
-//     //     let data = [...allProperties];
-
-//     //     cities.forEach((city) => {
-//     //       if (city !== "All" && query.includes(city.toLowerCase())) {
-//     //         data = data.filter(
-//     //           (x) => x.city?.toLowerCase() === city.toLowerCase()
-//     //         );
-//     //       }
-//     //     });
-
-//     //     const bhk = query.match(/([1-5])\s*bhk/i);
-//     //     if (bhk) {
-//     //       data = data.filter((x) => Number(x.bedrooms) === Number(bhk[1]));
-//     //     }
-
-//     //     if (query.includes("rent")) {
-//     //       data = data.filter(
-//     //         (x) => x.transactionType?.toLowerCase() === "rent"
-//     //       );
-//     //     }
-
-//     //     if (query.includes("buy")) {
-//     //       data = data.filter(
-//     //         (x) => x.transactionType?.toLowerCase() === "buy"
-//     //       );
-//     //     }
-
-//     //     assistantText = `Found ${data.length} matching properties for your search:`;
-//     //     matchedProperties = data.slice(0, 6);
-//     //   }
-
-//     //   const assistantMsg = {
-//     //     role: "assistant",
-//     //     text: assistantText,
-//     //     properties: matchedProperties,
-//     //   };
-
-//     //   setChatHistory((prev) =>
-//     //     prev.map((chat) => {
-//     //       if (chat.id === activeChatId) {
-//     //         return { ...chat, messages: [...chat.messages, assistantMsg] };
-//     //       }
-//     //       return chat;
-//     //     })
-//     //   );
-//     // }, 1000);
-// // -------------------------------------------------------------
 //     // AI INTENT & SEARCH LOGIC (UPDATED MATCHING)
 //     // -------------------------------------------------------------
 //     setTimeout(() => {
@@ -665,11 +590,11 @@
 //       <div className="relative flex h-[calc(100vh-80px)] w-full min-h-0 flex-col overflow-hidden lg:h-[calc(100vh-80px)] lg:flex-1">
 //         {/* Header */}
 //         <div className="flex shrink-0 items-center gap-3 border-b bg-white p-4 sm:p-5">
-//           <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-gray-100">
+//           <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] p-1.5 shadow-sm">
 //             <img
 //               src={ai}
 //               alt="Niwas AI Avatar"
-//               className="h-full w-full object-cover mix-blend-multiply"
+//               className="h-full w-full object-contain"
 //             />
 //           </div>
 //           <div>
@@ -694,11 +619,11 @@
 //         >
 //           {isFirstTurn && (
 //             <div className="mx-auto max-w-lg pt-6 text-center sm:pt-10">
-//               <div className="mx-auto p-2 mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-white border border-gray-100 shadow-lg">
+//               <div className="mx-auto p-3 mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] shadow-lg">
 //                 <img
 //                   src={ai}
 //                   alt="Niwas AI Large Logo"
-//                   className="h-full w-full object-cover mix-blend-multiply"
+//                   className="h-full w-full object-contain"
 //                 />
 //               </div>
 //               <h2 className="text-lg font-bold text-[#0F2E46] sm:text-xl">
@@ -852,7 +777,6 @@
 //   );
 // }
 
-
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import {
@@ -869,13 +793,13 @@ import {
   Navigation,
 } from "lucide-react";
 import logo from "../assets/images/homelogo.png";
-import ai from "../assets/images/niwas_ai.png"
-// import propertyVideo from "../assets/video/diginiwas.mp4";
-const propertyVideo  = import.meta.env.VITE_NIWAS_AI
+import ai from "../assets/images/niwas_ai.png";
+
+const propertyVideo = import.meta.env.VITE_NIWAS_AI;
+
 /* ============================================================
    UTILS — city fallback coords, distance, formatting
    ============================================================ */
-
 const CITY_COORDS = {
   jaipur: { lat: 26.9124, lng: 75.7873 },
   mohali: { lat: 30.7046, lng: 76.7179 },
@@ -920,7 +844,6 @@ function getPropertyCoords(property) {
 /* ============================================================
    SMALL SUBCOMPONENTS
    ============================================================ */
-
 function SuggestionChips({ suggestions, onPick, disabled }) {
   const list = suggestions || [
     "Who are you?",
@@ -935,17 +858,15 @@ function SuggestionChips({ suggestions, onPick, disabled }) {
           key={s}
           disabled={disabled}
           onClick={() => onPick(s)}
-          className={`group flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm shadow-sm transition-all duration-200 ${
-            disabled
+          className={`group flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm shadow-sm transition-all duration-200 ${disabled
               ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
               : "border-gray-200 bg-white text-gray-700 hover:border-[#1CB46D] hover:bg-[#1CB46D]/5 hover:text-[#0F2E46] hover:shadow-md active:scale-95"
-          }`}
+            }`}
         >
           <Sparkles
             size={13}
-            className={`text-[#1CB46D] ${
-              disabled ? "opacity-30" : "opacity-70 group-hover:opacity-100"
-            }`}
+            className={`text-[#1CB46D] ${disabled ? "opacity-30" : "opacity-70 group-hover:opacity-100"
+              }`}
           />
           {s}
         </button>
@@ -958,13 +879,8 @@ function TypingIndicator() {
   return (
     <div className="flex items-end gap-2 animate-[fadeInUp_0.25s_ease-out]">
       <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] p-1.5 shadow-sm">
-        <img
-          src={ai}
-          alt="Niwas AI"
-          className="h-full w-full object-contain"
-        />
+        <img src={ai} alt="Niwas AI" className="h-full w-full object-contain" />
       </div>
-
       <div className="inline-flex items-center gap-1.5 rounded-2xl rounded-bl-sm bg-gray-100 px-4 py-3.5">
         <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.3s]" />
         <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.15s]" />
@@ -979,11 +895,10 @@ function PropertyCard({ property, isSelected, onSelect }) {
     <button
       type="button"
       onClick={() => onSelect?.(property)}
-      className={`group w-full text-left overflow-hidden rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${
-        isSelected
+      className={`group w-full text-left overflow-hidden rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${isSelected
           ? "border-[#1CB46D] ring-2 ring-[#1CB46D]/30 shadow-lg"
           : "border-gray-200 shadow-sm"
-      }`}
+        }`}
     >
       <div className="relative h-40 w-full overflow-hidden">
         <img
@@ -1007,57 +922,19 @@ function PropertyCard({ property, isSelected, onSelect }) {
 
 function ChatMessage({ message, selectedProperty, onSelectProperty }) {
   const isUser = message.role === "user";
-
   return (
-    <div
-      className={`flex items-end gap-2 animate-[fadeInUp_0.3s_ease-out] ${
-        isUser ? "flex-row-reverse" : ""
-      }`}
-    >
-      <div
-        className={`flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-sm ${
-          isUser
-            ? "bg-gray-100"
-            : "bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] p-1.5"
-        }`}
-      >
-        {isUser ? (
-          <User size={18} className="text-gray-600" />
-        ) : (
-          <img
-            src={ai}
-            alt="Niwas AI"
-            className="h-full w-full object-contain"
-          />
-        )}
+    <div className={`flex items-end gap-2 animate-[fadeInUp_0.3s_ease-out] ${isUser ? "flex-row-reverse" : ""}`}>
+      <div className={`flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-sm ${isUser ? "bg-gray-100" : "bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] p-1.5"}`}>
+        {isUser ? <User size={18} className="text-gray-600" /> : <img src={ai} alt="Niwas AI" className="h-full w-full object-contain" />}
       </div>
-
-      <div
-        className={`flex flex-col gap-3 ${
-          isUser ? "items-end" : "items-start"
-        } max-w-[85%]`}
-      >
-        <div
-          className={`inline-block px-4 py-3 shadow-sm ${
-            isUser
-              ? "rounded-2xl rounded-br-sm bg-[#0F2E46] text-white"
-              : "rounded-2xl rounded-bl-sm bg-gray-100 text-gray-800"
-          }`}
-        >
-          <div className="whitespace-pre-line text-sm leading-relaxed">
-            {message.text}
-          </div>
+      <div className={`flex flex-col gap-3 ${isUser ? "items-end" : "items-start"} max-w-[85%]`}>
+        <div className={`inline-block px-4 py-3 shadow-sm ${isUser ? "rounded-2xl rounded-br-sm bg-[#0F2E46] text-white" : "rounded-2xl rounded-bl-sm bg-gray-100 text-gray-800"}`}>
+          <div className="whitespace-pre-line text-sm leading-relaxed">{message.text}</div>
         </div>
-
         {message.properties?.length > 0 && (
           <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
             {message.properties.map((p) => (
-              <PropertyCard
-                key={p._id}
-                property={p}
-                isSelected={selectedProperty?._id === p._id}
-                onSelect={onSelectProperty}
-              />
+              <PropertyCard key={p._id} property={p} isSelected={selectedProperty?._id === p._id} onSelect={onSelectProperty} />
             ))}
           </div>
         )}
@@ -1068,13 +945,9 @@ function ChatMessage({ message, selectedProperty, onSelectProperty }) {
 
 function PropertyLocationPanel({ property, onClose }) {
   if (!property) return null;
-
   const coords = getPropertyCoords(property);
   const title = property.projectName || property.title || "Selected Property";
-  const address =
-    property.address ||
-    [property.locality, property.city, property.state].filter(Boolean).join(", ") ||
-    property.city;
+  const address = property.address || [property.locality, property.city, property.state].filter(Boolean).join(", ") || property.city;
 
   const mapEmbedSrc = coords
     ? `https://www.google.com/maps?q=${coords.lat},${coords.lng}&hl=en&z=14&output=embed`
@@ -1088,43 +961,18 @@ function PropertyLocationPanel({ property, onClose }) {
     <div className="flex w-full flex-col gap-3 border-b border-gray-100 bg-white p-4 animate-[fadeInUp_0.25s_ease-out]">
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#1CB46D]/10 text-[#1CB46D]">
-            <MapPin size={16} />
-          </span>
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#1CB46D]/10 text-[#1CB46D]"><MapPin size={16} /></span>
           <div className="min-w-0">
             <p className="truncate text-sm font-bold text-[#0F2E46]">{title}</p>
             <p className="truncate text-xs text-gray-500">{address}</p>
           </div>
         </div>
-        <button
-          onClick={onClose}
-          aria-label="Close location"
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
-        >
-          <X size={15} />
-        </button>
+        <button onClick={onClose} aria-label="Close location" className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"><X size={15} /></button>
       </div>
-
       <div className="overflow-hidden rounded-xl border border-gray-200">
-        <iframe
-          title={`map-${property._id}`}
-          src={mapEmbedSrc}
-          width="100%"
-          height="180"
-          style={{ border: 0 }}
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-        />
+        <iframe title={`map-${property._id}`} src={mapEmbedSrc} width="100%" height="180" style={{ border: 0 }} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
       </div>
-
-      <a
-        href={mapDirectionsUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center justify-center gap-2 rounded-xl bg-[#0F2E46] py-2.5 text-xs font-semibold text-white shadow-sm transition-transform hover:scale-[1.02] active:scale-95"
-      >
-        <Navigation size={14} /> Get Directions
-      </a>
+      <a href={mapDirectionsUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 rounded-xl bg-[#0F2E46] py-2.5 text-xs font-semibold text-white shadow-sm transition-transform hover:scale-[1.02] active:scale-95"><Navigation size={14} /> Get Directions</a>
     </div>
   );
 }
@@ -1132,48 +980,23 @@ function PropertyLocationPanel({ property, onClose }) {
 function HistoryPanel({ chatHistory, activeChatId, onSelectChat, onNewChat }) {
   return (
     <div className="flex h-full w-full flex-col gap-4 overflow-y-auto p-4">
-      <button
-        onClick={onNewChat}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1CB46D] py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#159659] active:scale-95"
-      >
-        <PlusCircle size={18} /> New Chat
-      </button>
-
+      <button onClick={onNewChat} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1CB46D] py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#159659] active:scale-95"><PlusCircle size={18} /> New Chat</button>
       <div className="flex-1">
-        <h3 className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
-          <Clock size={14} /> Recent Conversations
-        </h3>
+        <h3 className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400"><Clock size={14} /> Recent Conversations</h3>
         <div className="flex flex-col gap-2">
           {chatHistory.length === 0 ? (
-            <p className="py-6 text-center text-xs text-gray-400">
-              No previous chats available.
-            </p>
+            <p className="py-6 text-center text-xs text-gray-400">No previous chats available.</p>
           ) : (
             chatHistory.map((chat) => (
               <button
                 key={chat.id}
                 onClick={() => onSelectChat(chat.id)}
-                className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-all duration-200 hover:bg-gray-50 ${
-                  activeChatId === chat.id
-                    ? "border-[#1CB46D] bg-[#1CB46D]/5"
-                    : "border-gray-100"
-                }`}
+                className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-all duration-200 hover:bg-gray-50 ${activeChatId === chat.id ? "border-[#1CB46D] bg-[#1CB46D]/5" : "border-gray-100"}`}
               >
-                <MessageSquare
-                  size={16}
-                  className={
-                    activeChatId === chat.id
-                      ? "text-[#1CB46D]"
-                      : "text-gray-400"
-                  }
-                />
+                <MessageSquare size={16} className={activeChatId === chat.id ? "text-[#1CB46D]" : "text-gray-400"} />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-[#0F2E46]">
-                    {chat.title || "Empty Conversation"}
-                  </p>
-                  <p className="text-[11px] text-gray-400">
-                    {chat.messages.length} messages
-                  </p>
+                  <p className="truncate text-sm font-medium text-[#0F2E46]">{chat.title || "Empty Conversation"}</p>
+                  <p className="text-[11px] text-gray-400">{chat.messages.length} messages</p>
                 </div>
               </button>
             ))
@@ -1185,17 +1008,19 @@ function HistoryPanel({ chatHistory, activeChatId, onSelectChat, onNewChat }) {
 }
 
 /* ============================================================
-   MAIN COMPONENT — CHAT LOCKED AFTER 3 MESSAGES
+   MAIN COMPONENT
    ============================================================ */
 export default function NiwasAi() {
   const [allProperties, setAllProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
-
-  // Video State & Chat Limit State
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [isChatLocked, setIsChatLocked] = useState(false);
 
-  // Chat Session Management State
+  // Intent State Tracker to follow up user responses
+  const [currentIntent, setCurrentIntent] = useState(null);
+
+  const GENERAL_STATEMENT = " We're here to help. \nShare your details below, and a dedicated DigiNiwas relationship manager will get in touch with you shortly to provide personalised guidance based on your requirements. \nFull Name  \nMobile \nWhatsApp  Number  \nEmail (Optional)  \nLocation ";
+
   const [chatHistory, setChatHistory] = useState([
     {
       id: "session-1",
@@ -1209,7 +1034,6 @@ export default function NiwasAi() {
     },
   ]);
   const [activeChatId, setActiveChatId] = useState("session-1");
-
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
@@ -1226,9 +1050,7 @@ export default function NiwasAi() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/properties`
-        );
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/properties`);
         if (res.data.success) {
           setAllProperties(res.data.properties);
           setFilteredProperties(res.data.properties);
@@ -1251,7 +1073,6 @@ export default function NiwasAi() {
     });
   }, [messages, typing]);
 
-  // Track chat messages limit dynamically
   useEffect(() => {
     const userMsgCount = messages.filter((m) => m.role === "user").length;
     if (userMsgCount >= 3) {
@@ -1263,9 +1084,7 @@ export default function NiwasAi() {
 
   const handleVoice = () => {
     if (isChatLocked) return;
-
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       alert("Voice input isn't supported in this browser.");
       return;
@@ -1289,14 +1108,10 @@ export default function NiwasAi() {
 
   const runSearch = (rawQuery) => {
     if (!rawQuery.trim() || isChatLocked) return;
-    const query = rawQuery.toLowerCase();
-
+    const query = rawQuery.toLowerCase().trim();
     const userMsg = { role: "user", text: rawQuery };
 
-    // Check count before pushing 3rd message
-    const currentUserMessagesCount = messages.filter(
-      (m) => m.role === "user"
-    ).length;
+    const currentUserMessagesCount = messages.filter((m) => m.role === "user").length;
     if (currentUserMessagesCount === 2) {
       setTimeout(() => {
         setShowVideoModal(true);
@@ -1306,8 +1121,7 @@ export default function NiwasAi() {
     setChatHistory((prev) =>
       prev.map((chat) => {
         if (chat.id === activeChatId) {
-          const updatedTitle =
-            chat.messages.length === 1 ? rawQuery : chat.title;
+          const updatedTitle = chat.messages.length === 1 ? rawQuery : chat.title;
           return {
             ...chat,
             title: updatedTitle,
@@ -1320,69 +1134,89 @@ export default function NiwasAi() {
 
     setTyping(true);
 
-    // -------------------------------------------------------------
-    // AI INTENT & SEARCH LOGIC (UPDATED MATCHING)
-    // -------------------------------------------------------------
     setTimeout(() => {
       setTyping(false);
-
       let assistantText = "";
       let matchedProperties = [];
 
-      // Clean query (extra characters, numbers, symbols removed for better intent detection)
-      const cleanQuery = query.trim().toLowerCase();
-
-      // 1. Identity Logic ("Who are you")
-      if (
-        cleanQuery.includes("who are you") ||
-        cleanQuery.includes("who r u") ||
-        cleanQuery.includes("kaun ho") ||
-        cleanQuery.includes("kon ho") ||
-        cleanQuery.includes("what is niwas ai") ||
-        cleanQuery.includes("niwas ai")
-      ) {
-        assistantText =
-          "I'm Niwas AI, your smart real estate assistant! 🏡\n\nI'm here to help you find, compare, and get the best luxury properties within your budget effortlessly.";
+      // --- FOLLOW UP HANDLING ---
+      if (currentIntent) {
+        setCurrentIntent(null); // Reset intent state trigger
+        if (query === "no") {
+          assistantText = "👋 Hi! I'm Niwas AI. We're here to help.";
+        } else {
+          assistantText = GENERAL_STATEMENT;
+        }
       }
-      // 2. Greetings Logic (Handles: hi, hii, hiii, hello, hey, namaste, etc.)
+      // --- GENERAL STATEMENT FOR INVESTMENT, DOCUMENTS, AND SPECIFIC GENERAL QUERIES ---
       else if (
-        cleanQuery.startsWith("hi") ||
-        cleanQuery.includes("hello") ||
-        cleanQuery.includes("hey") ||
-        cleanQuery.includes("namaste")
+        query.includes("best for investment") ||
+        query.includes("highest demand") ||
+        query.includes("nearby schools") ||
+        query.includes("hospitals nearby") ||
+        query.includes("is this area safe") ||
+        query.includes("nearby markets") ||
+        query.includes("documents are needed to buy") ||
+        query.includes("documents are needed to sell") ||
+        query.includes("property registration work") ||
+        query.includes("stamp duty charges") ||
+        query.includes("help with paperwork") ||
+        query.includes("digniwas help") ||
+        query.includes("niwas ai work") ||
+        query.includes("compare two properties") ||
+        query.includes("save this property") ||
+        query.includes("recommend similar properties")
       ) {
-        assistantText =
-          "Hello! 👋 How can I help you find the best luxury properties within your budget today?";
+        assistantText = GENERAL_STATEMENT;
       }
-      // 3. General Property Search Query
-      else {
+      // --- INTENT ROUTING LOGIC ---
+      else if (query.includes("property dealer") || query.includes("agent") || query.includes("partner")) {
+        assistantText = "Become a verified DigiNiwas Partner and receive:\n\n✅ Verified customer leads\n✅ Personal dashboard\n✅ Property promotion\n✅ Dedicated relationship support\n\nWould you like to register?";
+        setCurrentIntent("dealer");
+      } else if (query.includes("home loan")) {
+        assistantText = "I can connect you with our trusted banking partners. Should we proceed?";
+        setCurrentIntent("loan");
+      } else if (query.includes("sell my house") || query.includes("sell house")) {
+        assistantText = "Great! I'd be happy to help.\n\nWith DigiNiwas, you get:\n\n✅ Free property listing\n📸 Professional photography & videography\n📢 Digital marketing across multiple platforms\n👨‍💼 Verified buyer enquiries\n🤝 Support from trusted local agents\n\nShall we start by listing your property?";
+        setCurrentIntent("sell");
+      } else if (query.includes("rent out my flat") || query.includes("rent out my house") || query.includes("rent out my shop")) {
+        assistantText = "Perfect! We'll help you find genuine tenants.\n\nDigiNiwas offers:\nVerified tenant enquiries\nProfessional property photos\nDigital promotion\nRental agreement assistance\nDedicated support throughout the process\n\nReady to list your property?";
+        setCurrentIntent("rent_out");
+      } else if (query.includes("on rent") && (query.includes("2bhk") || query.includes("3bhk") || query.includes("flat") || query.includes("house") || query.includes("shop"))) {
+        assistantText = "I can help with that.\n\nPlease share:\n\nCity or locality\nMonthly budget\nFurnished or unavailable\nFamily or bachelor\n\nI'll show you the best verified options. Proceed?";
+        setCurrentIntent("rent_need");
+      } else if (query.includes("property worth") || query.includes("valuation") || query.includes("value of my property")) {
+        assistantText = "I can help estimate your property's value.\n\nPlease provide:\n\nProperty location\nProperty type\nBuilt-up area\nAge of the property\n\nWe'll prepare an estimated market valuation. Should we start?";
+        setCurrentIntent("worth");
+      } else if (query.includes("visit this property") || query.includes("site visit")) {
+        assistantText = "Excellent!\n\nI'll arrange a site visit with the verified DigiNiwas partner handling this property. Ready?";
+        setCurrentIntent("visit");
+      } else if (query.includes("property document") || query.includes("sale deed") || query.includes("registry guidance")) {
+        assistantText = "We can connect you with trusted professionals for:\nSale deed assistance\nRegistry guidance\nProperty verification\nDocumentation support\n\nWhat kind of assistance do you need?";
+        setCurrentIntent("documents");
+      }
+      // --- DEFAULT PROPERTY & IDENTITY CHATS ---
+      else if (query.includes("who are you") || query.includes("who r u") || query.includes("kaun ho") || query.includes("niwas ai")) {
+        assistantText = "I'm Niwas AI, your smart real estate assistant! 🏡\n\nI'm here to help you find, compare, and get the best luxury properties within your budget effortlessly.";
+      } else if (query.startsWith("hi") || query.includes("hello") || query.includes("hey") || query.includes("namaste")) {
+        assistantText = "Hello! 👋 How can I help you find the best luxury properties within your budget today?";
+      } else {
         let data = [...allProperties];
-
         cities.forEach((city) => {
-          if (city !== "All" && cleanQuery.includes(city.toLowerCase())) {
-            data = data.filter(
-              (x) => x.city?.toLowerCase() === city.toLowerCase()
-            );
+          if (city !== "All" && query.includes(city.toLowerCase())) {
+            data = data.filter((x) => x.city?.toLowerCase() === city.toLowerCase());
           }
         });
-
-        const bhk = cleanQuery.match(/([1-5])\s*bhk/i);
+        const bhk = query.match(/([1-5])\s*bhk/i);
         if (bhk) {
           data = data.filter((x) => Number(x.bedrooms) === Number(bhk[1]));
         }
-
-        if (cleanQuery.includes("rent")) {
-          data = data.filter(
-            (x) => x.transactionType?.toLowerCase() === "rent"
-          );
+        if (query.includes("rent")) {
+          data = data.filter((x) => x.transactionType?.toLowerCase() === "rent");
         }
-
-        if (cleanQuery.includes("buy")) {
-          data = data.filter(
-            (x) => x.transactionType?.toLowerCase() === "buy"
-          );
+        if (query.includes("buy")) {
+          data = data.filter((x) => x.transactionType?.toLowerCase() === "buy");
         }
-
         assistantText = `Found ${data.length} matching properties for your search:`;
         matchedProperties = data.slice(0, 6);
       }
@@ -1420,6 +1254,7 @@ export default function NiwasAi() {
     setChatHistory((prev) => [newChatSession, ...prev]);
     setActiveChatId(newId);
     setSelectedProperty(null);
+    setCurrentIntent(null);
   };
 
   const handleSelectProperty = (property) => {
@@ -1430,8 +1265,7 @@ export default function NiwasAi() {
   const handleSuggestion = (text) => runSearch(text);
 
   const isFirstTurn = messages.length === 1;
-  const showChips =
-    !typing && messages[messages.length - 1]?.role === "assistant";
+  const showChips = !typing && messages[messages.length - 1]?.role === "assistant";
 
   return (
     <div className="flex h-dvh w-full flex-col overflow-hidden bg-gray-50 lg:h-screen lg:flex-row">
@@ -1447,11 +1281,7 @@ export default function NiwasAi() {
         {/* Header */}
         <div className="flex shrink-0 items-center gap-3 border-b bg-white p-4 sm:p-5">
           <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] p-1.5 shadow-sm">
-            <img
-              src={ai}
-              alt="Niwas AI Avatar"
-              className="h-full w-full object-contain"
-            />
+            <img src={ai} alt="Niwas AI Avatar" className="h-full w-full object-contain" />
           </div>
           <div>
             <div className="font-bold text-[#0F2E46]">Niwas AI</div>
@@ -1461,71 +1291,38 @@ export default function NiwasAi() {
 
         {/* Watermark Logo */}
         <div className="pointer-events-none absolute inset-0 top-16 flex items-center justify-center overflow-hidden">
-          <img
-            src={ai}
-            alt="Watermark"
-            className="h-[280px] w-[280px] object-cover opacity-[0.03] mix-blend-multiply"
-          />
+          <img src={ai} alt="Watermark" className="h-[280px] w-[280px] object-cover opacity-[0.03] mix-blend-multiply" />
         </div>
 
         {/* Messages Scroll Area */}
-        <div
-          ref={scrollRef}
-          className="relative flex-1 min-h-0 space-y-5 overflow-y-auto p-4 sm:p-6 pb-6"
-        >
+        <div ref={scrollRef} className="relative flex-1 min-h-0 space-y-5 overflow-y-auto p-4 sm:p-6 pb-6">
           {isFirstTurn && (
             <div className="mx-auto max-w-lg pt-6 text-center sm:pt-10">
               <div className="mx-auto p-3 mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] shadow-lg">
-                <img
-                  src={ai}
-                  alt="Niwas AI Large Logo"
-                  className="h-full w-full object-contain"
-                />
+                <img src={ai} alt="Niwas AI Large Logo" className="h-full w-full object-contain" />
               </div>
-              <h2 className="text-lg font-bold text-[#0F2E46] sm:text-xl">
-                Find your next home, just by asking
-              </h2>
-              <p className="mx-auto mt-1 max-w-sm text-sm text-gray-500">
-                Tell me what you're looking for — city, budget, BHK, or rent vs. buy.
-              </p>
+              <h2 className="text-lg font-bold text-[#0F2E46] sm:text-xl">Find your next home, just by asking</h2>
+              <p className="mx-auto mt-1 max-w-sm text-sm text-gray-500">Tell me what you're looking for — city, budget, BHK, or rent vs. buy.</p>
             </div>
           )}
 
           {messages.map((msg, i) => (
-            <ChatMessage
-              key={i}
-              message={msg}
-              selectedProperty={selectedProperty}
-              onSelectProperty={handleSelectProperty}
-            />
+            <ChatMessage key={i} message={msg} selectedProperty={selectedProperty} onSelectProperty={handleSelectProperty} />
           ))}
 
           {typing && <TypingIndicator />}
 
           {showChips && (
             <div className="mx-auto max-w-lg">
-              {!isFirstTurn && (
-                <p className="mb-1.5 text-xs font-medium text-gray-400">
-                  Try another search
-                </p>
-              )}
-              <SuggestionChips
-                onPick={handleSuggestion}
-                disabled={isChatLocked}
-              />
+              {!isFirstTurn && <p className="mb-1.5 text-xs font-medium text-gray-400">Try another search</p>}
+              <SuggestionChips onPick={handleSuggestion} disabled={isChatLocked} />
             </div>
           )}
         </div>
 
-        {/* Fixed Bottom Input (Disables automatically when locked) */}
+        {/* Fixed Bottom Input */}
         <div className="shrink-0 border-t bg-white p-3 sm:p-4">
-          <div
-            className={`flex items-center gap-2 rounded-full border pl-4 pr-1.5 py-1.5 shadow-sm transition-all ${
-              isChatLocked
-                ? "border-red-200 bg-red-50/30"
-                : "border-gray-300 bg-white focus-within:border-[#1CB46D] focus-within:ring-2 focus-within:ring-[#1CB46D]/20"
-            }`}
-          >
+          <div className={`flex items-center gap-2 rounded-full border pl-4 pr-1.5 py-1.5 shadow-sm transition-all ${isChatLocked ? "border-red-200 bg-red-50/30" : "border-gray-300 bg-white focus-within:border-[#1CB46D] focus-within:ring-2 focus-within:ring-[#1CB46D]/20"}`}>
             <Search size={16} className="shrink-0 text-gray-400" />
             <input
               className="h-9 flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400 disabled:text-gray-400 disabled:cursor-not-allowed"
@@ -1533,98 +1330,39 @@ export default function NiwasAi() {
               disabled={isChatLocked}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              placeholder={
-                isChatLocked
-                  ? "Chat limit reached! Free trials ended."
-                  : "Ask anything about properties..."
-              }
+              placeholder={isChatLocked ? "Chat limit reached! Free trials ended." : "Ask anything about properties..."}
             />
-            <button
-              onClick={handleVoice}
-              disabled={isChatLocked}
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${
-                listening
-                  ? "bg-red-50 text-red-500 animate-pulse"
-                  : isChatLocked
-                  ? "text-gray-300 cursor-not-allowed"
-                  : "text-gray-400 hover:bg-gray-100 hover:text-[#0F2E46]"
-              }`}
-              aria-label="Voice search"
-              type="button"
-            >
+            <button onClick={handleVoice} disabled={isChatLocked} className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${listening ? "bg-red-50 text-red-500 animate-pulse" : isChatLocked ? "text-gray-300 cursor-not-allowed" : "text-gray-400 hover:bg-gray-100 hover:text-[#0F2E46]"}`} aria-label="Voice search" type="button">
               <Mic size={16} />
             </button>
-            <button
-              onClick={handleSend}
-              disabled={isChatLocked}
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white transition-transform ${
-                isChatLocked
-                  ? "bg-gray-300 cursor-not-allowed scale-100"
-                  : "bg-[#0F2E46] hover:scale-105 active:scale-95"
-              }`}
-              aria-label="Send message"
-              type="button"
-            >
+            <button onClick={handleSend} disabled={isChatLocked} className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white transition-transform ${isChatLocked ? "bg-gray-300 cursor-not-allowed scale-100" : "bg-[#0F2E46] hover:scale-105 active:scale-95"}`} aria-label="Send message" type="button">
               <Send size={16} />
             </button>
           </div>
         </div>
       </div>
 
-      {/* ---------------- Right Panel: Location (top) + Chat Sessions Sidebar ---------------- */}
+      {/* ---------------- Right Panel ---------------- */}
       <aside className="flex h-[42%] w-full min-h-0 flex-col overflow-y-auto border-t border-gray-100 bg-white lg:h-full lg:w-[320px] lg:border-l lg:border-t-0 xl:w-[360px]">
-        {selectedProperty && (
-          <PropertyLocationPanel
-            property={selectedProperty}
-            onClose={() => setSelectedProperty(null)}
-          />
-        )}
+        {selectedProperty && <PropertyLocationPanel property={selectedProperty} onClose={() => setSelectedProperty(null)} />}
         <div className="min-h-0 flex-1">
-          <HistoryPanel
-            chatHistory={chatHistory}
-            activeChatId={activeChatId}
-            onSelectChat={setActiveChatId}
-            onNewChat={handleNewChat}
-          />
+          <HistoryPanel chatHistory={chatHistory} activeChatId={activeChatId} onSelectChat={setActiveChatId} onNewChat={handleNewChat} />
         </div>
       </aside>
 
-      {/* 🎬 VIDEO POP-UP MODAL */}
+      {/* VIDEO POP-UP MODAL */}
       {showVideoModal && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-[fadeInUp_0.2s_ease-out]">
           <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
-            {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-gray-100 p-4">
-              <h3 className="text-base font-bold text-[#0F2E46]">
-                Premium Property Insights
-              </h3>
-              <button
-                onClick={() => setShowVideoModal(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors"
-                aria-label="Close Video"
-              >
-                <X size={18} />
-              </button>
+              <h3 className="text-base font-bold text-[#0F2E46]">Premium Property Insights</h3>
+              <button onClick={() => setShowVideoModal(false)} className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors" aria-label="Close Video"><X size={18} /></button>
             </div>
-
-            {/* Video Player Section */}
             <div className="relative aspect-video w-full bg-black">
-              <video
-                src={propertyVideo}
-                controls
-                autoPlay
-                className="h-full w-full object-contain"
-              />
+              <video src={propertyVideo} controls autoPlay className="h-full w-full object-contain" />
             </div>
-
-            {/* Modal Footer */}
             <div className="p-4 bg-gray-50 flex justify-end">
-              <button
-                onClick={() => setShowVideoModal(false)}
-                className="rounded-xl bg-[#0F2E46] px-5 py-2 text-sm font-semibold text-white shadow transition-transform hover:scale-105 active:scale-95"
-              >
-                Close View
-              </button>
+              <button onClick={() => setShowVideoModal(false)} className="rounded-xl bg-[#0F2E46] px-5 py-2 text-sm font-semibold text-white shadow transition-transform hover:scale-105 active:scale-95">Close View</button>
             </div>
           </div>
         </div>

@@ -11,6 +11,13 @@ import PopupImage from "../../components/common/PopupImage"
 const DARK_TILE_URL = `https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=${import.meta.env.VITE_STADIA_API_KEY}`;
 const DARK_TILE_ATTRIBUTION = '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>';
 
+const normalizeText = (value) => {
+  return String(value ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+};
+
 function CustomZoomControl() {
   const map = useMap();
   return (
@@ -56,27 +63,74 @@ function CustomZoomControl() {
 
 function FixMapSize() {
   const map = useMap();
+
   useEffect(() => {
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 100);
+    const timer = setTimeout(() => {
+      if (!map?._container) return;
+
+      try {
+        map.invalidateSize();
+      } catch (error) {
+        console.log("Map resize error:", error);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, [map]);
+
   return null;
 }
 
+// function FlyToCity({ selectedCity, hasSearch, notFound }) {
+//   const map = useMap();
+//   useEffect(() => {
+//     if (!hasSearch) return;
+//     if (selectedCity?.position) {
+//       map.flyTo(selectedCity.position, 11, { duration: 1.2 });
+//     } else if (notFound) {
+//       map.flyTo([23.5, 82], 4, { duration: 1.2 });
+//     }
+//   }, [selectedCity, hasSearch, notFound, map]);
+//   return null;
+// }
 function FlyToCity({ selectedCity, hasSearch, notFound }) {
   const map = useMap();
+
   useEffect(() => {
-    if (!hasSearch) return;
-    if (selectedCity?.position) {
-      map.flyTo(selectedCity.position, 11, { duration: 1.2 });
-    } else if (notFound) {
-      map.flyTo([23.5, 82], 4, { duration: 1.2 });
-    }
-  }, [selectedCity, hasSearch, notFound, map]);
+    if (!map) return;
+
+    const latitude = Number(selectedCity?.position?.[0]);
+    const longitude = Number(selectedCity?.position?.[1]);
+
+    const hasValidCoordinates =
+      Number.isFinite(latitude) &&
+      Number.isFinite(longitude);
+
+    const timer = setTimeout(() => {
+      if (!map?._container) return;
+
+      try {
+        map.invalidateSize();
+
+        if (hasSearch && hasValidCoordinates) {
+          map.flyTo([latitude, longitude], 12, {
+            duration: 1.2,
+          });
+        } else if (hasSearch && notFound) {
+          map.flyTo([23.5, 82], 4, {
+            duration: 1.2,
+          });
+        }
+      } catch (error) {
+        console.log("Map fly error:", error);
+      }
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [map, selectedCity, hasSearch, notFound]);
+
   return null;
 }
-
 export default function IndiaMap({ searchCity }) {
   const [properties, setProperties] = useState([]);
   const [cities, setCities] = useState([]);
@@ -84,7 +138,7 @@ export default function IndiaMap({ searchCity }) {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [searchParams] = useSearchParams();
-  const searchedCity = searchParams.get("city");
+  const searchedCity = searchParams.get("city") || "";
     const [showPopUpImg, setShowPopUpImg] = useState(false)
     const [image, setImage] = useState(null)
 
@@ -102,47 +156,98 @@ export default function IndiaMap({ searchCity }) {
       setLoading(false);
     }
   };
+useEffect(() => {
+  const grouped = {};
 
-  useEffect(() => {
-    const grouped = {};
-    properties.forEach((item) => {
-      if (!item.city || item.latitude == null || item.longitude == null) return;
-      if (!grouped[item.city]) {
-        grouped[item.city] = {
-          name: item.city,
-          position: [Number(item.latitude), Number(item.longitude)],
-          properties: [],
-        };
-      }
-      grouped[item.city].properties.push(item);
-    });
-    setCities(Object.values(grouped));
-  }, [properties]);
+  properties.forEach((item) => {
+    const cityName = String(item?.city ?? "").trim();
+    const latitude = Number(item?.latitude);
+    const longitude = Number(item?.longitude);
 
-  useEffect(() => {
-    if (!cities.length) return;
-    const term = (searchCity || searchedCity || "").trim();
-    if (!term) {
-      setSelectedCity(cities[0]);
-      setNotFound(false);
+    if (
+      !cityName ||
+      !Number.isFinite(latitude) ||
+      !Number.isFinite(longitude)
+    ) {
       return;
     }
-    const found = cities.find((c) => c.name.toLowerCase() === term.toLowerCase());
-    if (found) {
-      setSelectedCity(found);
-      setNotFound(false);
-    } else {
-      setSelectedCity(null);
-      setNotFound(true);
+
+    const cityKey = cityName.toLowerCase();
+
+    if (!grouped[cityKey]) {
+      grouped[cityKey] = {
+        name: cityName,
+        position: [latitude, longitude],
+        properties: [],
+      };
     }
-  }, [searchCity, searchedCity, cities]);
+
+    grouped[cityKey].properties.push(item);
+  });
+
+  setCities(Object.values(grouped));
+}, [properties]);
+
+  // useEffect(() => {
+  //   if (!cities.length) return;
+  //   const term = (searchCity || searchedCity || "").trim();
+  //   if (!term) {
+  //     setSelectedCity(cities[0]);
+  //     setNotFound(false);
+  //     return;
+  //   }
+  //   const found = cities.find((c) => c.name.toLowerCase() === term.toLowerCase());
+  //   if (found) {
+  //     setSelectedCity(found);
+  //     setNotFound(false);
+  //   } else {
+  //     setSelectedCity(null);
+  //     setNotFound(true);
+  //   }
+  // }, [searchCity, searchedCity, cities]);
+useEffect(() => {
+  if (!cities.length) return;
+
+  const term = normalizeText(searchCity || searchedCity || "");
+
+  if (!term) {
+    setSelectedCity(cities[0] || null);
+    setNotFound(false);
+    return;
+  }
+
+  let found = cities.find(
+    (city) => normalizeText(city?.name) === term
+  );
+
+  if (!found) {
+    found = cities.find((city) => {
+      const cityName = normalizeText(city?.name);
+
+      return (
+        cityName.includes(term) ||
+        term.includes(cityName)
+      );
+    });
+  }
+
+  if (found) {
+    setSelectedCity(found);
+    setNotFound(false);
+  } else {
+    setSelectedCity(null);
+    setNotFound(true);
+  }
+}, [searchCity, searchedCity, cities]);
 
   if (loading) {
     return <div className="text-center py-20">Loading....</div>;
   }
 
   const marketData = { activeListings: "1,284" };
-  const hasSearchTerm = !!(searchCity || searchedCity)?.trim();
+const hasSearchTerm = Boolean(
+  String(searchCity || searchedCity || "").trim()
+);
   
   return (
     <div className="w-full min-h-[600px] flex flex-col lg:flex-row gap-5 px-4 lg:px-6 py-8 bg-[#274255]">
@@ -162,7 +267,14 @@ export default function IndiaMap({ searchCity }) {
           <FlyToCity selectedCity={selectedCity} hasSearch={hasSearchTerm} notFound={notFound} />
           <TileLayer url={DARK_TILE_URL} attribution={DARK_TILE_ATTRIBUTION} noWrap={true} />
 
-          {cities.map((location) => (
+          {/* {cities.map((location) => ( */}
+          {cities
+  .filter(
+    (location) =>
+      Number.isFinite(Number(location?.position?.[0])) &&
+      Number.isFinite(Number(location?.position?.[1]))
+  )
+  .map((location) => (
             <CircleMarker
               className="border-2 border-white"
               key={location.name}

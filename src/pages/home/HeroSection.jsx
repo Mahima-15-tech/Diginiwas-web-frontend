@@ -29,9 +29,9 @@ import { IoSearch, IoLocationSharp, IoLocationOutline } from "react-icons/io5";
 import { HiSparkles } from "react-icons/hi2";
 import { LuFileSpreadsheet } from "react-icons/lu";
 import back from "../../assets/images/back.png";
-import niwas from "../../assets/images/niwas.png";
-import dashboard from "../../assets/images/dashboard.png";
-import property from "../../assets/images/property.png";
+import niwas from "../../assets/images/1.png";
+import dashboard from "../../assets/images/3.png";
+import property from "../../assets/images/2.png";
 import { TbHomeSignal } from "react-icons/tb";
 import { CiMobile3 } from "react-icons/ci";
 import { FaApple } from "react-icons/fa"
@@ -49,29 +49,82 @@ const bgImages = [
 ];
 
 
-export default function HeroSection() {
+// export default function HeroSection() {
 
+  // const [heroData, setHeroData] = useState(null);
+  // const [currentBg, setCurrentBg] = useState(0);
+  // const [fade, setFade] = useState(true);
+
+  // // 🔽 NEW: searched city state + ref to scroll into MapSection
+  // const [searchCity, setSearchCity] = useState("");
+  // const mapSectionRef = useRef(null);
+
+  // const handlePropertySearch = (city) => {
+  //   setSearchCity(city);
+  //   mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  // };
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setFade(false);
+  //     setTimeout(() => {
+  //       setCurrentBg((prev) => (prev + 1) % bgImages.length);
+  //       setFade(true);
+  //     }, 500);
+  //   }, 10000);
+  //   return () => clearInterval(interval);
+  // }, []);
+
+  // useEffect(() => {
+  //   getHeroSection();
+  // }, []);
+
+  // const getHeroSection = async () => {
+  //   try {
+  //     const res = await axios.get("/cms/hero");
+  //     setHeroData(res.data.hero);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+export default function HeroSection() {
   const [heroData, setHeroData] = useState(null);
   const [currentBg, setCurrentBg] = useState(0);
   const [fade, setFade] = useState(true);
 
-  // 🔽 NEW: searched city state + ref to scroll into MapSection
+  // Hero section me search ki gayi city
   const [searchCity, setSearchCity] = useState("");
+
+  // Map section tak automatically scroll karne ke liye
   const mapSectionRef = useRef(null);
 
   const handlePropertySearch = (city) => {
-    setSearchCity(city);
-    mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const cleanCity = city.trim();
+
+    if (!cleanCity) return;
+
+    // City ko MapSection me bhejna
+    setSearchCity(cleanCity);
+
+    // Map section tak smooth scroll
+    setTimeout(() => {
+      mapSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 100);
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
       setFade(false);
+
       setTimeout(() => {
         setCurrentBg((prev) => (prev + 1) % bgImages.length);
         setFade(true);
       }, 500);
     }, 10000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -84,7 +137,7 @@ export default function HeroSection() {
       const res = await axios.get("/cms/hero");
       setHeroData(res.data.hero);
     } catch (err) {
-      console.log(err);
+      console.log("Hero API Error:", err);
     }
   };
 
@@ -97,13 +150,33 @@ export default function HeroSection() {
         onSearch={handlePropertySearch}
       />
 
-      {/* 🔽 NEW: MapSection ab yahi page pe render hoga */}
-      <div ref={mapSectionRef}>
+      {/* Hero search ke baad isi section tak scroll hoga */}
+      <div
+        ref={mapSectionRef}
+        id="property-map-section"
+        className="scroll-mt-0"
+      >
         <MapSection searchCity={searchCity} />
       </div>
     </div>
   );
 }
+//   return (
+//     <div className="sm:min-h-screen h-full font-sans bg-[#0d1b2a] text-white">
+//       <Hero
+//         currentBg={currentBg}
+//         fade={fade}
+//         heroData={heroData}
+//         onSearch={handlePropertySearch}
+//       />
+
+//       {/* 🔽 NEW: MapSection ab yahi page pe render hoga */}
+//       <div ref={mapSectionRef}>
+//         <MapSection searchCity={searchCity} />
+//       </div>
+//     </div>
+//   );
+// }
 
 function Hero({ currentBg, fade, heroData, onSearch }) {
   return (
@@ -132,16 +205,33 @@ function Hero({ currentBg, fade, heroData, onSearch }) {
   );
 }
 
-function LeftContent({ heroData, onSearch }) {
+// function LeftContent({ heroData, onSearch }) {
 
-  const [btn, setBtn] = useState('search')
+//   const [btn, setBtn] = useState('search')
+//   const [location, setLocation] = useState("");
+
+//   const handleSearch = () => {
+//     if (!location.trim()) return;
+//     onSearch?.(location.trim());
+//   };
+function LeftContent({ heroData, onSearch }) {
+  const [btn, setBtn] = useState("search");
   const [location, setLocation] = useState("");
+  const [searchError, setSearchError] = useState("");
 
   const handleSearch = () => {
-    if (!location.trim()) return;
-    onSearch?.(location.trim());
-  };
+    const cleanLocation = location.trim();
 
+    if (!cleanLocation) {
+      setSearchError("Please enter a city name");
+      return;
+    }
+
+    setSearchError("");
+
+    // City HeroSection ke parent component me bhejna
+    onSearch?.(cleanLocation);
+  };
   return (
     <div className="flex-1  max-w-full lg:max-w-[50%] xl:max-w-[50%] text-center lg:text-left ">
       <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1.5 mb-4 sm:mb-6">
@@ -229,14 +319,33 @@ function LeftContent({ heroData, onSearch }) {
                 <p className="text-white text-left font-medium">
                   Enter Location
                 </p>
-                <input
+                {/* <input
                   type="text"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   placeholder="e.g., Jaipur"
                   className="w-full bg-transparent text-white/70 placeholder:text-white/50 outline-none mt-1"
-                />
+                /> */}
+                <input
+  type="text"
+  value={location}
+  onChange={(e) => {
+    setLocation(e.target.value);
+
+    if (searchError) {
+      setSearchError("");
+    }
+  }}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearch();
+    }
+  }}
+  placeholder="e.g., Jaipur, Delhi, Mumbai"
+  className="w-full bg-transparent text-white/70 placeholder:text-white/50 outline-none mt-1"
+/>
               </div>
             </div>
 
@@ -262,13 +371,21 @@ function LeftContent({ heroData, onSearch }) {
               </div>
             </div>
 
-            <button
+            {/* <button
               onClick={handleSearch}
               className="bg-[#33cc99] hover:bg-[#2fc18f] transition-all px-8 py-4 rounded-xl flex items-center justify-center gap-2 text-white font-semibold whitespace-nowrap"
             >
               <IoSearch className="text-lg text-white" />
               Search
-            </button>
+            </button> */}
+            <button
+  type="button"
+  onClick={handleSearch}
+  className="bg-[#33cc99] hover:bg-[#2fc18f] transition-all px-8 py-4 rounded-xl flex items-center justify-center gap-2 text-white font-semibold whitespace-nowrap"
+>
+  <IoSearch className="text-lg text-white" />
+  Search
+</button>
           </div>
         </div>
       </div>
@@ -276,25 +393,163 @@ function LeftContent({ heroData, onSearch }) {
   );
 }
 
+// function RightPhones({ heroData }) {
+//   const [showComingSoon, setShowComingSoon] = useState(false)
+//   return (
+//     <div className="flex-1 hidden md:flex flex-col items-center lg:items-end  w-full lg:max-w-[55%] mt-8 lg:mt-0 ">
+//       <div className=" relative flex items-end justify-center w-full  max-w-5xl mx-auto h-full  sm:h-[340px] md:h-[420px] lg:h-[500px]">
+//         <div className="absolute left-[5%] sm:left-[8%] md:left-[20%] lg:left-[12%] bottom-10 z-20 w-32 sm:w-40 md:w-56 lg:w-60 xl:w-72 -rotate-6 hover:scale-110 hover:rotate-0 transition-all duration-500 ease-out drop-shadow-[0_30px_60px_rgba(0,0,0,0.35)] [transform:perspective(700px)_rotateY(-20deg)] hover:[transform:perspective(700px)_rotateY(0deg)]">
+//           <img src={heroData?.heroImage1?.url || niwas} alt="Niwas AI" className="w-full h-auto rounded-[24px]" />
+//         </div>
+
+//         <div className="absolute left-[40%] md:left-[42%] -translate-x-1/2 bottom-10 z-10 w-36 sm:w-44 md:w-48 lg:w-52 xl:w-64 rotate-[3deg] hover:scale-105 hover:rotate-0 transition-all duration-500 ease-out drop-shadow-[0_35px_70px_rgba(0,0,0,0.4)] [transform:perspective(1200px)_rotateY(25deg)] hover:[transform:perspective(1200px)_rotateY(0deg)]">
+//           <img src={heroData?.heroImage2?.url || property} alt="Property Details" className="w-full h-auto rounded-[28px]" />
+//         </div>
+
+//         <div className="absolute right-[5%] sm:right-[8%] md:right-[22%] lg:right-[6%] bottom-20 z-0 w-32 sm:w-40 md:w-40 lg:w-44 xl:w-56 rotate-[10deg] hover:scale-105 hover:rotate-0 transition-all duration-500 ease-out drop-shadow-[0_30px_60px_rgba(0,0,0,0.35)] [transform:perspective(700px)_rotateY(25deg)] hover:[transform:perspective(1200px)_rotateY(0deg)]">
+//           <img src={heroData?.heroImage3?.url || dashboard} alt="Dashboard" className="w-full h-auto rounded-[24px]" />
+//         </div>
+//       </div>
+
+//       <div className="mt-8 ">
+//         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+//           <button
+//             id="download-playstore-btn"
+//             onClick={() => window.open("https://play.google.com/store/apps/details?id=com.whatsapp", "_blank")}
+//             className="group w-54 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-5 py-2 transition-all duration-300 hover:bg-white/20 hover:border-[#33cc99] hover:-translate-y-1 hover:shadow-[0_15px_40px_rgba(0,0,0,0.25)]"
+//           >
+//             <div className="flex items-center gap-4">
+//               <div className="w-14 h-14 rounded-xl bg-[#33cc99] flex items-center justify-center shadow-lg">
+//                 <IoLogoGooglePlaystore className="text-3xl text-[#274255]" />
+//               </div>
+//               <div className="text-left">
+//                 <p className="text-xs text-white/70 uppercase tracking-wider">Get it on</p>
+//                 <h3 className="text-lg font-bold text-white group-hover:text-[#33cc99] transition-colors">Google Play</h3>
+//               </div>
+//             </div>
+//           </button>
+
+//           <button
+//             id="download-appstore-btn"
+//             onClick={() => window.open("https://apps.apple.com/app/id310633997", "_blank")}
+//             className="group w-54 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl px-5 py-2 transition-all duration-300 hover:bg-white/20 hover:border-[#33cc99] hover:-translate-y-1 hover:shadow-[0_15px_40px_rgba(0,0,0,0.25)]"
+//           >
+//             <div className="flex items-center gap-4">
+//               <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center shadow-lg">
+//                 <FaApple className="text-3xl text-black" />
+//               </div>
+//               <div className="text-left">
+//                 <p className="text-xs text-white/70 uppercase tracking-wider">Download on the</p>
+//                 <h3 className="text-lg font-bold text-white group-hover:text-[#33cc99] transition-colors">App Store</h3>
+//               </div>
+//             </div>
+//           </button>
+//         </div>
+
+//         <div className="flex justify-center mt-6 cursor-pointer" onClick={() => setShowComingSoon(true)}>
+//           <div className="group flex items-center gap-4 px-5 py-3 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl shadow-lg hover:border-[#33cc99] transition-all duration-300">
+//             <div className="flex -space-x-2">
+//               <div className="w-10 h-10 rounded-full bg-[#33cc99] flex items-center justify-center">
+//                 <IoLogoGooglePlaystore className="text-[#274255] text-xl" />
+//               </div>
+//               <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center border-2 border-[#274255]">
+//                 <FaApple className="text-black text-xl" />
+//               </div>
+//             </div>
+//             <div  >
+//               <p className="text-white font-semibold text-sm">Mobile App Coming Soon</p>
+//               <p className="text-white/60 text-xs">Android & iOS</p>
+//             </div>
+//             <span className="w-2.5 h-2.5 rounded-full bg-[#33cc99] animate-pulse"></span>
+//           </div>
+//         </div>
+//       </div>
+
+//        { showComingSoon && (
+//          <ComingSoonVideo
+//           setShowComingSoon={setShowComingSoon} video={import.meta.env.VITE_NIWAS_AI}
+//         />)
+//         }
+
+//     </div>
+//   );
+// }
 function RightPhones({ heroData }) {
-  const [showComingSoon, setShowComingSoon] = useState(false)
-  return (
-    <div className="flex-1 hidden md:flex flex-col items-center lg:items-end  w-full lg:max-w-[55%] mt-8 lg:mt-0 ">
-      <div className=" relative flex items-end justify-center w-full  max-w-5xl mx-auto h-full  sm:h-[340px] md:h-[420px] lg:h-[500px]">
-        <div className="absolute left-[5%] sm:left-[8%] md:left-[20%] lg:left-[12%] bottom-10 z-20 w-32 sm:w-40 md:w-56 lg:w-60 xl:w-72 -rotate-6 hover:scale-110 hover:rotate-0 transition-all duration-500 ease-out drop-shadow-[0_30px_60px_rgba(0,0,0,0.35)] [transform:perspective(700px)_rotateY(-20deg)] hover:[transform:perspective(700px)_rotateY(0deg)]">
-          <img src={heroData?.heroImage1?.url || niwas} alt="Niwas AI" className="w-full h-auto rounded-[24px]" />
+  const [showComingSoon, setShowComingSoon] = useState(false);
+
+  // Reusable Phone Wrapper Component jo har image ko iPhone frame dega
+  const PhoneWrapper = ({ imgSrc, altText, rotationClass, zIndexClass, bottomClass, widthClass }) => (
+    <div className={`absolute ${bottomClass} ${zIndexClass} ${widthClass} ${rotationClass} transition-all duration-500 ease-out hover:scale-110 hover:rotate-0`}>
+      {/* Real iPhone Shape Outer Bezel */}
+      <div className="relative w-full aspect-[9/19.5] rounded-[24px] sm:rounded-[32px] md:rounded-[40px] ring-[6px] sm:ring-[8px] md:ring-[10px] ring-black bg-black shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] overflow-hidden border border-zinc-800">
+        
+        {/* Dynamic Island Notch */}
+        <div className="absolute top-1.5 sm:top-2.5 left-1/2 -translate-x-1/2 w-[30%] h-[12px] sm:h-[18px] bg-black rounded-full z-50 flex items-center justify-between px-2">
+          <div className="w-1.5 h-1.5 bg-zinc-900 rounded-full border border-zinc-800 opacity-60" />
+          <div className="w-2.5 h-0.5 bg-zinc-900 rounded-full opacity-60" />
         </div>
 
-        <div className="absolute left-[40%] md:left-[42%] -translate-x-1/2 bottom-10 z-10 w-36 sm:w-44 md:w-48 lg:w-52 xl:w-64 rotate-[3deg] hover:scale-105 hover:rotate-0 transition-all duration-500 ease-out drop-shadow-[0_35px_70px_rgba(0,0,0,0.4)] [transform:perspective(1200px)_rotateY(25deg)] hover:[transform:perspective(1200px)_rotateY(0deg)]">
-          <img src={heroData?.heroImage2?.url || property} alt="Property Details" className="w-full h-auto rounded-[28px]" />
+        {/* Top Status Bar Placeholder Area */}
+        <div className="absolute top-2 w-full px-4 flex justify-between text-[7px] sm:text-[11px] font-medium text-black/80 z-40 select-none">
+          <span>9:41</span>
+          <span>📶 🔋</span>
         </div>
 
-        <div className="absolute right-[5%] sm:right-[8%] md:right-[22%] lg:right-[6%] bottom-20 z-0 w-32 sm:w-40 md:w-40 lg:w-44 xl:w-56 rotate-[10deg] hover:scale-105 hover:rotate-0 transition-all duration-500 ease-out drop-shadow-[0_30px_60px_rgba(0,0,0,0.35)] [transform:perspective(700px)_rotateY(25deg)] hover:[transform:perspective(1200px)_rotateY(0deg)]">
-          <img src={heroData?.heroImage3?.url || dashboard} alt="Dashboard" className="w-full h-auto rounded-[24px]" />
+        {/* Screen Content Wrapper */}
+        <div className="w-full h-full pt-4 sm:pt-6 bg-white overflow-hidden">
+          <img 
+            src={imgSrc} 
+            alt={altText} 
+            className="w-full h-full object-cover object-top"
+          />
         </div>
+
+        {/* Bottom Home Indicator Line */}
+        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-[35%] h-[3px] bg-black rounded-full z-50" />
       </div>
+    </div>
+  );
 
-      <div className="mt-8 ">
+  return (
+    <div className="flex-1 hidden md:flex flex-col items-center lg:items-end w-full lg:max-w-[55%] mt-8 lg:mt-0">
+      {/* --- PHONES CONTAINER START --- */}
+      <div className="relative flex items-end justify-center w-full max-w-5xl mx-auto h-full sm:h-[340px] md:h-[420px] lg:h-[500px]">
+        
+        {/* 1st Left Phone (Niwas AI Screen) */}
+        <PhoneWrapper 
+          imgSrc={heroData?.heroImage1?.url || niwas} 
+          altText="Niwas AI"
+          rotationClass="-rotate-6 [transform:perspective(700px)_rotateY(-20deg)] hover:[transform:perspective(700px)_rotateY(0deg)]"
+          zIndexClass="z-20"
+          bottomClass="bottom-10 left-[5%] sm:left-[8%] md:left-[20%] lg:left-[12%]"
+          widthClass="w-32 sm:w-40 md:w-52 lg:w-56 xl:w-64"
+        />
+
+        {/* 2nd Center Phone (Property Details Screen) */}
+        <PhoneWrapper 
+          imgSrc={heroData?.heroImage2?.url || property} 
+          altText="Property Details"
+          rotationClass="rotate-[3deg] [transform:perspective(1200px)_rotateY(25deg)] hover:[transform:perspective(1200px)_rotateY(0deg)]"
+          zIndexClass="z-10"
+          bottomClass="bottom-10 left-[42%] -translate-x-1/2"
+          widthClass="w-36 sm:w-44 md:w-48 lg:w-52 xl:w-60"
+        />
+
+        {/* 3rd Right Phone (Dashboard Screen) */}
+        <PhoneWrapper 
+          imgSrc={heroData?.heroImage3?.url || dashboard} 
+          altText="Dashboard"
+          rotationClass="rotate-[10deg] [transform:perspective(700px)_rotateY(25deg)] hover:[transform:perspective(1200px)_rotateY(0deg)]"
+          zIndexClass="z-0"
+          bottomClass="bottom-20 right-[5%] sm:right-[8%] md:right-[22%] lg:right-[6%]"
+          widthClass="w-32 sm:w-40 md:w-44 lg:w-48 xl:w-54"
+        />
+
+      </div>
+      {/* --- PHONES CONTAINER END --- */}
+
+      {/* App Stores & Download section remains as it is */}
+      <div className="mt-8">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
             id="download-playstore-btn"
@@ -339,7 +594,7 @@ function RightPhones({ heroData }) {
                 <FaApple className="text-black text-xl" />
               </div>
             </div>
-            <div  >
+            <div>
               <p className="text-white font-semibold text-sm">Mobile App Coming Soon</p>
               <p className="text-white/60 text-xs">Android & iOS</p>
             </div>
@@ -348,15 +603,15 @@ function RightPhones({ heroData }) {
         </div>
       </div>
 
-       { showComingSoon && (
-         <ComingSoonVideo
-          setShowComingSoon={setShowComingSoon} video={import.meta.env.VITE_NIWAS_AI}
-        />)
-        }
-
+      {showComingSoon && (
+        <ComingSoonVideo
+          setShowComingSoon={setShowComingSoon}
+          video={import.meta.env.VITE_NIWAS_AI}
+        />
+      )}
     </div>
   );
-}
+}   
 
 function StatsBar({ heroData }) {
   const navigate = useNavigate();
