@@ -17,7 +17,26 @@ const normalizeText = (value) => {
     .toLowerCase()
     .replace(/\s+/g, " ");
 };
+const formatIndianCurrency = (amount) => {
+  const num = Number(amount);
+  if (!num || isNaN(num)) return "0";
 
+  if (num >= 10000000) {
+    // 1 Crore = 10,000,000
+    const cr = num / 10000000;
+    return `${Number.isInteger(cr) ? cr : cr.toFixed(2)} Crore`;
+  } else if (num >= 100000) {
+    // 1 Lakh = 100,000
+    const lakh = num / 100000;
+    return `${Number.isInteger(lakh) ? lakh : lakh.toFixed(2)} Lakh`;
+  } else if (num >= 1000) {
+    // Optional: formats thousands as 'k' or keep standard comma
+    const k = num / 1000;
+    return `${Number.isInteger(k) ? k : k.toFixed(1)} Thousand`;
+  }
+
+  return num.toLocaleString("en-IN");
+};
 function CustomZoomControl() {
   const map = useMap();
   return (
@@ -354,9 +373,12 @@ const hasSearchTerm = Boolean(
                   {/* Row 1: Price and Title (VILLA) Aligned side-by-side */}
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-baseline">
-                      <span className="text-xl font-black text-[#0f2e46] tracking-tight">
+                      {/* <span className="text-xl font-black text-[#0f2e46] tracking-tight">
                         ₹{Number(p.price).toLocaleString('en-IN')}
-                      </span>
+                      </span> */}
+                      <span className="text-xl font-black text-[#0f2e46] tracking-tight">
+  ₹{formatIndianCurrency(p.price)}
+</span>
                       {p.transactionType?.toLowerCase() === "rent" && (
                         <span className="text-[10px] font-semibold text-gray-400 ml-0.5">/mo</span>
                       )}

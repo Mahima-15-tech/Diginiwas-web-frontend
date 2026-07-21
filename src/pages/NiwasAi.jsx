@@ -820,11 +820,33 @@ const CITY_COORDS = {
   indore: { lat: 22.7196, lng: 75.8577 },
 };
 
+const formatIndianCurrency = (amount) => {
+  const num = Number(amount);
+  if (!num || isNaN(num)) return "0";
+
+  if (num >= 10000000) {
+    // 1 Crore = 10,000,000
+    const cr = num / 10000000;
+    return `${Number.isInteger(cr) ? cr : cr.toFixed(2)} Cr`;
+  } else if (num >= 100000) {
+    // 1 Lakh = 100,000
+    const lakh = num / 100000;
+    return `${Number.isInteger(lakh) ? lakh : lakh.toFixed(2)} L`;
+  } else if (num >= 1000) {
+    // Optional: formats thousands as 'k' or keep standard comma
+    const k = num / 1000;
+    return `${Number.isInteger(k) ? k : k.toFixed(1)} k`;
+  }
+
+  return num.toLocaleString("en-IN");
+};
+
 function formatPrice(price) {
   if (price === undefined || price === null || Number.isNaN(Number(price))) {
     return "Price on request";
   }
-  return `₹${Number(price).toLocaleString("en-IN")}`;
+  // return `₹${Number(price).toLocaleString("en-IN")}`;
+   return `₹${formatIndianCurrency(price)}`;
 }
 
 function getPropertyCoords(property) {

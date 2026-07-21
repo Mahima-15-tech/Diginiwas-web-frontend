@@ -28,7 +28,26 @@ const featuress = [
   { icon: FiBarChart2, title: "Maximum", title2: "Visibility" },
 ]
 
+const formatIndianCurrency = (amount) => {
+  const num = Number(amount);
+  if (!num || isNaN(num)) return "0";
 
+  if (num >= 10000000) {
+    // 1 Crore = 10,000,000
+    const cr = num / 10000000;
+    return `${Number.isInteger(cr) ? cr : cr.toFixed(2)} Cr`;
+  } else if (num >= 100000) {
+    // 1 Lakh = 100,000
+    const lakh = num / 100000;
+    return `${Number.isInteger(lakh) ? lakh : lakh.toFixed(2)} L`;
+  } else if (num >= 1000) {
+    // Optional: formats thousands as 'k' or keep standard comma
+    const k = num / 1000;
+    return `${Number.isInteger(k) ? k : k.toFixed(1)} k`;
+  }
+
+  return num.toLocaleString("en-IN");
+};
 
 function PropertyListing({ properties }) {
   const [showComingSoon, setShowComingSoon] = useState(false);
@@ -132,7 +151,8 @@ function PropertyListing({ properties }) {
               </div>
               <div className="text-[8px] sm:text-[9px] text-gray-400">
                 {/* is Live Now! */}
-                ₹{Number(currentProperty?.price || 0).toLocaleString("en-IN")}
+                {/* ₹{Number(currentProperty?.price || 0).toLocaleString("en-IN")} */}
+                ₹{formatIndianCurrency(currentProperty?.price )}
               </div>
               <div className="mt-2 flex justify-center">
                 <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-[#2dd4a8] text-[#2dd4a8] flex items-center justify-center">
@@ -361,7 +381,8 @@ export default function NiwasAIFinds() {
                         <div className="text-[11px] sm:text-base font-semibold leading-tight">{p.title}</div>
                         <div className="text-[9px] sm:text-sm text-gray-400 mt-0.5">{p.address}, {p.city}</div>
                         <div className="text-[10px] sm:text-xs text-[#2dd4a8] font-semibold mt-1.5">
-                          ₹{Number(p.price).toLocaleString("en-IN")} <span className="text-gray-500 text-sm font-normal">/ month</span>
+                          {/* ₹{Number(p.price).toLocaleString("en-IN")}  */}
+                          ₹{formatIndianCurrency(p.price )}
                         </div>
                       </div>
 
