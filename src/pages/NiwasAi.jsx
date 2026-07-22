@@ -1222,13 +1222,61 @@ export default function NiwasAi() {
         assistantText = "I'm Niwas AI, your smart real estate assistant! 🏡\n\nI'm here to help you find, compare, and get the best luxury properties within your budget effortlessly.";
       } else if (query.startsWith("hi") || query.includes("hello") || query.includes("hey") || query.includes("namaste")) {
         assistantText = "Hello! 👋 How can I help you find the best luxury properties within your budget today?";
-      } else {
+      // } else {
+      //   let data = [...allProperties];
+      //   cities.forEach((city) => {
+      //     if (city !== "All" && query.includes(city.toLowerCase())) {
+      //       data = data.filter((x) => x.city?.toLowerCase() === city.toLowerCase());
+      //     }
+      //   });
+      //   const bhk = query.match(/([1-5])\s*bhk/i);
+      //   if (bhk) {
+      //     data = data.filter((x) => Number(x.bedrooms) === Number(bhk[1]));
+      //   }
+      //   if (query.includes("rent")) {
+      //     data = data.filter((x) => x.transactionType?.toLowerCase() === "rent");
+      //   }
+      //   if (query.includes("buy")) {
+      //     data = data.filter((x) => x.transactionType?.toLowerCase() === "buy");
+      //   }
+      //   assistantText = `Found ${data.length} matching properties for your search:`;
+      //   matchedProperties = data.slice(0, 6);
+      // }
+} else {
         let data = [...allProperties];
-        cities.forEach((city) => {
-          if (city !== "All" && query.includes(city.toLowerCase())) {
-            data = data.filter((x) => x.city?.toLowerCase() === city.toLowerCase());
+        let isCityMentioned = false;
+        let matchedCityKey = "";
+
+        const dbCities = [...new Set(allProperties.map((x) => x.city?.trim()).filter(Boolean))];
+
+        for (const c of dbCities) {
+          const lowerCity = c.toLowerCase();
+          const firstWord = lowerCity.split(" ")[0];
+
+          if (query.includes(lowerCity) || query.includes(firstWord)) {
+            isCityMentioned = true;
+            matchedCityKey = firstWord; 
+            break;
           }
-        });
+        }
+
+        if (!isCityMentioned) {
+          Object.keys(CITY_COORDS).forEach((cKey) => {
+            if (query.includes(cKey)) {
+              isCityMentioned = true;
+              matchedCityKey = cKey;
+            }
+          });
+        }
+
+        if (isCityMentioned) {
+          data = data.filter((x) => {
+            if (!x.city) return false;
+            const itemCity = x.city.toLowerCase().trim();
+            return itemCity.includes(matchedCityKey) || itemCity.startsWith(matchedCityKey);
+          });
+        }
+
         const bhk = query.match(/([1-5])\s*bhk/i);
         if (bhk) {
           data = data.filter((x) => Number(x.bedrooms) === Number(bhk[1]));
@@ -1239,8 +1287,16 @@ export default function NiwasAi() {
         if (query.includes("buy")) {
           data = data.filter((x) => x.transactionType?.toLowerCase() === "buy");
         }
-        assistantText = `Found ${data.length} matching properties for your search:`;
-        matchedProperties = data.slice(0, 6);
+
+        if (data.length === 0) {
+          assistantText = isCityMentioned
+            ? `No property found in ${matchedCityKey.toUpperCase()} for your search criteria.`
+            : "No property found for your search criteria.";
+          matchedProperties = [];
+        } else {
+          assistantText = `Found ${data.length} matching properties for your search:`;
+          matchedProperties = data.slice(0, 6);
+        }
       }
 
       const assistantMsg = {
