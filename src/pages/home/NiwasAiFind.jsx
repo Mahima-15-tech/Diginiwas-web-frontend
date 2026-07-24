@@ -8,7 +8,7 @@ import {
 import { FaBrain, FaRegClock, FaInstagram, FaFacebook, FaWhatsapp, FaBullhorn } from "react-icons/fa";
 import { BiTargetLock } from "react-icons/bi";
 import { RiRobot2Line } from "react-icons/ri";
-import niwasAi from '../../assets/images/niwasAi.png'
+import niwasAi from '../../assets/images/niwas_ai.png'
 import homelogo from '../../assets/images/homelogo.png'
 import axios from "axios";
 import { useNavigate } from "react-router-dom";

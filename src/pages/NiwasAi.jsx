@@ -791,6 +791,7 @@ import {
   MapPin,
   X,
   Navigation,
+  Lock,
 } from "lucide-react";
 import logo from "../assets/images/homelogo.png";
 import ai from "../assets/images/niwas_ai.png";
@@ -825,15 +826,12 @@ const formatIndianCurrency = (amount) => {
   if (!num || isNaN(num)) return "0";
 
   if (num >= 10000000) {
-    // 1 Crore = 10,000,000
     const cr = num / 10000000;
     return `${Number.isInteger(cr) ? cr : cr.toFixed(2)} Cr`;
   } else if (num >= 100000) {
-    // 1 Lakh = 100,000
     const lakh = num / 100000;
     return `${Number.isInteger(lakh) ? lakh : lakh.toFixed(2)} L`;
   } else if (num >= 1000) {
-    // Optional: formats thousands as 'k' or keep standard comma
     const k = num / 1000;
     return `${Number.isInteger(k) ? k : k.toFixed(1)} k`;
   }
@@ -845,8 +843,7 @@ function formatPrice(price) {
   if (price === undefined || price === null || Number.isNaN(Number(price))) {
     return "Price on request";
   }
-  // return `₹${Number(price).toLocaleString("en-IN")}`;
-   return `₹${formatIndianCurrency(price)}`;
+  return `₹${formatIndianCurrency(price)}`;
 }
 
 function getPropertyCoords(property) {
@@ -867,11 +864,16 @@ function getPropertyCoords(property) {
    SMALL SUBCOMPONENTS
    ============================================================ */
 function SuggestionChips({ suggestions, onPick, disabled }) {
+  if (disabled) return null;
+
   const list = suggestions || [
-    "Who are you?",
-    "3 BHK in Jaipur",
-    "Villa under 1 crore",
-    "Rent in Mohali",
+    "Buy Property",
+    "Rent Property",
+    "Lease Commercial",
+    "Sell My Property",
+    "Find a Verified Agent",
+    "Home Loan",
+    "Promote My Property",
   ];
   return (
     <div className="flex flex-wrap gap-2 mt-4">
@@ -880,15 +882,11 @@ function SuggestionChips({ suggestions, onPick, disabled }) {
           key={s}
           disabled={disabled}
           onClick={() => onPick(s)}
-          className={`group flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm shadow-sm transition-all duration-200 ${disabled
-              ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "border-gray-200 bg-white text-gray-700 hover:border-[#1CB46D] hover:bg-[#1CB46D]/5 hover:text-[#0F2E46] hover:shadow-md active:scale-95"
-            }`}
+          className="group flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 shadow-sm transition-all duration-200 hover:border-[#1CB46D] hover:bg-[#1CB46D]/5 hover:text-[#0F2E46] hover:shadow-md active:scale-95"
         >
           <Sparkles
             size={13}
-            className={`text-[#1CB46D] ${disabled ? "opacity-30" : "opacity-70 group-hover:opacity-100"
-              }`}
+            className="text-[#1CB46D] opacity-70 group-hover:opacity-100"
           />
           {s}
         </button>
@@ -917,14 +915,17 @@ function PropertyCard({ property, isSelected, onSelect }) {
     <button
       type="button"
       onClick={() => onSelect?.(property)}
-      className={`group w-full text-left overflow-hidden rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${isSelected
+      className={`group w-full text-left overflow-hidden rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${
+        isSelected
           ? "border-[#1CB46D] ring-2 ring-[#1CB46D]/30 shadow-lg"
           : "border-gray-200 shadow-sm"
-        }`}
+      }`}
     >
       <div className="relative h-40 w-full overflow-hidden">
         <img
-          src={property.images?.[0]?.url || "https://via.placeholder.com/400x300"}
+          src={
+            property.images?.[0]?.url || "https://via.placeholder.com/400x300"
+          }
           alt={property.projectName || property.title || "Property"}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
@@ -945,18 +946,41 @@ function PropertyCard({ property, isSelected, onSelect }) {
 function ChatMessage({ message, selectedProperty, onSelectProperty }) {
   const isUser = message.role === "user";
   return (
-    <div className={`flex items-end gap-2 animate-[fadeInUp_0.3s_ease-out] ${isUser ? "flex-row-reverse" : ""}`}>
-      <div className={`flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-sm ${isUser ? "bg-gray-100" : "bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] p-1.5"}`}>
-        {isUser ? <User size={18} className="text-gray-600" /> : <img src={ai} alt="Niwas AI" className="h-full w-full object-contain" />}
+    <div
+      className={`flex items-end gap-2 animate-[fadeInUp_0.3s_ease-out] ${isUser ? "flex-row-reverse" : ""}`}
+    >
+      <div
+        className={`flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-sm ${isUser ? "bg-gray-100" : "bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] p-1.5"}`}
+      >
+        {isUser ? (
+          <User size={18} className="text-gray-600" />
+        ) : (
+          <img
+            src={ai}
+            alt="Niwas AI"
+            className="h-full w-full object-contain"
+          />
+        )}
       </div>
-      <div className={`flex flex-col gap-3 ${isUser ? "items-end" : "items-start"} max-w-[85%]`}>
-        <div className={`inline-block px-4 py-3 shadow-sm ${isUser ? "rounded-2xl rounded-br-sm bg-[#0F2E46] text-white" : "rounded-2xl rounded-bl-sm bg-gray-100 text-gray-800"}`}>
-          <div className="whitespace-pre-line text-sm leading-relaxed">{message.text}</div>
+      <div
+        className={`flex flex-col gap-3 ${isUser ? "items-end" : "items-start"} max-w-[85%]`}
+      >
+        <div
+          className={`inline-block px-4 py-3 shadow-sm ${isUser ? "rounded-2xl rounded-br-sm bg-[#0F2E46] text-white" : "rounded-2xl rounded-bl-sm bg-gray-100 text-gray-800"}`}
+        >
+          <div className="whitespace-pre-line text-sm leading-relaxed">
+            {message.text}
+          </div>
         </div>
         {message.properties?.length > 0 && (
           <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
             {message.properties.map((p) => (
-              <PropertyCard key={p._id} property={p} isSelected={selectedProperty?._id === p._id} onSelect={onSelectProperty} />
+              <PropertyCard
+                key={p._id}
+                property={p}
+                isSelected={selectedProperty?._id === p._id}
+                onSelect={onSelectProperty}
+              />
             ))}
           </div>
         )}
@@ -969,7 +993,12 @@ function PropertyLocationPanel({ property, onClose }) {
   if (!property) return null;
   const coords = getPropertyCoords(property);
   const title = property.projectName || property.title || "Selected Property";
-  const address = property.address || [property.locality, property.city, property.state].filter(Boolean).join(", ") || property.city;
+  const address =
+    property.address ||
+    [property.locality, property.city, property.state]
+      .filter(Boolean)
+      .join(", ") ||
+    property.city;
 
   const mapEmbedSrc = coords
     ? `https://www.google.com/maps?q=${coords.lat},${coords.lng}&hl=en&z=14&output=embed`
@@ -983,18 +1012,41 @@ function PropertyLocationPanel({ property, onClose }) {
     <div className="flex w-full flex-col gap-3 border-b border-gray-100 bg-white p-4 animate-[fadeInUp_0.25s_ease-out]">
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#1CB46D]/10 text-[#1CB46D]"><MapPin size={16} /></span>
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#1CB46D]/10 text-[#1CB46D]">
+            <MapPin size={16} />
+          </span>
           <div className="min-w-0">
             <p className="truncate text-sm font-bold text-[#0F2E46]">{title}</p>
             <p className="truncate text-xs text-gray-500">{address}</p>
           </div>
         </div>
-        <button onClick={onClose} aria-label="Close location" className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"><X size={15} /></button>
+        <button
+          onClick={onClose}
+          aria-label="Close location"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+        >
+          <X size={15} />
+        </button>
       </div>
       <div className="overflow-hidden rounded-xl border border-gray-200">
-        <iframe title={`map-${property._id}`} src={mapEmbedSrc} width="100%" height="180" style={{ border: 0 }} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+        <iframe
+          title={`map-${property._id}`}
+          src={mapEmbedSrc}
+          width="100%"
+          height="180"
+          style={{ border: 0 }}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
       </div>
-      <a href={mapDirectionsUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 rounded-xl bg-[#0F2E46] py-2.5 text-xs font-semibold text-white shadow-sm transition-transform hover:scale-[1.02] active:scale-95"><Navigation size={14} /> Get Directions</a>
+      <a
+        href={mapDirectionsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center justify-center gap-2 rounded-xl bg-[#0F2E46] py-2.5 text-xs font-semibold text-white shadow-sm transition-transform hover:scale-[1.02] active:scale-95"
+      >
+        <Navigation size={14} /> Get Directions
+      </a>
     </div>
   );
 }
@@ -1002,12 +1054,21 @@ function PropertyLocationPanel({ property, onClose }) {
 function HistoryPanel({ chatHistory, activeChatId, onSelectChat, onNewChat }) {
   return (
     <div className="flex h-full w-full flex-col gap-4 overflow-y-auto p-4">
-      <button onClick={onNewChat} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1CB46D] py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#159659] active:scale-95"><PlusCircle size={18} /> New Chat</button>
+      <button
+        onClick={onNewChat}
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1CB46D] py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#159659] active:scale-95"
+      >
+        <PlusCircle size={18} /> New Chat
+      </button>
       <div className="flex-1">
-        <h3 className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400"><Clock size={14} /> Recent Conversations</h3>
+        <h3 className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
+          <Clock size={14} /> Recent Conversations
+        </h3>
         <div className="flex flex-col gap-2">
           {chatHistory.length === 0 ? (
-            <p className="py-6 text-center text-xs text-gray-400">No previous chats available.</p>
+            <p className="py-6 text-center text-xs text-gray-400">
+              No previous chats available.
+            </p>
           ) : (
             chatHistory.map((chat) => (
               <button
@@ -1015,10 +1076,21 @@ function HistoryPanel({ chatHistory, activeChatId, onSelectChat, onNewChat }) {
                 onClick={() => onSelectChat(chat.id)}
                 className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-all duration-200 hover:bg-gray-50 ${activeChatId === chat.id ? "border-[#1CB46D] bg-[#1CB46D]/5" : "border-gray-100"}`}
               >
-                <MessageSquare size={16} className={activeChatId === chat.id ? "text-[#1CB46D]" : "text-gray-400"} />
+                <MessageSquare
+                  size={16}
+                  className={
+                    activeChatId === chat.id
+                      ? "text-[#1CB46D]"
+                      : "text-gray-400"
+                  }
+                />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-[#0F2E46]">{chat.title || "Empty Conversation"}</p>
-                  <p className="text-[11px] text-gray-400">{chat.messages.length} messages</p>
+                  <p className="truncate text-sm font-medium text-[#0F2E46]">
+                    {chat.title || "Empty Conversation"}
+                  </p>
+                  <p className="text-[11px] text-gray-400">
+                    {chat.messages.length} messages
+                  </p>
                 </div>
               </button>
             ))
@@ -1038,10 +1110,10 @@ export default function NiwasAi() {
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [isChatLocked, setIsChatLocked] = useState(false);
 
-  // Intent State Tracker to follow up user responses
   const [currentIntent, setCurrentIntent] = useState(null);
 
-  const GENERAL_STATEMENT = " We're here to help. \nShare your details below, and a dedicated DigiNiwas relationship manager will get in touch with you shortly to provide personalised guidance based on your requirements. \nFull Name  \nMobile \nWhatsApp  Number  \nEmail (Optional)  \nLocation ";
+  const GENERAL_STATEMENT =
+    "We're here to help. 🏡\n\nShare your details below, and a dedicated DigiNiwas relationship manager will get in touch with you shortly to provide personalised guidance based on your requirements:\n\n👤 Full Name:\n📱 Mobile:\n💬 WhatsApp Number:\n✉️ Email (Optional):\n📍 Location:";
 
   const [chatHistory, setChatHistory] = useState([
     {
@@ -1050,7 +1122,7 @@ export default function NiwasAi() {
       messages: [
         {
           role: "assistant",
-          text: "👋 Hi! I'm Niwas AI.\nAsk naturally like:\n• Who are you?\n• 3 BHK in Jaipur\n• Villa under 1 crore\n• Rent in Mohali",
+          text: "👋Welcome to DigiNiwas.\nI'm Niwas AI—here to help you discover properties, connect with verified agents, and simplify your real estate journey.\nWhat brings you to DigiNiwas today?",
         },
       ],
     },
@@ -1072,7 +1144,9 @@ export default function NiwasAi() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/properties`);
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/properties`,
+        );
         if (res.data.success) {
           setAllProperties(res.data.properties);
           setFilteredProperties(res.data.properties);
@@ -1083,11 +1157,6 @@ export default function NiwasAi() {
     })();
   }, []);
 
-  const cities = useMemo(
-    () => ["All", ...new Set(allProperties.map((x) => x.city).filter(Boolean))],
-    [allProperties]
-  );
-
   useEffect(() => {
     scrollRef.current?.scrollTo({
       top: scrollRef.current.scrollHeight,
@@ -1095,18 +1164,46 @@ export default function NiwasAi() {
     });
   }, [messages, typing]);
 
+  // 🔒 CHAT LOCK & GENERAL STATEMENT DISPLAY EFFECT
   useEffect(() => {
     const userMsgCount = messages.filter((m) => m.role === "user").length;
+
     if (userMsgCount >= 3) {
       setIsChatLocked(true);
+
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg && lastMsg.text !== GENERAL_STATEMENT) {
+        setTimeout(() => {
+          setChatHistory((prev) =>
+            prev.map((chat) => {
+              if (chat.id === activeChatId) {
+                const exists = chat.messages.some(
+                  (m) => m.text === GENERAL_STATEMENT
+                );
+                if (!exists) {
+                  return {
+                    ...chat,
+                    messages: [
+                      ...chat.messages,
+                      { role: "assistant", text: GENERAL_STATEMENT },
+                    ],
+                  };
+                }
+              }
+              return chat;
+            })
+          );
+        }, 600);
+      }
     } else {
       setIsChatLocked(false);
     }
-  }, [messages]);
+  }, [messages, activeChatId]);
 
   const handleVoice = () => {
     if (isChatLocked) return;
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       alert("Voice input isn't supported in this browser.");
       return;
@@ -1133,7 +1230,10 @@ export default function NiwasAi() {
     const query = rawQuery.toLowerCase().trim();
     const userMsg = { role: "user", text: rawQuery };
 
-    const currentUserMessagesCount = messages.filter((m) => m.role === "user").length;
+    const currentUserMessagesCount = messages.filter(
+      (m) => m.role === "user",
+    ).length;
+
     if (currentUserMessagesCount === 2) {
       setTimeout(() => {
         setShowVideoModal(true);
@@ -1143,7 +1243,8 @@ export default function NiwasAi() {
     setChatHistory((prev) =>
       prev.map((chat) => {
         if (chat.id === activeChatId) {
-          const updatedTitle = chat.messages.length === 1 ? rawQuery : chat.title;
+          const updatedTitle =
+            chat.messages.length === 1 ? rawQuery : chat.title;
           return {
             ...chat,
             title: updatedTitle,
@@ -1151,7 +1252,7 @@ export default function NiwasAi() {
           };
         }
         return chat;
-      })
+      }),
     );
 
     setTyping(true);
@@ -1161,17 +1262,22 @@ export default function NiwasAi() {
       let assistantText = "";
       let matchedProperties = [];
 
-      // --- FOLLOW UP HANDLING ---
-      if (currentIntent) {
-        setCurrentIntent(null); // Reset intent state trigger
-        if (query === "no") {
-          assistantText = "👋 Hi! I'm Niwas AI. We're here to help.";
-        } else {
-          assistantText = GENERAL_STATEMENT;
-        }
-      }
-      // --- GENERAL STATEMENT FOR INVESTMENT, DOCUMENTS, AND SPECIFIC GENERAL QUERIES ---
-      else if (
+      // --- GENERAL STATEMENT TRIGGER FOR COMMERCIAL, BUY, RENT, SELL, AGENT, LOAN & PROMOTE ---
+      if (
+        query.includes("commercial") ||
+        query.includes("buy property") ||
+        query.includes("buy") ||
+        query.includes("rent property") ||
+        query.includes("rent") ||
+        query.includes("sell my property") ||
+        query.includes("sell") ||
+        query.includes("verified agent") ||
+        query.includes("agent") ||
+        query.includes("dealer") ||
+        query.includes("home loan") ||
+        query.includes("loan") ||
+        query.includes("promote my property") ||
+        query.includes("promote") ||
         query.includes("best for investment") ||
         query.includes("highest demand") ||
         query.includes("nearby schools") ||
@@ -1187,67 +1293,37 @@ export default function NiwasAi() {
         query.includes("niwas ai work") ||
         query.includes("compare two properties") ||
         query.includes("save this property") ||
-        query.includes("recommend similar properties")
+        query.includes("recommend similar properties") ||
+        query.includes("what is the best place to buy")
       ) {
         assistantText = GENERAL_STATEMENT;
       }
-      // --- INTENT ROUTING LOGIC ---
-      else if (query.includes("property dealer") || query.includes("agent") || query.includes("partner")) {
-        assistantText = "Become a verified DigiNiwas Partner and receive:\n\n✅ Verified customer leads\n✅ Personal dashboard\n✅ Property promotion\n✅ Dedicated relationship support\n\nWould you like to register?";
-        setCurrentIntent("dealer");
-      } else if (query.includes("home loan")) {
-        assistantText = "I can connect you with our trusted banking partners. Should we proceed?";
-        setCurrentIntent("loan");
-      } else if (query.includes("sell my house") || query.includes("sell house")) {
-        assistantText = "Great! I'd be happy to help.\n\nWith DigiNiwas, you get:\n\n✅ Free property listing\n📸 Professional photography & videography\n📢 Digital marketing across multiple platforms\n👨‍💼 Verified buyer enquiries\n🤝 Support from trusted local agents\n\nShall we start by listing your property?";
-        setCurrentIntent("sell");
-      } else if (query.includes("rent out my flat") || query.includes("rent out my house") || query.includes("rent out my shop")) {
-        assistantText = "Perfect! We'll help you find genuine tenants.\n\nDigiNiwas offers:\nVerified tenant enquiries\nProfessional property photos\nDigital promotion\nRental agreement assistance\nDedicated support throughout the process\n\nReady to list your property?";
-        setCurrentIntent("rent_out");
-      } else if (query.includes("on rent") && (query.includes("2bhk") || query.includes("3bhk") || query.includes("flat") || query.includes("house") || query.includes("shop"))) {
-        assistantText = "I can help with that.\n\nPlease share:\n\nCity or locality\nMonthly budget\nFurnished or unavailable\nFamily or bachelor\n\nI'll show you the best verified options. Proceed?";
-        setCurrentIntent("rent_need");
-      } else if (query.includes("property worth") || query.includes("valuation") || query.includes("value of my property")) {
-        assistantText = "I can help estimate your property's value.\n\nPlease provide:\n\nProperty location\nProperty type\nBuilt-up area\nAge of the property\n\nWe'll prepare an estimated market valuation. Should we start?";
-        setCurrentIntent("worth");
-      } else if (query.includes("visit this property") || query.includes("site visit")) {
-        assistantText = "Excellent!\n\nI'll arrange a site visit with the verified DigiNiwas partner handling this property. Ready?";
-        setCurrentIntent("visit");
-      } else if (query.includes("property document") || query.includes("sale deed") || query.includes("registry guidance")) {
-        assistantText = "We can connect you with trusted professionals for:\nSale deed assistance\nRegistry guidance\nProperty verification\nDocumentation support\n\nWhat kind of assistance do you need?";
-        setCurrentIntent("documents");
-      }
-      // --- DEFAULT PROPERTY & IDENTITY CHATS ---
-      else if (query.includes("who are you") || query.includes("who r u") || query.includes("kaun ho") || query.includes("niwas ai")) {
-        assistantText = "I'm Niwas AI, your smart real estate assistant! 🏡\n\nI'm here to help you find, compare, and get the best luxury properties within your budget effortlessly.";
-      } else if (query.startsWith("hi") || query.includes("hello") || query.includes("hey") || query.includes("namaste")) {
-        assistantText = "Hello! 👋 How can I help you find the best luxury properties within your budget today?";
-      // } else {
-      //   let data = [...allProperties];
-      //   cities.forEach((city) => {
-      //     if (city !== "All" && query.includes(city.toLowerCase())) {
-      //       data = data.filter((x) => x.city?.toLowerCase() === city.toLowerCase());
-      //     }
-      //   });
-      //   const bhk = query.match(/([1-5])\s*bhk/i);
-      //   if (bhk) {
-      //     data = data.filter((x) => Number(x.bedrooms) === Number(bhk[1]));
-      //   }
-      //   if (query.includes("rent")) {
-      //     data = data.filter((x) => x.transactionType?.toLowerCase() === "rent");
-      //   }
-      //   if (query.includes("buy")) {
-      //     data = data.filter((x) => x.transactionType?.toLowerCase() === "buy");
-      //   }
-      //   assistantText = `Found ${data.length} matching properties for your search:`;
-      //   matchedProperties = data.slice(0, 6);
-      // }
-} else {
+      // --- DEFAULT IDENTITY CHATS ---
+      else if (
+        query.includes("who are you") ||
+        query.includes("who r u") ||
+        query.includes("kaun ho") ||
+        query.includes("niwas ai")
+      ) {
+        assistantText =
+          "I'm Niwas AI, your smart real estate assistant! 🏡\n\nI'm here to help you find, compare, and get the best luxury properties within your budget effortlessly.";
+      } else if (
+        query.startsWith("hi") ||
+        query.includes("hello") ||
+        query.includes("hey") ||
+        query.includes("namaste")
+      ) {
+        assistantText =
+          "Hello! 👋 How can I help you find the best luxury properties within your budget today?";
+      } else {
+        // --- NORMAL PROPERTY SEARCH LOGIC ---
         let data = [...allProperties];
         let isCityMentioned = false;
         let matchedCityKey = "";
 
-        const dbCities = [...new Set(allProperties.map((x) => x.city?.trim()).filter(Boolean))];
+        const dbCities = [
+          ...new Set(allProperties.map((x) => x.city?.trim()).filter(Boolean)),
+        ];
 
         for (const c of dbCities) {
           const lowerCity = c.toLowerCase();
@@ -1255,7 +1331,7 @@ export default function NiwasAi() {
 
           if (query.includes(lowerCity) || query.includes(firstWord)) {
             isCityMentioned = true;
-            matchedCityKey = firstWord; 
+            matchedCityKey = firstWord;
             break;
           }
         }
@@ -1273,19 +1349,16 @@ export default function NiwasAi() {
           data = data.filter((x) => {
             if (!x.city) return false;
             const itemCity = x.city.toLowerCase().trim();
-            return itemCity.includes(matchedCityKey) || itemCity.startsWith(matchedCityKey);
+            return (
+              itemCity.includes(matchedCityKey) ||
+              itemCity.startsWith(matchedCityKey)
+            );
           });
         }
 
         const bhk = query.match(/([1-5])\s*bhk/i);
         if (bhk) {
           data = data.filter((x) => Number(x.bedrooms) === Number(bhk[1]));
-        }
-        if (query.includes("rent")) {
-          data = data.filter((x) => x.transactionType?.toLowerCase() === "rent");
-        }
-        if (query.includes("buy")) {
-          data = data.filter((x) => x.transactionType?.toLowerCase() === "buy");
         }
 
         if (data.length === 0) {
@@ -1311,7 +1384,7 @@ export default function NiwasAi() {
             return { ...chat, messages: [...chat.messages, assistantMsg] };
           }
           return chat;
-        })
+        }),
       );
     }, 1000);
     setInput("");
@@ -1325,7 +1398,7 @@ export default function NiwasAi() {
       messages: [
         {
           role: "assistant",
-          text: "👋 Hi! I'm Niwas AI.\nTell me what type of home or villa you are looking for today!",
+          text: "👋Welcome to DigiNiwas.\nI'm Niwas AI—here to help you discover properties, connect with verified agents, and simplify your real estate journey.\nWhat brings you to DigiNiwas today?",
         },
       ],
     };
@@ -1336,14 +1409,17 @@ export default function NiwasAi() {
   };
 
   const handleSelectProperty = (property) => {
-    setSelectedProperty((prev) => (prev?._id === property._id ? null : property));
+    setSelectedProperty((prev) =>
+      prev?._id === property._id ? null : property,
+    );
   };
 
   const handleSend = () => runSearch(input);
   const handleSuggestion = (text) => runSearch(text);
 
   const isFirstTurn = messages.length === 1;
-  const showChips = !typing && messages[messages.length - 1]?.role === "assistant";
+  const showChips =
+    !typing && messages[messages.length - 1]?.role === "assistant";
 
   return (
     <div className="flex h-dvh w-full flex-col overflow-hidden bg-gray-50 lg:h-screen lg:flex-row">
@@ -1359,7 +1435,11 @@ export default function NiwasAi() {
         {/* Header */}
         <div className="flex shrink-0 items-center gap-3 border-b bg-white p-4 sm:p-5">
           <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] p-1.5 shadow-sm">
-            <img src={ai} alt="Niwas AI Avatar" className="h-full w-full object-contain" />
+            <img
+              src={ai}
+              alt="Niwas AI Avatar"
+              className="h-full w-full object-contain"
+            />
           </div>
           <div>
             <div className="font-bold text-[#0F2E46]">Niwas AI</div>
@@ -1369,82 +1449,1031 @@ export default function NiwasAi() {
 
         {/* Watermark Logo */}
         <div className="pointer-events-none absolute inset-0 top-16 flex items-center justify-center overflow-hidden">
-          <img src={ai} alt="Watermark" className="h-[280px] w-[280px] object-cover opacity-[0.03] mix-blend-multiply" />
+          <img
+            src={ai}
+            alt="Watermark"
+            className="h-[280px] w-[280px] object-cover opacity-[0.03] mix-blend-multiply"
+          />
         </div>
 
         {/* Messages Scroll Area */}
-        <div ref={scrollRef} className="relative flex-1 min-h-0 space-y-5 overflow-y-auto p-4 sm:p-6 pb-6">
+        <div
+          ref={scrollRef}
+          className="relative flex-1 min-h-0 space-y-5 overflow-y-auto p-4 sm:p-6 pb-6"
+        >
           {isFirstTurn && (
             <div className="mx-auto max-w-lg pt-6 text-center sm:pt-10">
               <div className="mx-auto p-3 mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] shadow-lg">
-                <img src={ai} alt="Niwas AI Large Logo" className="h-full w-full object-contain" />
+                <img
+                  src={ai}
+                  alt="Niwas AI Large Logo"
+                  className="h-full w-full object-contain"
+                />
               </div>
-              <h2 className="text-lg font-bold text-[#0F2E46] sm:text-xl">Find your next home, just by asking</h2>
-              <p className="mx-auto mt-1 max-w-sm text-sm text-gray-500">Tell me what you're looking for — city, budget, BHK, or rent vs. buy.</p>
+              <h2 className="text-lg font-bold text-[#0F2E46] sm:text-xl">
+                Find your next home, just by asking
+              </h2>
+              <p className="mx-auto mt-1 max-w-sm text-sm text-gray-500">
+                Tell me what you're looking for — city, budget, BHK, or rent vs.
+                buy.
+              </p>
             </div>
           )}
 
           {messages.map((msg, i) => (
-            <ChatMessage key={i} message={msg} selectedProperty={selectedProperty} onSelectProperty={handleSelectProperty} />
+            <ChatMessage
+              key={i}
+              message={msg}
+              selectedProperty={selectedProperty}
+              onSelectProperty={handleSelectProperty}
+            />
           ))}
 
           {typing && <TypingIndicator />}
 
           {showChips && (
             <div className="mx-auto max-w-lg">
-              {!isFirstTurn && <p className="mb-1.5 text-xs font-medium text-gray-400">Try another search</p>}
-              <SuggestionChips onPick={handleSuggestion} disabled={isChatLocked} />
+              {!isFirstTurn && (
+                <p className="mb-1.5 text-xs font-medium text-gray-400">
+                  Try another search
+                </p>
+              )}
+              <SuggestionChips
+                onPick={handleSuggestion}
+                disabled={isChatLocked}
+              />
             </div>
           )}
         </div>
 
-        {/* Fixed Bottom Input */}
+        {/* Dynamic Bottom Section (Input OR Lock Box) */}
         <div className="shrink-0 border-t bg-white p-3 sm:p-4">
-          <div className={`flex items-center gap-2 rounded-full border pl-4 pr-1.5 py-1.5 shadow-sm transition-all ${isChatLocked ? "border-red-200 bg-red-50/30" : "border-gray-300 bg-white focus-within:border-[#1CB46D] focus-within:ring-2 focus-within:ring-[#1CB46D]/20"}`}>
-            <Search size={16} className="shrink-0 text-gray-400" />
-            <input
-              className="h-9 flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400 disabled:text-gray-400 disabled:cursor-not-allowed"
-              value={input}
-              disabled={isChatLocked}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              placeholder={isChatLocked ? "Chat limit reached! Free trials ended." : "Ask anything about properties..."}
-            />
-            <button onClick={handleVoice} disabled={isChatLocked} className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${listening ? "bg-red-50 text-red-500 animate-pulse" : isChatLocked ? "text-gray-300 cursor-not-allowed" : "text-gray-400 hover:bg-gray-100 hover:text-[#0F2E46]"}`} aria-label="Voice search" type="button">
-              <Mic size={16} />
-            </button>
-            <button onClick={handleSend} disabled={isChatLocked} className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white transition-transform ${isChatLocked ? "bg-gray-300 cursor-not-allowed scale-100" : "bg-[#0F2E46] hover:scale-105 active:scale-95"}`} aria-label="Send message" type="button">
-              <Send size={16} />
-            </button>
-          </div>
+          {isChatLocked ? (
+            <div className="flex items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 p-3.5 shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600">
+                  <Lock size={18} />
+                </div>
+                <div>
+                  <p className="text-xs sm:text-sm font-semibold text-red-900">
+                    Free AI Trial Limit Reached
+                  </p>
+                  <p className="text-[11px] sm:text-xs text-red-600/90">
+                    Our team will reach out to you using the details provided above.
+                  </p>
+                </div>
+              </div>
+              {/* <button
+                onClick={handleNewChat}
+                className="shrink-0 rounded-xl bg-red-600 px-3.5 py-2 text-xs font-semibold text-white shadow hover:bg-red-700 transition"
+              >
+                New Chat
+              </button> */}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 rounded-full border border-gray-300 bg-white pl-4 pr-1.5 py-1.5 shadow-sm transition-all focus-within:border-[#1CB46D] focus-within:ring-2 focus-within:ring-[#1CB46D]/20">
+              <Search size={16} className="shrink-0 text-gray-400" />
+              <input
+                className="h-9 flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                placeholder="Ask anything about properties..."
+              />
+              <button
+                onClick={handleVoice}
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${listening ? "bg-red-50 text-red-500 animate-pulse" : "text-gray-400 hover:bg-gray-100 hover:text-[#0F2E46]"}`}
+                aria-label="Voice search"
+                type="button"
+              >
+                <Mic size={16} />
+              </button>
+              <button
+                onClick={handleSend}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#0F2E46] text-white transition-transform hover:scale-105 active:scale-95"
+                aria-label="Send message"
+                type="button"
+              >
+                <Send size={16} />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
       {/* ---------------- Right Panel ---------------- */}
       <aside className="flex h-[42%] w-full min-h-0 flex-col overflow-y-auto border-t border-gray-100 bg-white lg:h-full lg:w-[320px] lg:border-l lg:border-t-0 xl:w-[360px]">
-        {selectedProperty && <PropertyLocationPanel property={selectedProperty} onClose={() => setSelectedProperty(null)} />}
+        {selectedProperty && (
+          <PropertyLocationPanel
+            property={selectedProperty}
+            onClose={() => setSelectedProperty(null)}
+          />
+        )}
         <div className="min-h-0 flex-1">
-          <HistoryPanel chatHistory={chatHistory} activeChatId={activeChatId} onSelectChat={setActiveChatId} onNewChat={handleNewChat} />
+          <HistoryPanel
+            chatHistory={chatHistory}
+            activeChatId={activeChatId}
+            onSelectChat={setActiveChatId}
+            onNewChat={handleNewChat}
+          />
         </div>
       </aside>
-
-      {/* VIDEO POP-UP MODAL */}
-      {showVideoModal && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-[fadeInUp_0.2s_ease-out]">
-          <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
-            <div className="flex items-center justify-between border-b border-gray-100 p-4">
-              <h3 className="text-base font-bold text-[#0F2E46]">Premium Property Insights</h3>
-              <button onClick={() => setShowVideoModal(false)} className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors" aria-label="Close Video"><X size={18} /></button>
-            </div>
-            <div className="relative aspect-video w-full bg-black">
-              <video src={propertyVideo} controls autoPlay className="h-full w-full object-contain" />
-            </div>
-            <div className="p-4 bg-gray-50 flex justify-end">
-              <button onClick={() => setShowVideoModal(false)} className="rounded-xl bg-[#0F2E46] px-5 py-2 text-sm font-semibold text-white shadow transition-transform hover:scale-105 active:scale-95">Close View</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
+
+// import React, { useEffect, useMemo, useRef, useState } from "react";
+// import axios from "axios";
+// import {
+//   User,
+//   Send,
+//   Mic,
+//   Search,
+//   Sparkles,
+//   MessageSquare,
+//   PlusCircle,
+//   Clock,
+//   MapPin,
+//   X,
+//   Navigation,
+// } from "lucide-react";
+// import logo from "../assets/images/homelogo.png";
+// import ai from "../assets/images/niwas_ai.png";
+
+// const propertyVideo = import.meta.env.VITE_NIWAS_AI;
+
+// /* ============================================================
+//    UTILS — city fallback coords, distance, formatting
+//    ============================================================ */
+// const CITY_COORDS = {
+//   jaipur: { lat: 26.9124, lng: 75.7873 },
+//   mohali: { lat: 30.7046, lng: 76.7179 },
+//   chandigarh: { lat: 30.7333, lng: 76.7794 },
+//   delhi: { lat: 28.6139, lng: 77.209 },
+//   gurugram: { lat: 28.4595, lng: 77.0266 },
+//   gurgaon: { lat: 28.4595, lng: 77.0266 },
+//   noida: { lat: 28.5355, lng: 77.391 },
+//   mumbai: { lat: 19.076, lng: 72.8777 },
+//   pune: { lat: 18.5204, lng: 73.8567 },
+//   bangalore: { lat: 12.9716, lng: 77.5946 },
+//   begaluru: { lat: 12.9716, lng: 77.5946 },
+//   hyderabad: { lat: 17.385, lng: 78.4867 },
+//   ahmedabad: { lat: 23.0225, lng: 72.5714 },
+//   lucknow: { lat: 26.8467, lng: 80.9462 },
+//   kolkata: { lat: 22.5726, lng: 88.3639 },
+//   chennai: { lat: 13.0827, lng: 80.2707 },
+//   indore: { lat: 22.7196, lng: 75.8577 },
+// };
+
+// const formatIndianCurrency = (amount) => {
+//   const num = Number(amount);
+//   if (!num || isNaN(num)) return "0";
+
+//   if (num >= 10000000) {
+//     // 1 Crore = 10,000,000
+//     const cr = num / 10000000;
+//     return `${Number.isInteger(cr) ? cr : cr.toFixed(2)} Cr`;
+//   } else if (num >= 100000) {
+//     // 1 Lakh = 100,000
+//     const lakh = num / 100000;
+//     return `${Number.isInteger(lakh) ? lakh : lakh.toFixed(2)} L`;
+//   } else if (num >= 1000) {
+//     // Optional: formats thousands as 'k' or keep standard comma
+//     const k = num / 1000;
+//     return `${Number.isInteger(k) ? k : k.toFixed(1)} k`;
+//   }
+
+//   return num.toLocaleString("en-IN");
+// };
+
+// function formatPrice(price) {
+//   if (price === undefined || price === null || Number.isNaN(Number(price))) {
+//     return "Price on request";
+//   }
+//   // return `₹${Number(price).toLocaleString("en-IN")}`;
+//   return `₹${formatIndianCurrency(price)}`;
+// }
+
+// function getPropertyCoords(property) {
+//   if (!property) return null;
+//   const lat = Number(property.latitude ?? property.lat);
+//   const lng = Number(property.longitude ?? property.lng);
+//   if (!Number.isNaN(lat) && !Number.isNaN(lng) && (lat !== 0 || lng !== 0)) {
+//     return { lat, lng };
+//   }
+//   const cityKey = property.city?.toLowerCase()?.trim();
+//   if (cityKey && CITY_COORDS[cityKey]) {
+//     return CITY_COORDS[cityKey];
+//   }
+//   return null;
+// }
+
+// /* ============================================================
+//    SMALL SUBCOMPONENTS
+//    ============================================================ */
+// function SuggestionChips({ suggestions, onPick, disabled }) {
+//   const list = suggestions || [
+//     "Buy Property",
+//     "Rent Property",
+//     "Lease Commercial",
+//     "Sell My Property",
+//     "Find a Verified Agent",
+//     "Home Loan",
+//     "Promote My Property",
+//   ];
+//   return (
+//     <div className="flex flex-wrap gap-2 mt-4">
+//       {list.map((s) => (
+//         <button
+//           key={s}
+//           disabled={disabled}
+//           onClick={() => onPick(s)}
+//           className={`group flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm shadow-sm transition-all duration-200 ${
+//             disabled
+//               ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+//               : "border-gray-200 bg-white text-gray-700 hover:border-[#1CB46D] hover:bg-[#1CB46D]/5 hover:text-[#0F2E46] hover:shadow-md active:scale-95"
+//           }`}
+//         >
+//           <Sparkles
+//             size={13}
+//             className={`text-[#1CB46D] ${
+//               disabled ? "opacity-30" : "opacity-70 group-hover:opacity-100"
+//             }`}
+//           />
+//           {s}
+//         </button>
+//       ))}
+//     </div>
+//   );
+// }
+
+// function TypingIndicator() {
+//   return (
+//     <div className="flex items-end gap-2 animate-[fadeInUp_0.25s_ease-out]">
+//       <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] p-1.5 shadow-sm">
+//         <img src={ai} alt="Niwas AI" className="h-full w-full object-contain" />
+//       </div>
+//       <div className="inline-flex items-center gap-1.5 rounded-2xl rounded-bl-sm bg-gray-100 px-4 py-3.5">
+//         <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.3s]" />
+//         <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce [animation-delay:-0.15s]" />
+//         <span className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce" />
+//       </div>
+//     </div>
+//   );
+// }
+
+// function PropertyCard({ property, isSelected, onSelect }) {
+//   return (
+//     <button
+//       type="button"
+//       onClick={() => onSelect?.(property)}
+//       className={`group w-full text-left overflow-hidden rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${
+//         isSelected
+//           ? "border-[#1CB46D] ring-2 ring-[#1CB46D]/30 shadow-lg"
+//           : "border-gray-200 shadow-sm"
+//       }`}
+//     >
+//       <div className="relative h-40 w-full overflow-hidden">
+//         <img
+//           src={
+//             property.images?.[0]?.url || "https://via.placeholder.com/400x300"
+//           }
+//           alt={property.projectName || property.title || "Property"}
+//           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+//         />
+//         <div className="absolute bottom-2 left-3 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-[#0F2E46] shadow">
+//           {formatPrice(property.price)}
+//         </div>
+//       </div>
+//       <div className="p-3">
+//         <h4 className="font-bold text-sm text-[#0F2E46] leading-snug line-clamp-1">
+//           {property.projectName || property.title}
+//         </h4>
+//         <p className="text-xs text-gray-500 mt-0.5">{property.city}</p>
+//       </div>
+//     </button>
+//   );
+// }
+
+// function ChatMessage({ message, selectedProperty, onSelectProperty }) {
+//   const isUser = message.role === "user";
+//   return (
+//     <div
+//       className={`flex items-end gap-2 animate-[fadeInUp_0.3s_ease-out] ${isUser ? "flex-row-reverse" : ""}`}
+//     >
+//       <div
+//         className={`flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-sm ${isUser ? "bg-gray-100" : "bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] p-1.5"}`}
+//       >
+//         {isUser ? (
+//           <User size={18} className="text-gray-600" />
+//         ) : (
+//           <img
+//             src={ai}
+//             alt="Niwas AI"
+//             className="h-full w-full object-contain"
+//           />
+//         )}
+//       </div>
+//       <div
+//         className={`flex flex-col gap-3 ${isUser ? "items-end" : "items-start"} max-w-[85%]`}
+//       >
+//         <div
+//           className={`inline-block px-4 py-3 shadow-sm ${isUser ? "rounded-2xl rounded-br-sm bg-[#0F2E46] text-white" : "rounded-2xl rounded-bl-sm bg-gray-100 text-gray-800"}`}
+//         >
+//           <div className="whitespace-pre-line text-sm leading-relaxed">
+//             {message.text}
+//           </div>
+//         </div>
+//         {message.properties?.length > 0 && (
+//           <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
+//             {message.properties.map((p) => (
+//               <PropertyCard
+//                 key={p._id}
+//                 property={p}
+//                 isSelected={selectedProperty?._id === p._id}
+//                 onSelect={onSelectProperty}
+//               />
+//             ))}
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
+
+// function PropertyLocationPanel({ property, onClose }) {
+//   if (!property) return null;
+//   const coords = getPropertyCoords(property);
+//   const title = property.projectName || property.title || "Selected Property";
+//   const address =
+//     property.address ||
+//     [property.locality, property.city, property.state]
+//       .filter(Boolean)
+//       .join(", ") ||
+//     property.city;
+
+//   const mapEmbedSrc = coords
+//     ? `https://www.google.com/maps?q=${coords.lat},${coords.lng}&hl=en&z=14&output=embed`
+//     : `https://www.google.com/maps?q=${encodeURIComponent(address || "India")}&hl=en&z=12&output=embed`;
+
+//   const mapDirectionsUrl = coords
+//     ? `https://www.google.com/maps/dir/?api=1&destination=${coords.lat},${coords.lng}`
+//     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || "India")}`;
+
+//   return (
+//     <div className="flex w-full flex-col gap-3 border-b border-gray-100 bg-white p-4 animate-[fadeInUp_0.25s_ease-out]">
+//       <div className="flex items-start justify-between gap-2">
+//         <div className="flex items-center gap-2 min-w-0">
+//           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#1CB46D]/10 text-[#1CB46D]">
+//             <MapPin size={16} />
+//           </span>
+//           <div className="min-w-0">
+//             <p className="truncate text-sm font-bold text-[#0F2E46]">{title}</p>
+//             <p className="truncate text-xs text-gray-500">{address}</p>
+//           </div>
+//         </div>
+//         <button
+//           onClick={onClose}
+//           aria-label="Close location"
+//           className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+//         >
+//           <X size={15} />
+//         </button>
+//       </div>
+//       <div className="overflow-hidden rounded-xl border border-gray-200">
+//         <iframe
+//           title={`map-${property._id}`}
+//           src={mapEmbedSrc}
+//           width="100%"
+//           height="180"
+//           style={{ border: 0 }}
+//           loading="lazy"
+//           referrerPolicy="no-referrer-when-downgrade"
+//         />
+//       </div>
+//       <a
+//         href={mapDirectionsUrl}
+//         target="_blank"
+//         rel="noopener noreferrer"
+//         className="flex items-center justify-center gap-2 rounded-xl bg-[#0F2E46] py-2.5 text-xs font-semibold text-white shadow-sm transition-transform hover:scale-[1.02] active:scale-95"
+//       >
+//         <Navigation size={14} /> Get Directions
+//       </a>
+//     </div>
+//   );
+// }
+
+// function HistoryPanel({ chatHistory, activeChatId, onSelectChat, onNewChat }) {
+//   return (
+//     <div className="flex h-full w-full flex-col gap-4 overflow-y-auto p-4">
+//       <button
+//         onClick={onNewChat}
+//         className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1CB46D] py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#159659] active:scale-95"
+//       >
+//         <PlusCircle size={18} /> New Chat
+//       </button>
+//       <div className="flex-1">
+//         <h3 className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
+//           <Clock size={14} /> Recent Conversations
+//         </h3>
+//         <div className="flex flex-col gap-2">
+//           {chatHistory.length === 0 ? (
+//             <p className="py-6 text-center text-xs text-gray-400">
+//               No previous chats available.
+//             </p>
+//           ) : (
+//             chatHistory.map((chat) => (
+//               <button
+//                 key={chat.id}
+//                 onClick={() => onSelectChat(chat.id)}
+//                 className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-all duration-200 hover:bg-gray-50 ${activeChatId === chat.id ? "border-[#1CB46D] bg-[#1CB46D]/5" : "border-gray-100"}`}
+//               >
+//                 <MessageSquare
+//                   size={16}
+//                   className={
+//                     activeChatId === chat.id
+//                       ? "text-[#1CB46D]"
+//                       : "text-gray-400"
+//                   }
+//                 />
+//                 <div className="min-w-0 flex-1">
+//                   <p className="truncate text-sm font-medium text-[#0F2E46]">
+//                     {chat.title || "Empty Conversation"}
+//                   </p>
+//                   <p className="text-[11px] text-gray-400">
+//                     {chat.messages.length} messages
+//                   </p>
+//                 </div>
+//               </button>
+//             ))
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// /* ============================================================
+//    MAIN COMPONENT
+//    ============================================================ */
+// export default function NiwasAi() {
+//   const [allProperties, setAllProperties] = useState([]);
+//   const [filteredProperties, setFilteredProperties] = useState([]);
+//   const [showVideoModal, setShowVideoModal] = useState(false);
+//   const [isChatLocked, setIsChatLocked] = useState(false);
+
+//   // Intent State Tracker to follow up user responses
+//   const [currentIntent, setCurrentIntent] = useState(null);
+
+//   const GENERAL_STATEMENT =
+//     " We're here to help. \nShare your details below, and a dedicated DigiNiwas relationship manager will get in touch with you shortly to provide personalised guidance based on your requirements. \nFull Name  \nMobile \nWhatsApp  Number  \nEmail (Optional)  \nLocation ";
+
+//   const [chatHistory, setChatHistory] = useState([
+//     {
+//       id: "session-1",
+//       title: "Properties Query",
+//       messages: [
+//         {
+//           role: "assistant",
+//           text: "👋Welcome to DigiNiwas.\nI'm Niwas AI—here to help you discover properties, connect with verified agents, and simplify your real estate journey.\nWhat brings you to DigiNiwas today?",
+//         },
+//       ],
+//     },
+//   ]);
+//   const [activeChatId, setActiveChatId] = useState("session-1");
+//   const [input, setInput] = useState("");
+//   const [typing, setTyping] = useState(false);
+//   const [selectedProperty, setSelectedProperty] = useState(null);
+//   const [listening, setListening] = useState(false);
+//   const scrollRef = useRef(null);
+//   const recognitionRef = useRef(null);
+
+//   const activeChat = useMemo(() => {
+//     return chatHistory.find((c) => c.id === activeChatId) || chatHistory[0];
+//   }, [chatHistory, activeChatId]);
+
+//   const messages = activeChat.messages;
+
+//   useEffect(() => {
+//     (async () => {
+//       try {
+//         const res = await axios.get(
+//           `${import.meta.env.VITE_API_URL}/api/properties`,
+//         );
+//         if (res.data.success) {
+//           setAllProperties(res.data.properties);
+//           setFilteredProperties(res.data.properties);
+//         }
+//       } catch (e) {
+//         console.log(e);
+//       }
+//     })();
+//   }, []);
+
+//   const cities = useMemo(
+//     () => ["All", ...new Set(allProperties.map((x) => x.city).filter(Boolean))],
+//     [allProperties],
+//   );
+
+//   useEffect(() => {
+//     scrollRef.current?.scrollTo({
+//       top: scrollRef.current.scrollHeight,
+//       behavior: "smooth",
+//     });
+//   }, [messages, typing]);
+
+//   useEffect(() => {
+//     const userMsgCount = messages.filter((m) => m.role === "user").length;
+//     if (userMsgCount >= 3) {
+//       setIsChatLocked(true);
+//     } else {
+//       setIsChatLocked(false);
+//     }
+//   }, [messages]);
+
+//   const handleVoice = () => {
+//     if (isChatLocked) return;
+//     const SpeechRecognition =
+//       window.SpeechRecognition || window.webkitSpeechRecognition;
+//     if (!SpeechRecognition) {
+//       alert("Voice input isn't supported in this browser.");
+//       return;
+//     }
+//     if (listening) {
+//       recognitionRef.current?.stop();
+//       return;
+//     }
+//     const recognition = new SpeechRecognition();
+//     recognition.lang = "en-IN";
+//     recognition.interimResults = false;
+//     recognition.onstart = () => setListening(true);
+//     recognition.onend = () => setListening(false);
+//     recognition.onresult = (e) => {
+//       const transcript = e.results?.[0]?.[0]?.transcript;
+//       if (transcript) setInput(transcript);
+//     };
+//     recognitionRef.current = recognition;
+//     recognition.start();
+//   };
+
+//   const runSearch = (rawQuery) => {
+//     if (!rawQuery.trim() || isChatLocked) return;
+//     const query = rawQuery.toLowerCase().trim();
+//     const userMsg = { role: "user", text: rawQuery };
+
+//     const currentUserMessagesCount = messages.filter(
+//       (m) => m.role === "user",
+//     ).length;
+//     if (currentUserMessagesCount === 2) {
+//       setTimeout(() => {
+//         setShowVideoModal(true);
+//       }, 800);
+//     }
+
+//     setChatHistory((prev) =>
+//       prev.map((chat) => {
+//         if (chat.id === activeChatId) {
+//           const updatedTitle =
+//             chat.messages.length === 1 ? rawQuery : chat.title;
+//           return {
+//             ...chat,
+//             title: updatedTitle,
+//             messages: [...chat.messages, userMsg],
+//           };
+//         }
+//         return chat;
+//       }),
+//     );
+
+//     setTyping(true);
+
+//     setTimeout(() => {
+//       setTyping(false);
+//       let assistantText = "";
+//       let matchedProperties = [];
+
+//       // --- FOLLOW UP HANDLING ---
+//       if (currentIntent) {
+//         setCurrentIntent(null); // Reset intent state trigger
+//         if (query === "no") {
+//           assistantText = "👋 Hi! I'm Niwas AI. We're here to help.";
+//         } else {
+//           assistantText = GENERAL_STATEMENT;
+//         }
+//       }
+//       // --- GENERAL STATEMENT FOR INVESTMENT, DOCUMENTS, AND SPECIFIC GENERAL QUERIES ---
+//       else if (
+//         query.includes("best for investment") ||
+//         query.includes("highest demand") ||
+//         query.includes("nearby schools") ||
+//         query.includes("hospitals nearby") ||
+//         query.includes("is this area safe") ||
+//         query.includes("nearby markets") ||
+//         query.includes("documents are needed to buy") ||
+//         query.includes("documents are needed to sell") ||
+//         query.includes("property registration work") ||
+//         query.includes("stamp duty charges") ||
+//         query.includes("help with paperwork") ||
+//         query.includes("digniwas help") ||
+//         query.includes("niwas ai work") ||
+//         query.includes("compare two properties") ||
+//         query.includes("save this property") ||
+//         query.includes("recommend similar properties") ||
+//         query.includes("What is the best Place to Buy")
+//       ) {
+//         assistantText = GENERAL_STATEMENT;
+//       }
+//       // --- INTENT ROUTING LOGIC ---
+//       else if (
+//         query.includes("property dealer") ||
+//         query.includes("agent") ||
+//         query.includes("partner")
+//       ) {
+//         assistantText =
+//           "Become a verified DigiNiwas Partner and receive:\n\n✅ Verified customer leads\n✅ Personal dashboard\n✅ Property promotion\n✅ Dedicated relationship support\n\nWould you like to register?";
+//         setCurrentIntent("dealer");
+//       } else if (query.includes("home loan")) {
+//         assistantText =
+//           "I can connect you with our trusted banking partners. Should we proceed?";
+//         setCurrentIntent("loan");
+//       } else if (
+//         query.includes("sell my house") ||
+//         query.includes("sell house")
+//       ) {
+//         assistantText =
+//           "Great! I'd be happy to help.\n\nWith DigiNiwas, you get:\n\n✅ Free property listing\n📸 Professional photography & videography\n📢 Digital marketing across multiple platforms\n👨‍💼 Verified buyer enquiries\n🤝 Support from trusted local agents\n\nShall we start by listing your property?";
+//         setCurrentIntent("sell");
+//       } else if (
+//         query.includes("rent out my flat") ||
+//         query.includes("rent out my house") ||
+//         query.includes("rent out my shop")
+//       ) {
+//         assistantText =
+//           "Perfect! We'll help you find genuine tenants.\n\nDigiNiwas offers:\nVerified tenant enquiries\nProfessional property photos\nDigital promotion\nRental agreement assistance\nDedicated support throughout the process\n\nReady to list your property?";
+//         setCurrentIntent("rent_out");
+//       } else if (
+//         query.includes("on rent") &&
+//         (query.includes("2bhk") ||
+//           query.includes("3bhk") ||
+//           query.includes("flat") ||
+//           query.includes("house") ||
+//           query.includes("shop"))
+//       ) {
+//         assistantText =
+//           "I can help with that.\n\nPlease share:\n\nCity or locality\nMonthly budget\nFurnished or unavailable\nFamily or bachelor\n\nI'll show you the best verified options. Proceed?";
+//         setCurrentIntent("rent_need");
+//       } else if (
+//         query.includes("property worth") ||
+//         query.includes("valuation") ||
+//         query.includes("value of my property")
+//       ) {
+//         assistantText =
+//           "I can help estimate your property's value.\n\nPlease provide:\n\nProperty location\nProperty type\nBuilt-up area\nAge of the property\n\nWe'll prepare an estimated market valuation. Should we start?";
+//         setCurrentIntent("worth");
+//       } else if (
+//         query.includes("visit this property") ||
+//         query.includes("site visit")
+//       ) {
+//         assistantText =
+//           "Excellent!\n\nI'll arrange a site visit with the verified DigiNiwas partner handling this property. Ready?";
+//         setCurrentIntent("visit");
+//       } else if (
+//         query.includes("property document") ||
+//         query.includes("sale deed") ||
+//         query.includes("registry guidance")
+//       ) {
+//         assistantText =
+//           "We can connect you with trusted professionals for:\nSale deed assistance\nRegistry guidance\nProperty verification\nDocumentation support\n\nWhat kind of assistance do you need?";
+//         setCurrentIntent("documents");
+//       }
+//       // --- DEFAULT PROPERTY & IDENTITY CHATS ---
+//       else if (
+//         query.includes("who are you") ||
+//         query.includes("who r u") ||
+//         query.includes("kaun ho") ||
+//         query.includes("niwas ai")
+//       ) {
+//         assistantText =
+//           "I'm Niwas AI, your smart real estate assistant! 🏡\n\nI'm here to help you find, compare, and get the best luxury properties within your budget effortlessly.";
+//       } else if (
+//         query.startsWith("hi") ||
+//         query.includes("hello") ||
+//         query.includes("hey") ||
+//         query.includes("namaste")
+//       ) {
+//         assistantText =
+//           "Hello! 👋 How can I help you find the best luxury properties within your budget today?";
+//         // } else {
+//         //   let data = [...allProperties];
+//         //   cities.forEach((city) => {
+//         //     if (city !== "All" && query.includes(city.toLowerCase())) {
+//         //       data = data.filter((x) => x.city?.toLowerCase() === city.toLowerCase());
+//         //     }
+//         //   });
+//         //   const bhk = query.match(/([1-5])\s*bhk/i);
+//         //   if (bhk) {
+//         //     data = data.filter((x) => Number(x.bedrooms) === Number(bhk[1]));
+//         //   }
+//         //   if (query.includes("rent")) {
+//         //     data = data.filter((x) => x.transactionType?.toLowerCase() === "rent");
+//         //   }
+//         //   if (query.includes("buy")) {
+//         //     data = data.filter((x) => x.transactionType?.toLowerCase() === "buy");
+//         //   }
+//         //   assistantText = `Found ${data.length} matching properties for your search:`;
+//         //   matchedProperties = data.slice(0, 6);
+//         // }
+//       } else {
+//         let data = [...allProperties];
+//         let isCityMentioned = false;
+//         let matchedCityKey = "";
+
+//         const dbCities = [
+//           ...new Set(allProperties.map((x) => x.city?.trim()).filter(Boolean)),
+//         ];
+
+//         for (const c of dbCities) {
+//           const lowerCity = c.toLowerCase();
+//           const firstWord = lowerCity.split(" ")[0];
+
+//           if (query.includes(lowerCity) || query.includes(firstWord)) {
+//             isCityMentioned = true;
+//             matchedCityKey = firstWord;
+//             break;
+//           }
+//         }
+
+//         if (!isCityMentioned) {
+//           Object.keys(CITY_COORDS).forEach((cKey) => {
+//             if (query.includes(cKey)) {
+//               isCityMentioned = true;
+//               matchedCityKey = cKey;
+//             }
+//           });
+//         }
+
+//         if (isCityMentioned) {
+//           data = data.filter((x) => {
+//             if (!x.city) return false;
+//             const itemCity = x.city.toLowerCase().trim();
+//             return (
+//               itemCity.includes(matchedCityKey) ||
+//               itemCity.startsWith(matchedCityKey)
+//             );
+//           });
+//         }
+
+//         const bhk = query.match(/([1-5])\s*bhk/i);
+//         if (bhk) {
+//           data = data.filter((x) => Number(x.bedrooms) === Number(bhk[1]));
+//         }
+//         if (query.includes("rent")) {
+//           data = data.filter(
+//             (x) => x.transactionType?.toLowerCase() === "rent",
+//           );
+//         }
+//         if (query.includes("buy")) {
+//           data = data.filter((x) => x.transactionType?.toLowerCase() === "buy");
+//         }
+
+//         if (data.length === 0) {
+//           assistantText = isCityMentioned
+//             ? `No property found in ${matchedCityKey.toUpperCase()} for your search criteria.`
+//             : "No property found for your search criteria.";
+//           matchedProperties = [];
+//         } else {
+//           assistantText = `Found ${data.length} matching properties for your search:`;
+//           matchedProperties = data.slice(0, 6);
+//         }
+//       }
+
+//       const assistantMsg = {
+//         role: "assistant",
+//         text: assistantText,
+//         properties: matchedProperties,
+//       };
+
+//       setChatHistory((prev) =>
+//         prev.map((chat) => {
+//           if (chat.id === activeChatId) {
+//             return { ...chat, messages: [...chat.messages, assistantMsg] };
+//           }
+//           return chat;
+//         }),
+//       );
+//     }, 1000);
+//     setInput("");
+//   };
+
+//   const handleNewChat = () => {
+//     const newId = `session-${Date.now()}`;
+//     const newChatSession = {
+//       id: newId,
+//       title: "New Conversation",
+//       messages: [
+//         {
+//           role: "assistant",
+//           text: "👋Welcome to DigiNiwas.\nI'm Niwas AI—here to help you discover properties, connect with verified agents, and simplify your real estate journey.\nWhat brings you to DigiNiwas today?",
+//         },
+//       ],
+//     };
+//     setChatHistory((prev) => [newChatSession, ...prev]);
+//     setActiveChatId(newId);
+//     setSelectedProperty(null);
+//     setCurrentIntent(null);
+//   };
+
+//   const handleSelectProperty = (property) => {
+//     setSelectedProperty((prev) =>
+//       prev?._id === property._id ? null : property,
+//     );
+//   };
+
+//   const handleSend = () => runSearch(input);
+//   const handleSuggestion = (text) => runSearch(text);
+
+//   const isFirstTurn = messages.length === 1;
+//   const showChips =
+//     !typing && messages[messages.length - 1]?.role === "assistant";
+
+//   return (
+//     <div className="flex h-dvh w-full flex-col overflow-hidden bg-gray-50 lg:h-screen lg:flex-row">
+//       <style>{`
+//         @keyframes fadeInUp {
+//           from { opacity: 0; transform: translateY(8px); }
+//           to { opacity: 1; transform: translateY(0); }
+//         }
+//       `}</style>
+
+//       {/* ---------------- Main Chat Column ---------------- */}
+//       <div className="relative flex h-[calc(100vh-80px)] w-full min-h-0 flex-col overflow-hidden lg:h-[calc(100vh-80px)] lg:flex-1">
+//         {/* Header */}
+//         <div className="flex shrink-0 items-center gap-3 border-b bg-white p-4 sm:p-5">
+//           <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] p-1.5 shadow-sm">
+//             <img
+//               src={ai}
+//               alt="Niwas AI Avatar"
+//               className="h-full w-full object-contain"
+//             />
+//           </div>
+//           <div>
+//             <div className="font-bold text-[#0F2E46]">Niwas AI</div>
+//             <div className="text-xs text-gray-500">AI Property Consultant</div>
+//           </div>
+//         </div>
+
+//         {/* Watermark Logo */}
+//         <div className="pointer-events-none absolute inset-0 top-16 flex items-center justify-center overflow-hidden">
+//           <img
+//             src={ai}
+//             alt="Watermark"
+//             className="h-[280px] w-[280px] object-cover opacity-[0.03] mix-blend-multiply"
+//           />
+//         </div>
+
+//         {/* Messages Scroll Area */}
+//         <div
+//           ref={scrollRef}
+//           className="relative flex-1 min-h-0 space-y-5 overflow-y-auto p-4 sm:p-6 pb-6"
+//         >
+//           {isFirstTurn && (
+//             <div className="mx-auto max-w-lg pt-6 text-center sm:pt-10">
+//               <div className="mx-auto p-3 mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#1CB46D] to-[#0F2E46] shadow-lg">
+//                 <img
+//                   src={ai}
+//                   alt="Niwas AI Large Logo"
+//                   className="h-full w-full object-contain"
+//                 />
+//               </div>
+//               <h2 className="text-lg font-bold text-[#0F2E46] sm:text-xl">
+//                 Find your next home, just by asking
+//               </h2>
+//               <p className="mx-auto mt-1 max-w-sm text-sm text-gray-500">
+//                 Tell me what you're looking for — city, budget, BHK, or rent vs.
+//                 buy.
+//               </p>
+//             </div>
+//           )}
+
+//           {messages.map((msg, i) => (
+//             <ChatMessage
+//               key={i}
+//               message={msg}
+//               selectedProperty={selectedProperty}
+//               onSelectProperty={handleSelectProperty}
+//             />
+//           ))}
+
+//           {typing && <TypingIndicator />}
+
+//           {showChips && (
+//             <div className="mx-auto max-w-lg">
+//               {!isFirstTurn && (
+//                 <p className="mb-1.5 text-xs font-medium text-gray-400">
+//                   Try another search
+//                 </p>
+//               )}
+//               <SuggestionChips
+//                 onPick={handleSuggestion}
+//                 disabled={isChatLocked}
+//               />
+//             </div>
+//           )}
+//         </div>
+
+//         {/* Fixed Bottom Input */}
+//         <div className="shrink-0 border-t bg-white p-3 sm:p-4">
+//           <div
+//             className={`flex items-center gap-2 rounded-full border pl-4 pr-1.5 py-1.5 shadow-sm transition-all ${isChatLocked ? "border-red-200 bg-red-50/30" : "border-gray-300 bg-white focus-within:border-[#1CB46D] focus-within:ring-2 focus-within:ring-[#1CB46D]/20"}`}
+//           >
+//             <Search size={16} className="shrink-0 text-gray-400" />
+//             <input
+//               className="h-9 flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400 disabled:text-gray-400 disabled:cursor-not-allowed"
+//               value={input}
+//               disabled={isChatLocked}
+//               onChange={(e) => setInput(e.target.value)}
+//               onKeyDown={(e) => e.key === "Enter" && handleSend()}
+//               placeholder={
+//                 isChatLocked
+//                   ? "Chat limit reached! Free trials ended."
+//                   : "Ask anything about properties..."
+//               }
+//             />
+//             <button
+//               onClick={handleVoice}
+//               disabled={isChatLocked}
+//               className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${listening ? "bg-red-50 text-red-500 animate-pulse" : isChatLocked ? "text-gray-300 cursor-not-allowed" : "text-gray-400 hover:bg-gray-100 hover:text-[#0F2E46]"}`}
+//               aria-label="Voice search"
+//               type="button"
+//             >
+//               <Mic size={16} />
+//             </button>
+//             <button
+//               onClick={handleSend}
+//               disabled={isChatLocked}
+//               className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white transition-transform ${isChatLocked ? "bg-gray-300 cursor-not-allowed scale-100" : "bg-[#0F2E46] hover:scale-105 active:scale-95"}`}
+//               aria-label="Send message"
+//               type="button"
+//             >
+//               <Send size={16} />
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* ---------------- Right Panel ---------------- */}
+//       <aside className="flex h-[42%] w-full min-h-0 flex-col overflow-y-auto border-t border-gray-100 bg-white lg:h-full lg:w-[320px] lg:border-l lg:border-t-0 xl:w-[360px]">
+//         {selectedProperty && (
+//           <PropertyLocationPanel
+//             property={selectedProperty}
+//             onClose={() => setSelectedProperty(null)}
+//           />
+//         )}
+//         <div className="min-h-0 flex-1">
+//           <HistoryPanel
+//             chatHistory={chatHistory}
+//             activeChatId={activeChatId}
+//             onSelectChat={setActiveChatId}
+//             onNewChat={handleNewChat}
+//           />
+//         </div>
+//       </aside>
+
+//       {/* VIDEO POP-UP MODAL */}
+//       {showVideoModal && (
+//         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-[fadeInUp_0.2s_ease-out]">
+//           <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl transition-all">
+//             <div className="flex items-center justify-between border-b border-gray-100 p-4">
+//               <h3 className="text-base font-bold text-[#0F2E46]">
+//                 Premium Property Insights
+//               </h3>
+//               <button
+//                 onClick={() => setShowVideoModal(false)}
+//                 className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors"
+//                 aria-label="Close Video"
+//               >
+//                 <X size={18} />
+//               </button>
+//             </div>
+//             <div className="relative aspect-video w-full bg-black">
+//               <video
+//                 src={propertyVideo}
+//                 controls
+//                 autoPlay
+//                 className="h-full w-full object-contain"
+//               />
+//             </div>
+//             <div className="p-4 bg-gray-50 flex justify-end">
+//               <button
+//                 onClick={() => setShowVideoModal(false)}
+//                 className="rounded-xl bg-[#0F2E46] px-5 py-2 text-sm font-semibold text-white shadow transition-transform hover:scale-105 active:scale-95"
+//               >
+//                 Close View
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }

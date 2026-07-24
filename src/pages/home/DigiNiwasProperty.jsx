@@ -17,7 +17,7 @@ import {
   FiArrowRight,
 } from "react-icons/fi";
 
-import niwasAi from "../../assets/images/niwasAi.png"
+import niwasAi from "../../assets/images/niwas_ai.png"
 
 const arcItems = [
   {
@@ -751,11 +751,11 @@ export default function AgentDashboardPreview() {
 
                 height: 50,
 
-                borderRadius: "50%",
+                // borderRadius: "50%",
 
-                background: "#04121d",
+                // background: "#04121d",
 
-                border: `3px solid ${MINT}`,
+                // border: `3px solid ${MINT}`,
 
                 display: "flex",
 
@@ -765,7 +765,7 @@ export default function AgentDashboardPreview() {
 
                 color: MINT,
 
-                boxShadow: "0 0 30px rgba(51,204,153,.25)",
+                // boxShadow: "0 0 30px rgba(51,204,153,.25)",
 
                 transition: "all .4s",
               }}
