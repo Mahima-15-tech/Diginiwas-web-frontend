@@ -796,8 +796,6 @@ import {
 import logo from "../assets/images/homelogo.png";
 import ai from "../assets/images/niwas_ai.png";
 
-const propertyVideo = import.meta.env.VITE_NIWAS_AI;
-
 /* ============================================================
    UTILS — city fallback coords, distance, formatting
    ============================================================ */
@@ -864,8 +862,6 @@ function getPropertyCoords(property) {
    SMALL SUBCOMPONENTS
    ============================================================ */
 function SuggestionChips({ suggestions, onPick, disabled }) {
-  if (disabled) return null;
-
   const list = suggestions || [
     "Buy Property",
     "Rent Property",
@@ -882,11 +878,17 @@ function SuggestionChips({ suggestions, onPick, disabled }) {
           key={s}
           disabled={disabled}
           onClick={() => onPick(s)}
-          className="group flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 shadow-sm transition-all duration-200 hover:border-[#1CB46D] hover:bg-[#1CB46D]/5 hover:text-[#0F2E46] hover:shadow-md active:scale-95"
+          className={`group flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm shadow-sm transition-all duration-200 ${
+            disabled
+              ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "border-gray-200 bg-white text-gray-700 hover:border-[#1CB46D] hover:bg-[#1CB46D]/5 hover:text-[#0F2E46] hover:shadow-md active:scale-95"
+          }`}
         >
           <Sparkles
             size={13}
-            className="text-[#1CB46D] opacity-70 group-hover:opacity-100"
+            className={`text-[#1CB46D] ${
+              disabled ? "opacity-30" : "opacity-70 group-hover:opacity-100"
+            }`}
           />
           {s}
         </button>
@@ -1107,13 +1109,14 @@ function HistoryPanel({ chatHistory, activeChatId, onSelectChat, onNewChat }) {
 export default function NiwasAi() {
   const [allProperties, setAllProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
-  const [showVideoModal, setShowVideoModal] = useState(false);
   const [isChatLocked, setIsChatLocked] = useState(false);
 
+  // Intent State Tracker to follow up user responses
   const [currentIntent, setCurrentIntent] = useState(null);
+  const [pendingAction, setPendingAction] = useState(null);
 
   const GENERAL_STATEMENT =
-    "We're here to help. 🏡\n\nShare your details below, and a dedicated DigiNiwas relationship manager will get in touch with you shortly to provide personalised guidance based on your requirements:\n\n👤 Full Name:\n📱 Mobile:\n💬 WhatsApp Number:\n✉️ Email (Optional):\n📍 Location:";
+    " We're here to help. \nShare your details below, and a dedicated DigiNiwas relationship manager will get in touch with you shortly to provide personalised guidance based on your requirements. \nFull Name  \nMobile \nWhatsApp  Number  \nEmail (Optional)  \nLocation ";
 
   const [chatHistory, setChatHistory] = useState([
     {
@@ -1164,41 +1167,15 @@ export default function NiwasAi() {
     });
   }, [messages, typing]);
 
-  // 🔒 CHAT LOCK & GENERAL STATEMENT DISPLAY EFFECT
+  // 3 user messages poore hote hi chat Lock ho jayegi
   useEffect(() => {
     const userMsgCount = messages.filter((m) => m.role === "user").length;
-
     if (userMsgCount >= 3) {
       setIsChatLocked(true);
-
-      const lastMsg = messages[messages.length - 1];
-      if (lastMsg && lastMsg.text !== GENERAL_STATEMENT) {
-        setTimeout(() => {
-          setChatHistory((prev) =>
-            prev.map((chat) => {
-              if (chat.id === activeChatId) {
-                const exists = chat.messages.some(
-                  (m) => m.text === GENERAL_STATEMENT
-                );
-                if (!exists) {
-                  return {
-                    ...chat,
-                    messages: [
-                      ...chat.messages,
-                      { role: "assistant", text: GENERAL_STATEMENT },
-                    ],
-                  };
-                }
-              }
-              return chat;
-            })
-          );
-        }, 600);
-      }
     } else {
       setIsChatLocked(false);
     }
-  }, [messages, activeChatId]);
+  }, [messages]);
 
   const handleVoice = () => {
     if (isChatLocked) return;
@@ -1230,16 +1207,6 @@ export default function NiwasAi() {
     const query = rawQuery.toLowerCase().trim();
     const userMsg = { role: "user", text: rawQuery };
 
-    const currentUserMessagesCount = messages.filter(
-      (m) => m.role === "user",
-    ).length;
-
-    if (currentUserMessagesCount === 2) {
-      setTimeout(() => {
-        setShowVideoModal(true);
-      }, 800);
-    }
-
     setChatHistory((prev) =>
       prev.map((chat) => {
         if (chat.id === activeChatId) {
@@ -1252,7 +1219,7 @@ export default function NiwasAi() {
           };
         }
         return chat;
-      }),
+      })
     );
 
     setTyping(true);
@@ -1262,43 +1229,115 @@ export default function NiwasAi() {
       let assistantText = "";
       let matchedProperties = [];
 
-      // --- GENERAL STATEMENT TRIGGER FOR COMMERCIAL, BUY, RENT, SELL, AGENT, LOAN & PROMOTE ---
-      if (
-        query.includes("commercial") ||
-        query.includes("buy property") ||
+      // --- STEP 2: USER RESPONDED WITH LOCATION ---
+      if (pendingAction) {
+        const locationInput = query;
+        const currentAction = pendingAction;
+        setPendingAction(null);
+
+        let data = [...allProperties];
+        data = data.filter((x) => {
+          if (!x.city) return false;
+          const itemCity = x.city.toLowerCase().trim();
+          const itemAddress = (x.address || "").toLowerCase();
+          const itemLocality = (x.locality || "").toLowerCase();
+
+          return (
+            itemCity.includes(locationInput) ||
+            itemAddress.includes(locationInput) ||
+            itemLocality.includes(locationInput)
+          );
+        });
+
+        if (currentAction === "buy") {
+          data = data.filter((x) => x.transactionType?.toLowerCase() === "buy");
+        } else if (currentAction === "rent") {
+          data = data.filter((x) => x.transactionType?.toLowerCase() === "rent");
+        }
+
+        if (data.length > 0) {
+          assistantText = `Found ${data.length} matching properties in ${rawQuery}:`;
+          matchedProperties = data.slice(0, 6);
+        } else {
+          assistantText = `No properties available in ${rawQuery} currently.\n\n${GENERAL_STATEMENT}`;
+        }
+      }
+      // --- FOLLOW UP HANDLING ---
+      else if (currentIntent) {
+        setCurrentIntent(null);
+        if (query === "no") {
+          assistantText = "👋 Hi! I'm Niwas AI. We're here to help.";
+        } else {
+          assistantText = GENERAL_STATEMENT;
+        }
+      }
+      // --- STEP 1: INITIAL ACTION INTENT ---
+      else if (
+        query === "buy property" ||
+        query === "rent property" ||
+        query === "lease commercial" ||
         query.includes("buy") ||
-        query.includes("rent property") ||
         query.includes("rent") ||
-        query.includes("sell my property") ||
-        query.includes("sell") ||
-        query.includes("verified agent") ||
-        query.includes("agent") ||
-        query.includes("dealer") ||
-        query.includes("home loan") ||
-        query.includes("loan") ||
-        query.includes("promote my property") ||
-        query.includes("promote") ||
+        query.includes("sell")
+      ) {
+        let matchedCity = "";
+        const dbCities = [
+          ...new Set(allProperties.map((x) => x.city?.trim()).filter(Boolean)),
+        ];
+
+        for (const c of dbCities) {
+          if (query.includes(c.toLowerCase())) {
+            matchedCity = c;
+            break;
+          }
+        }
+
+        if (matchedCity) {
+          let data = allProperties.filter(
+            (x) => x.city?.toLowerCase() === matchedCity.toLowerCase()
+          );
+          if (data.length > 0) {
+            assistantText = `Found ${data.length} matching properties in ${matchedCity}:`;
+            matchedProperties = data.slice(0, 6);
+          } else {
+            assistantText = `No properties found in ${matchedCity}.\n\n${GENERAL_STATEMENT}`;
+          }
+        } else {
+          if (query.includes("buy")) setPendingAction("buy");
+          else if (query.includes("rent")) setPendingAction("rent");
+          else setPendingAction("general_search");
+
+          assistantText = "📍 Which city or locality are you looking for?";
+        }
+      }
+      // --- GENERAL STATEMENT FOR FAQS ---
+      else if (
         query.includes("best for investment") ||
         query.includes("highest demand") ||
         query.includes("nearby schools") ||
         query.includes("hospitals nearby") ||
         query.includes("is this area safe") ||
-        query.includes("nearby markets") ||
-        query.includes("documents are needed to buy") ||
-        query.includes("documents are needed to sell") ||
-        query.includes("property registration work") ||
+        query.includes("documents are needed") ||
         query.includes("stamp duty charges") ||
-        query.includes("help with paperwork") ||
-        query.includes("digniwas help") ||
-        query.includes("niwas ai work") ||
-        query.includes("compare two properties") ||
-        query.includes("save this property") ||
-        query.includes("recommend similar properties") ||
-        query.includes("what is the best place to buy")
+        query.includes("help with paperwork")
       ) {
         assistantText = GENERAL_STATEMENT;
       }
-      // --- DEFAULT IDENTITY CHATS ---
+      // --- INTENT ROUTING LOGIC ---
+      else if (
+        query.includes("property dealer") ||
+        query.includes("agent") ||
+        query.includes("partner")
+      ) {
+        assistantText =
+          "Become a verified DigiNiwas Partner and receive:\n\n✅ Verified customer leads\n✅ Personal dashboard\n✅ Property promotion\n✅ Dedicated relationship support\n\nWould you like to register?";
+        setCurrentIntent("dealer");
+      } else if (query.includes("home loan")) {
+        assistantText =
+          "I can connect you with our trusted banking partners. Should we proceed?";
+        setCurrentIntent("loan");
+      }
+      // --- DEFAULT BOT IDENTITY ---
       else if (
         query.includes("who are you") ||
         query.includes("who r u") ||
@@ -1306,7 +1345,7 @@ export default function NiwasAi() {
         query.includes("niwas ai")
       ) {
         assistantText =
-          "I'm Niwas AI, your smart real estate assistant! 🏡\n\nI'm here to help you find, compare, and get the best luxury properties within your budget effortlessly.";
+          "I'm Niwas AI, your smart real estate assistant! 🏡\n\nI'm here to help you find, compare, and get the best properties within your budget effortlessly.";
       } else if (
         query.startsWith("hi") ||
         query.includes("hello") ||
@@ -1315,57 +1354,17 @@ export default function NiwasAi() {
       ) {
         assistantText =
           "Hello! 👋 How can I help you find the best luxury properties within your budget today?";
-      } else {
-        // --- NORMAL PROPERTY SEARCH LOGIC ---
+      }
+      // --- FALLBACK SEARCH ---
+      else {
         let data = [...allProperties];
-        let isCityMentioned = false;
-        let matchedCityKey = "";
-
-        const dbCities = [
-          ...new Set(allProperties.map((x) => x.city?.trim()).filter(Boolean)),
-        ];
-
-        for (const c of dbCities) {
-          const lowerCity = c.toLowerCase();
-          const firstWord = lowerCity.split(" ")[0];
-
-          if (query.includes(lowerCity) || query.includes(firstWord)) {
-            isCityMentioned = true;
-            matchedCityKey = firstWord;
-            break;
-          }
-        }
-
-        if (!isCityMentioned) {
-          Object.keys(CITY_COORDS).forEach((cKey) => {
-            if (query.includes(cKey)) {
-              isCityMentioned = true;
-              matchedCityKey = cKey;
-            }
-          });
-        }
-
-        if (isCityMentioned) {
-          data = data.filter((x) => {
-            if (!x.city) return false;
-            const itemCity = x.city.toLowerCase().trim();
-            return (
-              itemCity.includes(matchedCityKey) ||
-              itemCity.startsWith(matchedCityKey)
-            );
-          });
-        }
-
-        const bhk = query.match(/([1-5])\s*bhk/i);
-        if (bhk) {
-          data = data.filter((x) => Number(x.bedrooms) === Number(bhk[1]));
-        }
+        data = data.filter((x) => {
+          if (!x.city) return false;
+          return x.city.toLowerCase().includes(query);
+        });
 
         if (data.length === 0) {
-          assistantText = isCityMentioned
-            ? `No property found in ${matchedCityKey.toUpperCase()} for your search criteria.`
-            : "No property found for your search criteria.";
-          matchedProperties = [];
+          assistantText = GENERAL_STATEMENT;
         } else {
           assistantText = `Found ${data.length} matching properties for your search:`;
           matchedProperties = data.slice(0, 6);
@@ -1384,7 +1383,7 @@ export default function NiwasAi() {
             return { ...chat, messages: [...chat.messages, assistantMsg] };
           }
           return chat;
-        }),
+        })
       );
     }, 1000);
     setInput("");
@@ -1406,6 +1405,7 @@ export default function NiwasAi() {
     setActiveChatId(newId);
     setSelectedProperty(null);
     setCurrentIntent(null);
+    setPendingAction(null);
   };
 
   const handleSelectProperty = (property) => {
@@ -1506,58 +1506,67 @@ export default function NiwasAi() {
           )}
         </div>
 
-        {/* Dynamic Bottom Section (Input OR Lock Box) */}
+        {/* Fixed Bottom Input */}
         <div className="shrink-0 border-t bg-white p-3 sm:p-4">
-          {isChatLocked ? (
-            <div className="flex items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 p-3.5 shadow-sm">
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600">
-                  <Lock size={18} />
-                </div>
-                <div>
-                  <p className="text-xs sm:text-sm font-semibold text-red-900">
-                    Free AI Trial Limit Reached
-                  </p>
-                  <p className="text-[11px] sm:text-xs text-red-600/90">
-                    Our team will reach out to you using the details provided above.
-                  </p>
-                </div>
-              </div>
-              {/* <button
-                onClick={handleNewChat}
-                className="shrink-0 rounded-xl bg-red-600 px-3.5 py-2 text-xs font-semibold text-white shadow hover:bg-red-700 transition"
-              >
-                New Chat
-              </button> */}
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 rounded-full border border-gray-300 bg-white pl-4 pr-1.5 py-1.5 shadow-sm transition-all focus-within:border-[#1CB46D] focus-within:ring-2 focus-within:ring-[#1CB46D]/20">
-              <Search size={16} className="shrink-0 text-gray-400" />
-              <input
-                className="h-9 flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                placeholder="Ask anything about properties..."
-              />
-              <button
-                onClick={handleVoice}
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${listening ? "bg-red-50 text-red-500 animate-pulse" : "text-gray-400 hover:bg-gray-100 hover:text-[#0F2E46]"}`}
-                aria-label="Voice search"
-                type="button"
-              >
-                <Mic size={16} />
-              </button>
-              <button
-                onClick={handleSend}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#0F2E46] text-white transition-transform hover:scale-105 active:scale-95"
-                aria-label="Send message"
-                type="button"
-              >
-                <Send size={16} />
-              </button>
+          {/* Chat Lock Alert Badge */}
+          {isChatLocked && (
+            <div className="mb-2 flex items-center gap-2 rounded-lg bg-red-50 p-2 text-xs text-red-600 border border-red-100">
+              <Lock size={14} className="shrink-0 text-red-500" />
+              <span>
+                Free trial limit reached (3/3 queries used). Start a <b>New Chat</b> or contact support to continue.
+              </span>
             </div>
           )}
+
+          <div
+            className={`flex items-center gap-2 rounded-full border pl-4 pr-1.5 py-1.5 shadow-sm transition-all ${
+              isChatLocked
+                ? "border-red-200 bg-red-50/20"
+                : "border-gray-300 bg-white focus-within:border-[#1CB46D] focus-within:ring-2 focus-within:ring-[#1CB46D]/20"
+            }`}
+          >
+            <Search size={16} className="shrink-0 text-gray-400" />
+            <input
+              className="h-9 flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400 disabled:text-gray-400 disabled:cursor-not-allowed"
+              value={input}
+              disabled={isChatLocked}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              placeholder={
+                isChatLocked
+                  ? "Chat limit reached!"
+                  : "Ask anything about properties..."
+              }
+            />
+            <button
+              onClick={handleVoice}
+              disabled={isChatLocked}
+              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors ${
+                listening
+                  ? "bg-red-50 text-red-500 animate-pulse"
+                  : isChatLocked
+                  ? "text-gray-300 cursor-not-allowed"
+                  : "text-gray-400 hover:bg-gray-100 hover:text-[#0F2E46]"
+              }`}
+              aria-label="Voice search"
+              type="button"
+            >
+              <Mic size={16} />
+            </button>
+            <button
+              onClick={handleSend}
+              disabled={isChatLocked}
+              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white transition-transform ${
+                isChatLocked
+                  ? "bg-gray-300 cursor-not-allowed scale-100"
+                  : "bg-[#0F2E46] hover:scale-105 active:scale-95"
+              }`}
+              aria-label="Send message"
+              type="button"
+            >
+              <Send size={16} />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -2016,254 +2025,210 @@ export default function NiwasAi() {
 //     recognition.start();
 //   };
 
-//   const runSearch = (rawQuery) => {
-//     if (!rawQuery.trim() || isChatLocked) return;
-//     const query = rawQuery.toLowerCase().trim();
-//     const userMsg = { role: "user", text: rawQuery };
+//  // 1. Context Tracking ke liye State
+// const [pendingAction, setPendingAction] = useState(null); // e.g., 'buy', 'rent', 'sell', etc.
 
-//     const currentUserMessagesCount = messages.filter(
-//       (m) => m.role === "user",
-//     ).length;
-//     if (currentUserMessagesCount === 2) {
-//       setTimeout(() => {
-//         setShowVideoModal(true);
-//       }, 800);
+// const runSearch = (rawQuery) => {
+//   if (!rawQuery.trim() || isChatLocked) return;
+//   const query = rawQuery.toLowerCase().trim();
+//   const userMsg = { role: "user", text: rawQuery };
+
+//   const currentUserMessagesCount = messages.filter(
+//     (m) => m.role === "user"
+//   ).length;
+//   if (currentUserMessagesCount === 2) {
+//     setTimeout(() => {
+//       setShowVideoModal(true);
+//     }, 800);
+//   }
+
+//   setChatHistory((prev) =>
+//     prev.map((chat) => {
+//       if (chat.id === activeChatId) {
+//         const updatedTitle =
+//           chat.messages.length === 1 ? rawQuery : chat.title;
+//         return {
+//           ...chat,
+//           title: updatedTitle,
+//           messages: [...chat.messages, userMsg],
+//         };
+//       }
+//       return chat;
+//     })
+//   );
+
+//   setTyping(true);
+
+//   setTimeout(() => {
+//     setTyping(false);
+//     let assistantText = "";
+//     let matchedProperties = [];
+
+//     // --- STEP 2: USER RESPONDED WITH LOCATION (PENDING ACTION EXIST) ---
+//     if (pendingAction) {
+//       const locationInput = query;
+//       const currentAction = pendingAction;
+//       setPendingAction(null); // Reset pending state
+
+//       // Search DB with Location
+//       let data = [...allProperties];
+//       data = data.filter((x) => {
+//         if (!x.city) return false;
+//         const itemCity = x.city.toLowerCase().trim();
+//         const itemAddress = (x.address || "").toLowerCase();
+//         const itemLocality = (x.locality || "").toLowerCase();
+
+//         return (
+//           itemCity.includes(locationInput) ||
+//           itemAddress.includes(locationInput) ||
+//           itemLocality.includes(locationInput)
+//         );
+//       });
+
+//       // Filter by Action Type if available
+//       if (currentAction === "buy") {
+//         data = data.filter((x) => x.transactionType?.toLowerCase() === "buy");
+//       } else if (currentAction === "rent") {
+//         data = data.filter((x) => x.transactionType?.toLowerCase() === "rent");
+//       }
+
+//       // Check if properties exist or return General Statement
+//       if (data.length > 0) {
+//         assistantText = `Found ${data.length} matching properties in ${rawQuery}:`;
+//         matchedProperties = data.slice(0, 6);
+//       } else {
+//         assistantText = `No properties available in ${rawQuery} currently.\n\n${GENERAL_STATEMENT}`;
+//       }
 //     }
+//     // --- FOLLOW UP HANDLING FOR DEALERS/LOANS ETC ---
+//     else if (currentIntent) {
+//       setCurrentIntent(null);
+//       if (query === "no") {
+//         assistantText = "👋 Hi! I'm Niwas AI. We're here to help.";
+//       } else {
+//         assistantText = GENERAL_STATEMENT;
+//       }
+//     }
+//     // --- STEP 1: INITIAL ACTION INTENT (PROMPT FOR LOCATION) ---
+//     else if (
+//       query === "buy property" ||
+//       query === "rent property" ||
+//       query === "lease commercial" ||
+//       query.includes("buy") ||
+//       query.includes("rent") ||
+//       query.includes("sell")
+//     ) {
+//       // Check if location is already mentioned in query
+//       let matchedCity = "";
+//       const dbCities = [
+//         ...new Set(allProperties.map((x) => x.city?.trim()).filter(Boolean)),
+//       ];
+
+//       for (const c of dbCities) {
+//         if (query.includes(c.toLowerCase())) {
+//           matchedCity = c;
+//           break;
+//         }
+//       }
+
+//       if (matchedCity) {
+//         // Location pehle se di hui hai direct search karein
+//         let data = allProperties.filter(
+//           (x) => x.city?.toLowerCase() === matchedCity.toLowerCase()
+//         );
+//         if (data.length > 0) {
+//           assistantText = `Found ${data.length} matching properties in ${matchedCity}:`;
+//           matchedProperties = data.slice(0, 6);
+//         } else {
+//           assistantText = `No properties found in ${matchedCity}.\n\n${GENERAL_STATEMENT}`;
+//         }
+//       } else {
+//         // Location nahi di hai -> Ask for location
+//         if (query.includes("buy")) setPendingAction("buy");
+//         else if (query.includes("rent")) setPendingAction("rent");
+//         else setPendingAction("general_search");
+
+//         assistantText = "📍 Which city or locality are you looking for?";
+//       }
+//     }
+//     // --- GENERAL STATEMENT FOR FAQS & INFORMATION ---
+//     else if (
+//       query.includes("best for investment") ||
+//       query.includes("highest demand") ||
+//       query.includes("nearby schools") ||
+//       query.includes("hospitals nearby") ||
+//       query.includes("is this area safe") ||
+//       query.includes("documents are needed") ||
+//       query.includes("stamp duty charges") ||
+//       query.includes("help with paperwork")
+//     ) {
+//       assistantText = GENERAL_STATEMENT;
+//     }
+//     // --- INTENT ROUTING LOGIC ---
+//     else if (
+//       query.includes("property dealer") ||
+//       query.includes("agent") ||
+//       query.includes("partner")
+//     ) {
+//       assistantText =
+//         "Become a verified DigiNiwas Partner and receive:\n\n✅ Verified customer leads\n✅ Personal dashboard\n✅ Property promotion\n✅ Dedicated relationship support\n\nWould you like to register?";
+//       setCurrentIntent("dealer");
+//     } else if (query.includes("home loan")) {
+//       assistantText =
+//         "I can connect you with our trusted banking partners. Should we proceed?";
+//       setCurrentIntent("loan");
+//     }
+//     // --- DEFAULT BOT IDENTITY ---
+//     else if (
+//       query.includes("who are you") ||
+//       query.includes("who r u") ||
+//       query.includes("kaun ho") ||
+//       query.includes("niwas ai")
+//     ) {
+//       assistantText =
+//         "I'm Niwas AI, your smart real estate assistant! 🏡\n\nI'm here to help you find, compare, and get the best properties within your budget effortlessly.";
+//     } else if (
+//       query.startsWith("hi") ||
+//       query.includes("hello") ||
+//       query.includes("hey") ||
+//       query.includes("namaste")
+//     ) {
+//       assistantText =
+//         "Hello! 👋 How can I help you find the best luxury properties within your budget today?";
+//     }
+//     // --- FALLBACK SEARCH ---
+//     else {
+//       let data = [...allProperties];
+//       data = data.filter((x) => {
+//         if (!x.city) return false;
+//         return x.city.toLowerCase().includes(query);
+//       });
+
+//       if (data.length === 0) {
+//         assistantText = GENERAL_STATEMENT;
+//       } else {
+//         assistantText = `Found ${data.length} matching properties for your search:`;
+//         matchedProperties = data.slice(0, 6);
+//       }
+//     }
+
+//     const assistantMsg = {
+//       role: "assistant",
+//       text: assistantText,
+//       properties: matchedProperties,
+//     };
 
 //     setChatHistory((prev) =>
 //       prev.map((chat) => {
 //         if (chat.id === activeChatId) {
-//           const updatedTitle =
-//             chat.messages.length === 1 ? rawQuery : chat.title;
-//           return {
-//             ...chat,
-//             title: updatedTitle,
-//             messages: [...chat.messages, userMsg],
-//           };
+//           return { ...chat, messages: [...chat.messages, assistantMsg] };
 //         }
 //         return chat;
-//       }),
+//       })
 //     );
-
-//     setTyping(true);
-
-//     setTimeout(() => {
-//       setTyping(false);
-//       let assistantText = "";
-//       let matchedProperties = [];
-
-//       // --- FOLLOW UP HANDLING ---
-//       if (currentIntent) {
-//         setCurrentIntent(null); // Reset intent state trigger
-//         if (query === "no") {
-//           assistantText = "👋 Hi! I'm Niwas AI. We're here to help.";
-//         } else {
-//           assistantText = GENERAL_STATEMENT;
-//         }
-//       }
-//       // --- GENERAL STATEMENT FOR INVESTMENT, DOCUMENTS, AND SPECIFIC GENERAL QUERIES ---
-//       else if (
-//         query.includes("best for investment") ||
-//         query.includes("highest demand") ||
-//         query.includes("nearby schools") ||
-//         query.includes("hospitals nearby") ||
-//         query.includes("is this area safe") ||
-//         query.includes("nearby markets") ||
-//         query.includes("documents are needed to buy") ||
-//         query.includes("documents are needed to sell") ||
-//         query.includes("property registration work") ||
-//         query.includes("stamp duty charges") ||
-//         query.includes("help with paperwork") ||
-//         query.includes("digniwas help") ||
-//         query.includes("niwas ai work") ||
-//         query.includes("compare two properties") ||
-//         query.includes("save this property") ||
-//         query.includes("recommend similar properties") ||
-//         query.includes("What is the best Place to Buy")
-//       ) {
-//         assistantText = GENERAL_STATEMENT;
-//       }
-//       // --- INTENT ROUTING LOGIC ---
-//       else if (
-//         query.includes("property dealer") ||
-//         query.includes("agent") ||
-//         query.includes("partner")
-//       ) {
-//         assistantText =
-//           "Become a verified DigiNiwas Partner and receive:\n\n✅ Verified customer leads\n✅ Personal dashboard\n✅ Property promotion\n✅ Dedicated relationship support\n\nWould you like to register?";
-//         setCurrentIntent("dealer");
-//       } else if (query.includes("home loan")) {
-//         assistantText =
-//           "I can connect you with our trusted banking partners. Should we proceed?";
-//         setCurrentIntent("loan");
-//       } else if (
-//         query.includes("sell my house") ||
-//         query.includes("sell house")
-//       ) {
-//         assistantText =
-//           "Great! I'd be happy to help.\n\nWith DigiNiwas, you get:\n\n✅ Free property listing\n📸 Professional photography & videography\n📢 Digital marketing across multiple platforms\n👨‍💼 Verified buyer enquiries\n🤝 Support from trusted local agents\n\nShall we start by listing your property?";
-//         setCurrentIntent("sell");
-//       } else if (
-//         query.includes("rent out my flat") ||
-//         query.includes("rent out my house") ||
-//         query.includes("rent out my shop")
-//       ) {
-//         assistantText =
-//           "Perfect! We'll help you find genuine tenants.\n\nDigiNiwas offers:\nVerified tenant enquiries\nProfessional property photos\nDigital promotion\nRental agreement assistance\nDedicated support throughout the process\n\nReady to list your property?";
-//         setCurrentIntent("rent_out");
-//       } else if (
-//         query.includes("on rent") &&
-//         (query.includes("2bhk") ||
-//           query.includes("3bhk") ||
-//           query.includes("flat") ||
-//           query.includes("house") ||
-//           query.includes("shop"))
-//       ) {
-//         assistantText =
-//           "I can help with that.\n\nPlease share:\n\nCity or locality\nMonthly budget\nFurnished or unavailable\nFamily or bachelor\n\nI'll show you the best verified options. Proceed?";
-//         setCurrentIntent("rent_need");
-//       } else if (
-//         query.includes("property worth") ||
-//         query.includes("valuation") ||
-//         query.includes("value of my property")
-//       ) {
-//         assistantText =
-//           "I can help estimate your property's value.\n\nPlease provide:\n\nProperty location\nProperty type\nBuilt-up area\nAge of the property\n\nWe'll prepare an estimated market valuation. Should we start?";
-//         setCurrentIntent("worth");
-//       } else if (
-//         query.includes("visit this property") ||
-//         query.includes("site visit")
-//       ) {
-//         assistantText =
-//           "Excellent!\n\nI'll arrange a site visit with the verified DigiNiwas partner handling this property. Ready?";
-//         setCurrentIntent("visit");
-//       } else if (
-//         query.includes("property document") ||
-//         query.includes("sale deed") ||
-//         query.includes("registry guidance")
-//       ) {
-//         assistantText =
-//           "We can connect you with trusted professionals for:\nSale deed assistance\nRegistry guidance\nProperty verification\nDocumentation support\n\nWhat kind of assistance do you need?";
-//         setCurrentIntent("documents");
-//       }
-//       // --- DEFAULT PROPERTY & IDENTITY CHATS ---
-//       else if (
-//         query.includes("who are you") ||
-//         query.includes("who r u") ||
-//         query.includes("kaun ho") ||
-//         query.includes("niwas ai")
-//       ) {
-//         assistantText =
-//           "I'm Niwas AI, your smart real estate assistant! 🏡\n\nI'm here to help you find, compare, and get the best luxury properties within your budget effortlessly.";
-//       } else if (
-//         query.startsWith("hi") ||
-//         query.includes("hello") ||
-//         query.includes("hey") ||
-//         query.includes("namaste")
-//       ) {
-//         assistantText =
-//           "Hello! 👋 How can I help you find the best luxury properties within your budget today?";
-//         // } else {
-//         //   let data = [...allProperties];
-//         //   cities.forEach((city) => {
-//         //     if (city !== "All" && query.includes(city.toLowerCase())) {
-//         //       data = data.filter((x) => x.city?.toLowerCase() === city.toLowerCase());
-//         //     }
-//         //   });
-//         //   const bhk = query.match(/([1-5])\s*bhk/i);
-//         //   if (bhk) {
-//         //     data = data.filter((x) => Number(x.bedrooms) === Number(bhk[1]));
-//         //   }
-//         //   if (query.includes("rent")) {
-//         //     data = data.filter((x) => x.transactionType?.toLowerCase() === "rent");
-//         //   }
-//         //   if (query.includes("buy")) {
-//         //     data = data.filter((x) => x.transactionType?.toLowerCase() === "buy");
-//         //   }
-//         //   assistantText = `Found ${data.length} matching properties for your search:`;
-//         //   matchedProperties = data.slice(0, 6);
-//         // }
-//       } else {
-//         let data = [...allProperties];
-//         let isCityMentioned = false;
-//         let matchedCityKey = "";
-
-//         const dbCities = [
-//           ...new Set(allProperties.map((x) => x.city?.trim()).filter(Boolean)),
-//         ];
-
-//         for (const c of dbCities) {
-//           const lowerCity = c.toLowerCase();
-//           const firstWord = lowerCity.split(" ")[0];
-
-//           if (query.includes(lowerCity) || query.includes(firstWord)) {
-//             isCityMentioned = true;
-//             matchedCityKey = firstWord;
-//             break;
-//           }
-//         }
-
-//         if (!isCityMentioned) {
-//           Object.keys(CITY_COORDS).forEach((cKey) => {
-//             if (query.includes(cKey)) {
-//               isCityMentioned = true;
-//               matchedCityKey = cKey;
-//             }
-//           });
-//         }
-
-//         if (isCityMentioned) {
-//           data = data.filter((x) => {
-//             if (!x.city) return false;
-//             const itemCity = x.city.toLowerCase().trim();
-//             return (
-//               itemCity.includes(matchedCityKey) ||
-//               itemCity.startsWith(matchedCityKey)
-//             );
-//           });
-//         }
-
-//         const bhk = query.match(/([1-5])\s*bhk/i);
-//         if (bhk) {
-//           data = data.filter((x) => Number(x.bedrooms) === Number(bhk[1]));
-//         }
-//         if (query.includes("rent")) {
-//           data = data.filter(
-//             (x) => x.transactionType?.toLowerCase() === "rent",
-//           );
-//         }
-//         if (query.includes("buy")) {
-//           data = data.filter((x) => x.transactionType?.toLowerCase() === "buy");
-//         }
-
-//         if (data.length === 0) {
-//           assistantText = isCityMentioned
-//             ? `No property found in ${matchedCityKey.toUpperCase()} for your search criteria.`
-//             : "No property found for your search criteria.";
-//           matchedProperties = [];
-//         } else {
-//           assistantText = `Found ${data.length} matching properties for your search:`;
-//           matchedProperties = data.slice(0, 6);
-//         }
-//       }
-
-//       const assistantMsg = {
-//         role: "assistant",
-//         text: assistantText,
-//         properties: matchedProperties,
-//       };
-
-//       setChatHistory((prev) =>
-//         prev.map((chat) => {
-//           if (chat.id === activeChatId) {
-//             return { ...chat, messages: [...chat.messages, assistantMsg] };
-//           }
-//           return chat;
-//         }),
-//       );
-//     }, 1000);
-//     setInput("");
-//   };
+//   }, 1000);
+//   setInput("");
+// };
 
 //   const handleNewChat = () => {
 //     const newId = `session-${Date.now()}`;
