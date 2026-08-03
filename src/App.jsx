@@ -69,7 +69,7 @@ import Blogs from "./pages/Blogs";
 function App() {
   // 🎥 Environment Variable se Video URL extract kar rahe hain
   const propertyVideo = import.meta.env.VITE_NIWAS_AI;
-
+console.log("Video URL:", import.meta.env.VITE_NIWAS_AI);
   // Check kar rahe hain ki user ne pehle video dekhi hai ya nahi
   const [showIntroVideo, setShowIntroVideo] = useState(() => {
     return !sessionStorage.getItem("hasSeenDiginiwasIntro");
