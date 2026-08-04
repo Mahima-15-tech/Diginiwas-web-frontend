@@ -46,7 +46,7 @@
 // }
 // export default App;
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import Layout from "./layouts/Layout";
 import { Routes, Route } from "react-router-dom";
@@ -66,9 +66,12 @@ import CookiesPolicy from "./pages/CokkiesPolicy";
 import Blogs from "./pages/Blogs";
 
 function App() {
+  // ⚡ Cloudinary URL me streaming optimization parameters (f_auto,q_auto) lagaye gaye hain
   const propertyVideo =
     import.meta.env.VITE_NIWAS_AI ||
-    "https://res.cloudinary.com/dhuabv2it/video/upload/v1783603443/diginiwas_k2k2bf.mp4";
+    "https://res.cloudinary.com/dhuabv2it/video/upload/f_auto,q_auto/v1783603443/diginiwas_k2k2bf.mp4";
+
+  const videoRef = useRef(null);
 
   const [showIntroVideo, setShowIntroVideo] = useState(() => {
     try {
@@ -82,21 +85,25 @@ function App() {
     try {
       sessionStorage.setItem("hasSeenDiginiwasIntro", "true");
     } catch (e) {
-      console.warn("SessionStorage access failed:", e);
+      console.warn("Session storage restricted:", e);
     }
     setShowIntroVideo(false);
   };
 
-  // 🛡️ PRODUCTION SAFETY TIMEOUT:
-  // Agar Production par video 6 seconds me load/play nahi hui, toh automatic bypass kar dega
+  // 🎬 Video Autoplay Error Handler (Ensures smooth playback without stopping)
   useEffect(() => {
-    if (showIntroVideo) {
-      const timer = setTimeout(() => {
-        console.warn("Video load timeout - automatically skipping intro for production stability.");
-        handleVideoEnd();
-      }, 7000); // 7 Seconds max wait time
-
-      return () => clearTimeout(timer);
+    if (showIntroVideo && videoRef.current) {
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.warn("Autoplay was prevented by browser:", error);
+          // Mutex retry agar browser ne autoplay pause kar diya ho
+          if (videoRef.current) {
+            videoRef.current.muted = true;
+            videoRef.current.play();
+          }
+        });
+      }
     }
   }, [showIntroVideo]);
 
@@ -106,6 +113,7 @@ function App() {
       {showIntroVideo && propertyVideo ? (
         <div className="fixed inset-0 z-[99999] bg-black flex items-center justify-center overflow-hidden">
           <video
+            ref={videoRef}
             src={propertyVideo}
             autoPlay
             muted
@@ -114,8 +122,8 @@ function App() {
             controls
             onEnded={handleVideoEnd}
             onError={(e) => {
-              console.error("Video Error on Production:", e);
-              handleVideoEnd(); // Error aate hi bypass
+              console.error("Video Error:", e);
+              handleVideoEnd();
             }}
             className="w-full h-full object-cover"
           />
@@ -157,7 +165,7 @@ function App() {
 
 export default App;
 
-// import { useState } from "react";
+// import { useState, useEffect } from "react";
 // import "./App.css";
 // import Layout from "./layouts/Layout";
 // import { Routes, Route } from "react-router-dom";
@@ -181,15 +189,35 @@ export default App;
 //     import.meta.env.VITE_NIWAS_AI ||
 //     "https://res.cloudinary.com/dhuabv2it/video/upload/v1783603443/diginiwas_k2k2bf.mp4";
 
-//   // Check if user has already watched the intro video
 //   const [showIntroVideo, setShowIntroVideo] = useState(() => {
-//     return !sessionStorage.getItem("hasSeenDiginiwasIntro");
+//     try {
+//       return !sessionStorage.getItem("hasSeenDiginiwasIntro");
+//     } catch {
+//       return false;
+//     }
 //   });
 
 //   const handleVideoEnd = () => {
-//     sessionStorage.setItem("hasSeenDiginiwasIntro", "true");
+//     try {
+//       sessionStorage.setItem("hasSeenDiginiwasIntro", "true");
+//     } catch (e) {
+//       console.warn("SessionStorage access failed:", e);
+//     }
 //     setShowIntroVideo(false);
 //   };
+
+//   // 🛡️ PRODUCTION SAFETY TIMEOUT:
+//   // Agar Production par video 6 seconds me load/play nahi hui, toh automatic bypass kar dega
+//   useEffect(() => {
+//     if (showIntroVideo) {
+//       const timer = setTimeout(() => {
+//         console.warn("Video load timeout - automatically skipping intro for production stability.");
+//         handleVideoEnd();
+//       }, 7000); // 7 Seconds max wait time
+
+//       return () => clearTimeout(timer);
+//     }
+//   }, [showIntroVideo]);
 
 //   return (
 //     <>
@@ -201,12 +229,12 @@ export default App;
 //             autoPlay
 //             muted
 //             playsInline
+//             preload="auto"
 //             controls
 //             onEnded={handleVideoEnd}
 //             onError={(e) => {
-//               console.log("Video Error:", e);
-//               // Fallback: Video error par site load hone de
-//               handleVideoEnd();
+//               console.error("Video Error on Production:", e);
+//               handleVideoEnd(); // Error aate hi bypass
 //             }}
 //             className="w-full h-full object-cover"
 //           />
