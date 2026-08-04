@@ -68,55 +68,36 @@ import Blogs from "./pages/Blogs";
 
 function App() {
   const propertyVideo =
+    import.meta.env.VITE_NIWAS_AI ||
     "https://res.cloudinary.com/dhuabv2it/video/upload/v1783603443/diginiwas_k2k2bf.mp4";
-  // 🎥 Environment Variable se Video URL extract kar rahe hain
-  // const propertyVideo = import.meta.env.VITE_NIWAS_AI;
-  console.log(
-    "Video URL: propertyVideo",
-    import.meta.env.VITE_NIWAS_AI,
-    propertyVideo,
-  );
-  // Check kar rahe hain ki user ne pehle video dekhi hai ya nahi
-  const [showIntroVideo, setShowIntroVideo] = useState(true) 
-  
-  // => {
-  //   return !sessionStorage.getItem("hasSeenDiginiwasIntro");
-  // });
-  console.log("showIntroVideo =", showIntroVideo);
+
+  // Check if user has already watched the intro video
+  const [showIntroVideo, setShowIntroVideo] = useState(() => {
+    return !sessionStorage.getItem("hasSeenDiginiwasIntro");
+  });
 
   const handleVideoEnd = () => {
     sessionStorage.setItem("hasSeenDiginiwasIntro", "true");
     setShowIntroVideo(false);
   };
-  console.log(sessionStorage.getItem("hasSeenDiginiwasIntro"));
 
   return (
     <>
-      {/* 🎬 INTRO VIDEO OVERLAY (Jab tak user video na dekh le ya skip na kar de) */}
+      {/* 🎬 INTRO VIDEO OVERLAY */}
       {showIntroVideo && propertyVideo ? (
         <div className="fixed inset-0 z-[99999] bg-black flex items-center justify-center overflow-hidden">
-          {/* <video
-            src={propertyVideo} 
-            autoPlay
-            muted
-            playsInline
-            onEnded={handleVideoEnd}
-            className="w-full h-full object-cover"
-          /> */}
           <video
             src={propertyVideo}
             autoPlay
             muted
             playsInline
             controls
-            onLoadedData={() => console.log("Video Loaded")}
-            onCanPlay={() => console.log("Video Can Play")}
-            onPlay={() => console.log("Video Playing")}
+            onEnded={handleVideoEnd}
             onError={(e) => {
               console.log("Video Error:", e);
-              console.log(e.target.error);
+              // Fallback: Video error par site load hone de
+              handleVideoEnd();
             }}
-            onEnded={handleVideoEnd}
             className="w-full h-full object-cover"
           />
 
