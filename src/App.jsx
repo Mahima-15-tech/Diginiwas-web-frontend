@@ -69,7 +69,7 @@ import Blogs from "./pages/Blogs";
 function App() {
   // 🎥 Environment Variable se Video URL extract kar rahe hain
   const propertyVideo = import.meta.env.VITE_NIWAS_AI;
-console.log("Video URL:", import.meta.env.VITE_NIWAS_AI);
+  console.log("Video URL: propertyVideo", import.meta.env.VITE_NIWAS_AI , propertyVideo);
   // Check kar rahe hain ki user ne pehle video dekhi hai ya nahi
   const [showIntroVideo, setShowIntroVideo] = useState(() => {
     return !sessionStorage.getItem("hasSeenDiginiwasIntro");
@@ -117,7 +117,10 @@ console.log("Video URL:", import.meta.env.VITE_NIWAS_AI);
             <Route path="cookie-policy" element={<CookiesPolicy />} />
             <Route path="add-property" element={<AddProperty />} />
             <Route path="admin-dashboard" element={<AdminDashboard />} />
-            <Route path="property-management" element={<PropertyManagement />} />
+            <Route
+              path="property-management"
+              element={<PropertyManagement />}
+            />
             <Route path="blogs" element={<Blogs />} />
           </Route>
         </Routes>
