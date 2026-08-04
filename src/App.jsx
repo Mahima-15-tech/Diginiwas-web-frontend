@@ -77,6 +77,7 @@ function App() {
   );
   // Check kar rahe hain ki user ne pehle video dekhi hai ya nahi
   const [showIntroVideo, setShowIntroVideo] = useState(true) 
+  
   // => {
   //   return !sessionStorage.getItem("hasSeenDiginiwasIntro");
   // });
@@ -86,6 +87,7 @@ function App() {
     sessionStorage.setItem("hasSeenDiginiwasIntro", "true");
     setShowIntroVideo(false);
   };
+  console.log(sessionStorage.getItem("hasSeenDiginiwasIntro"));
 
   return (
     <>
